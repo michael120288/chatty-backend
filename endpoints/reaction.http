@@ -1,0 +1,51 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+
+###
+POST {{baseUrl}}/{{urlPath}}/post/reaction
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+# Privacy - Public | Private | Followers
+# Feelings - like | love | wow | happy | sad | angry
+
+{
+  "userTo":"6615cdbb3869dd92f5643019",
+  "postId": "6621b1eaf8b49930cfd6d1a0",
+  "type": "love",
+  "previousReaction": "happy",
+  "profilePicture":"https://res.cloudinary.com/dhcw9nswr/image/upload/v1712197100/660e0de132ced657c4108512",
+  "postReactions": {"like":0,"love":1,"happy":0,"wow":0,"sad":0,"angry":0}
+}
+
+###
+DELETE {{baseUrl}}/{{urlPath}}/post/reaction/6621b1eaf8b49930cfd6d1a0/love/{"like":0,"love":0,"happy":0,"wow":0,"sad":0,"angry":0}
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+# Privacy - Public | Private | Followers
+# Feelings - like | love | wow | happy | sad | angry
+
+{}
+
+###
+GET {{baseUrl}}/{{urlPath}}/post/reactions/6621b1eaf8b49930cfd6d1a0
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+GET {{baseUrl}}/{{urlPath}}/post/single/reaction/username/Mike11/6621b1eaf8b49930cfd6d1a0
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+GET {{baseUrl}}/{{urlPath}}/post/reactions/username/Mike11
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
