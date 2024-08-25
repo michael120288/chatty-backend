@@ -13,6 +13,7 @@ import { IFollowerJobData } from '@follower/interfaces/follower.interface';
 type IBaseJobData = IAuthJob | IEmailJob | IPostJobData | IReactionJob | ICommentJob | IFollowerJobData
 
 
+
 let bullAdapters: BullAdapter[] = [];
 export let serverAdapter: ExpressAdapter;
 
