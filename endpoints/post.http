@@ -11,12 +11,12 @@ withCredentials: true
 # Feelings - like | love | wow | happy | sad | angry
 
 {
-  "post":"This is my first post",
+  "post":"This is my third post",
   "bgColor": "#4aa1f3",
   "privacy": "Private",
   "gifUrl": "",
   "profilePicture":"https://res.cloudinary.com/dhcw9nswr/image/upload/v1712197100/660e0de132ced657c4108512",
-  "feelings": "happy"
+  "feelings": "love"
 }
 
 ###

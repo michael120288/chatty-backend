@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import Logger from 'bunyan';
-import { config } from '@root/config';
 import sendGridMail from '@sendgrid/mail';
+import { config } from '@root/config';
 import { BadRequestError } from '@global/helpers/error-handler';
 
 interface IMailOptions {
@@ -14,62 +14,54 @@ interface IMailOptions {
 
 const log: Logger = config.createLogger('mailOptions');
 sendGridMail.setApiKey(config.SENDGRID_API_KEY!);
+
 class MailTransport {
-  public async sendMail(
-    receiverEmail: string,
-    subject: string,
-    body: string,
-  ): Promise<void> {
-    if(config.NODE_ENV === 'test'|| config.NODE_ENV === 'development') {
+  public async sendEmail(receiverEmail: string, subject: string, body: string): Promise<void> {
+    if (config.NODE_ENV === 'test' || config.NODE_ENV === 'development') {
       this.developmentEmailSender(receiverEmail, subject, body);
-    }else{
+    } else {
       this.productionEmailSender(receiverEmail, subject, body);
     }
   }
 
-  private async developmentEmailSender(
-    receiverEmail: string,
-    subject: string,
-    body: string,
-  ): Promise<void> {
+  private async developmentEmailSender(receiverEmail: string, subject: string, body: string): Promise<void> {
     const transporter: Mail = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
-      secure: false, // true for 465, false for other ports
+      secure: false,
       auth: {
-        user: config.SENDER_EMAIL!, // generated ethereal user
-        pass: config.SENDER_EMAIL_PASSWORD!, // generated ethereal password
-      },
+        user: config.SENDER_EMAIL!,
+        pass: config.SENDER_EMAIL_PASSWORD!
+      }
     });
 
     const mailOptions: IMailOptions = {
-      from: `Chatty App <${config.SENDER_EMAIL}>`,
+      from: `Chatty App <${config.SENDER_EMAIL!}>`,
       to: receiverEmail,
       subject,
-      html: body,
+      html: body
     };
+
     try {
       await transporter.sendMail(mailOptions);
-      log.info('Development email sent successfully');
+      log.info('Development email sent successfully.');
     } catch (error) {
       log.error('Error sending email', error);
       throw new BadRequestError('Error sending email');
     }
   }
-  private async productionEmailSender(
-    receiverEmail: string,
-    subject: string,
-    body: string,
-  ): Promise<void> {
+
+  private async productionEmailSender(receiverEmail: string, subject: string, body: string): Promise<void> {
     const mailOptions: IMailOptions = {
-      from: `Chatty App <${config.SENDER_EMAIL}>`,
+      from: `Chatty App <${config.SENDER_EMAIL!}>`,
       to: receiverEmail,
       subject,
-      html: body,
+      html: body
     };
+
     try {
       await sendGridMail.send(mailOptions);
-      log.info('Production email sent successfully');
+      log.info('Production email sent successfully.');
     } catch (error) {
       log.error('Error sending email', error);
       throw new BadRequestError('Error sending email');
@@ -77,4 +69,4 @@ class MailTransport {
   }
 }
 
-export const mailTransport:MailTransport = new MailTransport()
+export const mailTransport: MailTransport = new MailTransport();
