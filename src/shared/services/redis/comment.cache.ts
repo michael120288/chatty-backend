@@ -19,6 +19,7 @@ export class CommentCache extends BaseCache {
         await this.client.connect();
       }
       await this.client.LPUSH(`comments:${postId}`, value);
+      console.log(await this.client.LPUSH(`comments:${postId}`, value),'1');
       const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCount');
       let count: number = Helpers.parseJson(commentsCount[0]) as number;
       count += 1;

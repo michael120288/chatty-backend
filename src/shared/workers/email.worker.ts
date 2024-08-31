@@ -1,7 +1,6 @@
 import { DoneCallback, Job } from 'bull';
 import Logger from 'bunyan';
 import { config } from '@root/config';
-import { authService } from '@service/db/auth.service';
 import { mailTransport } from '@service/emails/mail.transport';
 
 const log: Logger = config.createLogger('emailWorker');
@@ -9,8 +8,8 @@ const log: Logger = config.createLogger('emailWorker');
 class EmailWorker {
   async addNotificationEmail(job: Job, done: DoneCallback): Promise<void> {
     try {
-      const { template,receiverEmail,subject } = job.data;
-      await mailTransport.sendMail(receiverEmail,subject,template)
+      const { template, receiverEmail, subject } = job.data;
+      await mailTransport.sendEmail(receiverEmail, subject, template);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
