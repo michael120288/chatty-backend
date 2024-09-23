@@ -5,6 +5,8 @@ import { PostCache } from '@service/redis/post.cache';
 import { UserCache } from '@service/redis/user.cache';
 import { IAllUsers, IUserDocument } from '@user/interfaces/user.interface';
 import { IFollowerData } from '@follower/interfaces/follower.interface';
+import { followerService } from '@service/db/follower.service';
+import mongoose from 'mongoose';
 
 const postCache: PostCache = new PostCache();
 const userCache: UserCache = new UserCache();
@@ -57,5 +59,10 @@ export class Get {
     }
     const totalUsers: number = await Get.prototype.usersCount(type);
     return { users, totalUsers };
+  }
+  private async followers(userId: string): Promise<IFollowerData[]> {
+    const cachedFollowers: IFollowerData[] = await followerCache.getFollowersFromCache(`followers:${userId}`);
+    const result = cachedFollowers.length ? cachedFollowers : await followerService.getFollowerData(new mongoose.Types.ObjectId(userId));
+    return result;
   }
 }
