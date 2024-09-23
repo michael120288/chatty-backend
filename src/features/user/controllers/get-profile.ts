@@ -7,6 +7,10 @@ import { IAllUsers, IUserDocument } from '@user/interfaces/user.interface';
 import { IFollowerData } from '@follower/interfaces/follower.interface';
 import { followerService } from '@service/db/follower.service';
 import mongoose from 'mongoose';
+import { userService } from '@service/db/user.service';
+import { postService } from '@service/db/post.service';
+import { IPostDocument } from '@post/interfaces/post.interface';
+import { Helpers } from '@global/helpers/helpers';
 
 const postCache: PostCache = new PostCache();
 const userCache: UserCache = new UserCache();
@@ -46,6 +50,18 @@ export class Get {
       });
   }
 
+  public async profile(req: Request, res: Response): Promise<void> {
+    const cachedUser: IUserDocument = (await userCache.getUserFromCache(`${req.currentUser!.userId}`)) as IUserDocument;
+    const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(`${req.currentUser!.userId}`);
+    res.status(HTTP_STATUS.OK).json({ message: 'Get user profile', user: existingUser });
+  }
+
+  public async profileByUserId(req: Request, res: Response): Promise<void> {
+    const { userId } = req.params;
+    const cachedUser: IUserDocument = (await userCache.getUserFromCache(userId)) as IUserDocument;
+    const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(userId);
+    res.status(HTTP_STATUS.OK).json({ message: 'Get user profile by id', user: existingUser });
+  }
   private async allUsers({ newSkip, limit, skip, userId }: IUserAll): Promise<IAllUsers> {
     let users;
     let type = '';
@@ -64,5 +80,24 @@ export class Get {
     const cachedFollowers: IFollowerData[] = await followerCache.getFollowersFromCache(`followers:${userId}`);
     const result = cachedFollowers.length ? cachedFollowers : await followerService.getFollowerData(new mongoose.Types.ObjectId(userId));
     return result;
+  }
+
+  public async profileAndPosts(req: Request, res: Response): Promise<void> {
+    const { userId, username, uId } = req.params;
+    const userName: string = Helpers.firstLetterUppercase(username);
+    const cachedUser: IUserDocument = (await userCache.getUserFromCache(userId)) as IUserDocument;
+    const cachedUserPosts: IPostDocument[] = await postCache.getUserPostsFromCache('post', parseInt(uId, 10));
+
+    const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(userId);
+    const userPosts: IPostDocument[] = cachedUserPosts.length
+      ? cachedUserPosts
+      : await postService.getPosts({ username: userName }, 0, 100, { createdAt: -1 });
+
+    res.status(HTTP_STATUS.OK).json({ message: 'Get user profile and posts', user: existingUser, posts: userPosts });
+  }
+
+  private async usersCount(type: string): Promise<number> {
+    const totalUsers: number = type === 'redis' ? await userCache.getTotalUsersInCache() : await userService.getTotalUsersInDB();
+    return totalUsers;
   }
 }
