@@ -14,7 +14,7 @@ Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/user/profile/62f29f71da585226216b2724
+GET {{baseUrl}}/{{urlPath}}/user/profile/66f8c47797b6f261b4546f25
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -32,7 +32,7 @@ Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/user/profile/search/danny
+GET {{baseUrl}}/{{urlPath}}/user/profile/search/i
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

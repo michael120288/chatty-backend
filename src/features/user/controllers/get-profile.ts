@@ -28,6 +28,7 @@ interface IUserAll {
 export class Get {
   public async all(req: Request, res: Response): Promise<void> {
     const { page } = req.params;
+    console.log(page,'====');
     const skip: number = (parseInt(page) - 1) * PAGE_SIZE;
     const limit: number = PAGE_SIZE * parseInt(page);
     const newSkip: number = skip === 0 ? skip : skip + 1;
@@ -80,6 +81,18 @@ export class Get {
     const cachedFollowers: IFollowerData[] = await followerCache.getFollowersFromCache(`followers:${userId}`);
     const result = cachedFollowers.length ? cachedFollowers : await followerService.getFollowerData(new mongoose.Types.ObjectId(userId));
     return result;
+  }
+
+  public async randomUserSuggestions(req: Request, res: Response): Promise<void> {
+    let randomUsers: IUserDocument[] = [];
+    const cachedUsers: IUserDocument[] = await userCache.getRandomUsersFromCache(`${req.currentUser!.userId}`, req.currentUser!.username);
+    if(cachedUsers.length) {
+      randomUsers = [...cachedUsers];
+    } else {
+      const users: IUserDocument[] = await userService.getRandomUsers(req.currentUser!.userId);
+      randomUsers = [...users];
+    }
+    res.status(HTTP_STATUS.OK).json({ message: 'User suggestions', users: randomUsers });
   }
 
   public async profileAndPosts(req: Request, res: Response): Promise<void> {
