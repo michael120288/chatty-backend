@@ -1,5 +1,9 @@
 import { BaseCache } from '@service/redis/base.cache';
-import { INotificationSettings, ISocialLinks, IUserDocument } from '@user/interfaces/user.interface';
+import {
+  INotificationSettings,
+  ISocialLinks,
+  IUserDocument,
+} from '@user/interfaces/user.interface';
 import Logger from 'bunyan';
 import { indexOf, findIndex } from 'lodash';
 import { config } from '@root/config';
@@ -9,7 +13,17 @@ import { RedisCommandRawReply } from '@redis/client/dist/lib/commands';
 
 const log: Logger = config.createLogger('userCache');
 type UserItem = string | ISocialLinks | INotificationSettings;
+<<<<<<< HEAD
+type UserCacheMultiType =
+  | string
+  | number
+  | Buffer
+  | RedisCommandRawReply[]
+  | IUserDocument
+  | IUserDocument[];
+=======
 type UserCacheMultiType = string | number | Buffer | RedisCommandRawReply[] | IUserDocument | IUserDocument[];
+>>>>>>> develop
 
 export class UserCache extends BaseCache {
   constructor() {
@@ -37,6 +51,37 @@ export class UserCache extends BaseCache {
       quote,
       bgImageId,
       bgImageVersion,
+<<<<<<< HEAD
+      social,
+    } = createdUser;
+    const firstObj = {
+      _id: `${_id}`,
+      uId: `${uId}`,
+      username: `${username}`,
+      email: `${email}`,
+      avatarColor: `${avatarColor}`,
+      createdAt: `${createdAt}`,
+      postsCount: `${postsCount}`,
+    };
+    const secondObj = {
+      blocked: JSON.stringify(blocked),
+      blockedBy: JSON.stringify(blockedBy),
+      profilePicture: `${profilePicture}`,
+      followersCount: `${followersCount}`,
+      followingCount: `${followingCount}`,
+      notifications: JSON.stringify(notifications),
+      social: JSON.stringify(social),
+    };
+    const thirdObj = {
+      work: `${work}`,
+      location: `${location}`,
+      school: `${school}`,
+      quote: `${quote}`,
+      bgImageVersion: `${bgImageVersion}`,
+      bgImageId: `${bgImageId}`,
+    };
+    const dataToSave = {...firstObj, ...secondObj, ...thirdObj}
+=======
       social
     } = createdUser;
     const firstList: string[] = [
@@ -86,13 +131,24 @@ export class UserCache extends BaseCache {
       `${bgImageId}`
     ];
     const dataToSave: string[] = [...firstList, ...secondList, ...thirdList];
+>>>>>>> develop
 
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
+<<<<<<< HEAD
+      await this.client.ZADD('user', {
+        score: parseInt(userUId, 10),
+        value: `${key}`,
+      });
+      for(const [itemKey,itemValues]of Object.entries(dataToSave)){
+        await this.client.HSET(`users:${key}`, `${itemKey}`, `${itemValues}`);
+      }
+=======
       await this.client.ZADD('user', { score: parseInt(userUId, 10), value: `${key}` });
       await this.client.HSET(`users:${key}`, dataToSave);
+>>>>>>> develop
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
@@ -105,7 +161,13 @@ export class UserCache extends BaseCache {
         await this.client.connect();
       }
 
+<<<<<<< HEAD
+      const response: IUserDocument = (await this.client.HGETALL(
+        `users:${userId}`,
+      )) as unknown as IUserDocument;
+=======
       const response: IUserDocument = (await this.client.HGETALL(`users:${userId}`)) as unknown as IUserDocument;
+>>>>>>> develop
       response.createdAt = new Date(Helpers.parseJson(`${response.createdAt}`));
       response.postsCount = Helpers.parseJson(`${response.postsCount}`);
       response.blocked = Helpers.parseJson(`${response.blocked}`);
@@ -122,6 +184,8 @@ export class UserCache extends BaseCache {
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
+<<<<<<< HEAD
+=======
     }
   }
 
@@ -196,17 +260,122 @@ export class UserCache extends BaseCache {
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
+>>>>>>> develop
     }
   }
 
-  public async updateSingleUserItemInCache(userId: string, prop: string, value: UserItem): Promise<IUserDocument | null> {
+  public async getUsersFromCache(
+    start: number,
+    end: number,
+    excludedUserKey: string,
+  ): Promise<IUserDocument[]> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
+      const response: string[] = await this.client.ZRANGE('user', start, end, {
+        REV: true,
+      });
+      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+      for (const key of response) {
+        if (key !== excludedUserKey) {
+          multi.HGETALL(`users:${key}`);
+        }
+      }
+      const replies: UserCacheMultiType =
+        (await multi.exec()) as UserCacheMultiType;
+      const userReplies: IUserDocument[] = [];
+      for (const reply of replies as IUserDocument[]) {
+        reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
+        reply.postsCount = Helpers.parseJson(`${reply.postsCount}`);
+        reply.blocked = Helpers.parseJson(`${reply.blocked}`);
+        reply.blockedBy = Helpers.parseJson(`${reply.blockedBy}`);
+        reply.notifications = Helpers.parseJson(`${reply.notifications}`);
+        reply.social = Helpers.parseJson(`${reply.social}`);
+        reply.followersCount = Helpers.parseJson(`${reply.followersCount}`);
+        reply.followingCount = Helpers.parseJson(`${reply.followingCount}`);
+        reply.bgImageId = Helpers.parseJson(`${reply.bgImageId}`);
+        reply.bgImageVersion = Helpers.parseJson(`${reply.bgImageVersion}`);
+        reply.profilePicture = Helpers.parseJson(`${reply.profilePicture}`);
+
+        userReplies.push(reply);
+      }
+      return userReplies;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
+  public async getRandomUsersFromCache(
+    userId: string,
+    excludedUsername: string,
+  ): Promise<IUserDocument[]> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const replies: IUserDocument[] = [];
+      const followers: string[] = await this.client.LRANGE(
+        `followers:${userId}`,
+        0,
+        -1,
+      );
+      const users: string[] = await this.client.ZRANGE('user', 0, -1);
+      const randomUsers: string[] = Helpers.shuffle(users).slice(0, 10);
+      for (const key of randomUsers) {
+        const followerIndex = indexOf(followers, key);
+        if (followerIndex < 0) {
+          const userHash: IUserDocument = (await this.client.HGETALL(
+            `users:${key}`,
+          )) as unknown as IUserDocument;
+          replies.push(userHash);
+        }
+      }
+      const excludedUsernameIndex: number = findIndex(replies, [
+        'username',
+        excludedUsername,
+      ]);
+      replies.splice(excludedUsernameIndex, 1);
+      for (const reply of replies) {
+        reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
+        reply.postsCount = Helpers.parseJson(`${reply.postsCount}`);
+        reply.blocked = Helpers.parseJson(`${reply.blocked}`);
+        reply.blockedBy = Helpers.parseJson(`${reply.blockedBy}`);
+        reply.notifications = Helpers.parseJson(`${reply.notifications}`);
+        reply.social = Helpers.parseJson(`${reply.social}`);
+        reply.followersCount = Helpers.parseJson(`${reply.followersCount}`);
+        reply.followingCount = Helpers.parseJson(`${reply.followingCount}`);
+        reply.bgImageId = Helpers.parseJson(`${reply.bgImageId}`);
+        reply.bgImageVersion = Helpers.parseJson(`${reply.bgImageVersion}`);
+        reply.profilePicture = Helpers.parseJson(`${reply.profilePicture}`);
+      }
+      return replies;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
+  public async updateSingleUserItemInCache(
+    userId: string,
+    prop: string,
+    value: UserItem,
+  ): Promise<IUserDocument | null> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+<<<<<<< HEAD
+      await this.client.HSET(`users:${userId}`, `${prop}`, JSON.stringify(value));
+      const response: IUserDocument = (await this.getUserFromCache(
+        userId,
+      )) as IUserDocument;
+=======
       const dataToSave: string[] = [`${prop}`, JSON.stringify(value)];
       await this.client.HSET(`users:${userId}`, dataToSave);
       const response: IUserDocument = await this.getUserFromCache(userId) as IUserDocument;
+>>>>>>> develop
       return response;
     } catch (error) {
       log.error(error);
@@ -226,5 +395,9 @@ export class UserCache extends BaseCache {
       throw new ServerError('Server error. Try again.');
     }
   }
+<<<<<<< HEAD
+}
+=======
 
 }
+>>>>>>> develop
