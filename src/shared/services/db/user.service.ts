@@ -74,7 +74,7 @@ class UserService {
     return users;
   }
 
-<<<<<<< HEAD
+
   public async getRandomUsers(userId: string): Promise<IUserDocument[]> {
     const randomUsers: IUserDocument[] = [];
     const users: IUserDocument[] = await UserModel.aggregate([
@@ -108,13 +108,10 @@ class UserService {
     return randomUsers;
   }
 
-=======
->>>>>>> develop
   public async getTotalUsersInDB(): Promise<number> {
     const totalCount: number = await UserModel.find({}).countDocuments();
     return totalCount;
   }
-<<<<<<< HEAD
 
   public async searchUsers(regex: RegExp): Promise<ISearchUser[]> {
     const users = await AuthModel.aggregate([
@@ -134,8 +131,6 @@ class UserService {
     return users;
   }
 
-=======
->>>>>>> develop
   private aggregateProject() {
     return {
       _id: 1,
