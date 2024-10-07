@@ -28,10 +28,6 @@ interface IUserAll {
 export class Get {
   public async all(req: Request, res: Response): Promise<void> {
     const { page } = req.params;
-<<<<<<< HEAD
-    console.log(page,'====');
-=======
->>>>>>> develop
     const skip: number = (parseInt(page) - 1) * PAGE_SIZE;
     const limit: number = PAGE_SIZE * parseInt(page);
     const newSkip: number = skip === 0 ? skip : skip + 1;
@@ -86,7 +82,6 @@ export class Get {
     return result;
   }
 
-<<<<<<< HEAD
   public async randomUserSuggestions(req: Request, res: Response): Promise<void> {
     let randomUsers: IUserDocument[] = [];
     const cachedUsers: IUserDocument[] = await userCache.getRandomUsersFromCache(`${req.currentUser!.userId}`, req.currentUser!.username);
@@ -99,8 +94,6 @@ export class Get {
     res.status(HTTP_STATUS.OK).json({ message: 'User suggestions', users: randomUsers });
   }
 
-=======
->>>>>>> develop
   public async profileAndPosts(req: Request, res: Response): Promise<void> {
     const { userId, username, uId } = req.params;
     const userName: string = Helpers.firstLetterUppercase(username);
