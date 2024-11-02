@@ -39,7 +39,29 @@ withCredentials: true
 }
 
 ###
+POST {{baseUrl}}/{{urlPath}}/post/video/post
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "post":"Post with image created",
+  "bgColor": "#4aa1f3",
+  "privacy": "Public",
+  "gifUrl": "",
+  "profilePicture":"https://res.cloudinary.com/dhcw9nswr/image/upload/v1712197100/660e0de132ced657c4108512",
+  "feelings": "happy",
+  "video":""
+}
+
+###
 GET {{baseUrl}}/{{urlPath}}/post/all/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+GET {{baseUrl}}/{{urlPath}}/post/videos/1
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
