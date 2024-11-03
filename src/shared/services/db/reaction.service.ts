@@ -18,7 +18,7 @@ const userCache: UserCache = new UserCache();
 class ReactionService {
   public async addReactionDataToDB(reactionData: IReactionJob): Promise<void> {
     const { postId, userTo, userFrom, username, type, previousReaction, reactionObject } = reactionData;
-    let updatedReactionObject: IReactionDocument = reactionObject as IReactionDocument;
+    let updatedReactionObject: Partial<IReactionDocument> = reactionObject as IReactionDocument;
     if (previousReaction) {
       updatedReactionObject = omit(reactionObject, ['_id']);
     }

@@ -2,7 +2,7 @@ import { Server } from 'socket.io';
 
 let socketIOImageObject: Server;
 
-export class SocketIOimageHandler {
+export class SocketIOImageHandler {
   public listen(io: Server): void {
     socketIOImageObject = io;
   }
