@@ -34,7 +34,7 @@
     "baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     "rootDirs": [
-      "src"
+      "."
     ] /* Allow multiple folders to be treated as one when resolving modules. */,
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
@@ -109,6 +109,26 @@
     "pretty": true,
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true, /* Skip type checking all .d.ts files. */
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true },
+    ],
+    "paths": {
+      "@auth/*": ["src/features/auth/*"],
+      "@user/*": ["src/features/user/*"],
+      "@post/*": ["src/features/post/*"],
+      "@reaction/*": ["src/features/reactions/*"],
+      "@comment/*": ["src/features/comments/*"],
+      "@follower/*": ["src/features/followers/*"],
+      "@notification/*": ["src/features/notifications/*"],
+      "@image/*": ["src/features/images/*"],
+      "@chat/*": ["src/features/chat/*"],
+      "@global/*": ["src/shared/globals/*"],
+      "@service/*": ["src/shared/services/*"],
+      "@socket/*": ["src/shared/sockets/*"],
+      "@worker/*": ["src/shared/workers/*"],
+      "@root/*": ["src/*"]
+    }
   }
 }
