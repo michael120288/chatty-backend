@@ -34,7 +34,7 @@ export class Delete {
     ) as Promise<IUserDocument>;
     (await Promise.all([bgImageId, bgImageVersion])) as [IUserDocument, IUserDocument];
     imageQueue.addImageJob('removeImageFromDB', {
-      imageId: image?._id
+      imageId: image?._id  as string,
     });
     res.status(HTTP_STATUS.OK).json({ message: 'Image deleted successfully' });
   }
