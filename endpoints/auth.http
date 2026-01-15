@@ -22,8 +22,8 @@ Accept: application/json
 withCredentials:true
 
 {
-  "username":"Mike25",
-  "password":"test1234"
+  "username":"Mike27",
+  "password":"Test1234!@#$"
 }
 
 ###
@@ -56,6 +56,6 @@ Accept: application/json
 withCredentials:true
 
 {
-  "password":"michael",
-  "confirmPassword":"michael"
+  "password":"MyNewPass123!",
+  "confirmPassword":"MyNewPass123!"
 }

@@ -3,7 +3,6 @@ import Mail from 'nodemailer/lib/mailer';
 import Logger from 'bunyan';
 import sendGridMail from '@sendgrid/mail';
 import { config } from '@root/config';
-import { BadRequestError } from '@global/helpers/error-handler';
 
 interface IMailOptions {
   from: string;
@@ -17,10 +16,12 @@ sendGridMail.setApiKey(config.SENDGRID_API_KEY!);
 
 class MailTransport {
   public async sendEmail(receiverEmail: string, subject: string, body: string): Promise<void> {
+    log.info(`Preparing to send email to: ${receiverEmail}, subject: "${subject}", environment: ${config.NODE_ENV}`);
+
     if (config.NODE_ENV === 'test' || config.NODE_ENV === 'development') {
-      this.developmentEmailSender(receiverEmail, subject, body);
+      await this.developmentEmailSender(receiverEmail, subject, body);
     } else {
-      this.productionEmailSender(receiverEmail, subject, body);
+      await this.productionEmailSender(receiverEmail, subject, body);
     }
   }
 
@@ -44,10 +45,11 @@ class MailTransport {
 
     try {
       await transporter.sendMail(mailOptions);
-      log.info('Development email sent successfully.');
+      log.info(`Development email sent successfully to: ${receiverEmail}`);
     } catch (error) {
-      log.error('Error sending email', error);
-      throw new BadRequestError('Error sending email');
+      log.error(`Error sending email to ${receiverEmail} (non-critical in development):`, error);
+      // In development, log the error but don't crash the app
+      // Email failures shouldn't stop the application
     }
   }
 
@@ -61,10 +63,11 @@ class MailTransport {
 
     try {
       await sendGridMail.send(mailOptions);
-      log.info('Production email sent successfully.');
+      log.info(`Production email sent successfully to: ${receiverEmail}`);
     } catch (error) {
-      log.error('Error sending email', error);
-      throw new BadRequestError('Error sending email');
+      log.error(`Error sending email to ${receiverEmail} in production:`, error);
+      // Log the error but don't crash the app
+      // Email failures should be monitored but shouldn't stop the application
     }
   }
 }

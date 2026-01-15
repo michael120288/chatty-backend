@@ -1,6 +1,10 @@
 import { BaseQueue } from '@service/queues/base.queue';
 import { IEmailJob } from '@user/interfaces/user.interface';
 import { emailWorker } from '@worker/email.worker';
+import { config } from '@root/config';
+import Logger from 'bunyan';
+
+const log: Logger = config.createLogger('emailQueue');
 
 class EmailQueue extends BaseQueue{
   constructor() {
@@ -15,6 +19,7 @@ class EmailQueue extends BaseQueue{
   }
 
   public addEmailJob(name: string, data: IEmailJob): void {
+    log.info(`Adding email job to queue: ${name}, recipient: ${data.receiverEmail}, subject: ${data.subject}`);
     this.addJob(name, data);
   }
 }

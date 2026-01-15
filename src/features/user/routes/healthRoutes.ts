@@ -6,42 +6,37 @@ import HTTP_STATUS from 'http-status-codes';
 import { config } from '@root/config';
 
 class HealthRoutes {
-  private router: Router;
-
-  constructor() {
-    this.router = express.Router();
-  }
-
   public health(): Router {
-    this.router.get('/health', (req: Request, res: Response) => {
+    const router: Router = express.Router();
+    router.get('/health', (req: Request, res: Response) => {
       res.status(HTTP_STATUS.OK).send(`Health: Server instance is healthy with process id ${process.pid} on ${moment().format('LL')}`);
     });
-
-    return this.router;
+    return router;
   }
 
   public env(): Router {
-    this.router.get('/env', (req: Request, res: Response) => {
+    const router: Router = express.Router();
+    router.get('/env', (req: Request, res: Response) => {
       res.status(HTTP_STATUS.OK).send(`This is the ${config.NODE_ENV} environment.`);
     });
-
-    return this.router;
+    return router;
   }
 
   public instance(): Router {
-    this.router.get('/instance', async (req: Request, res: Response) => {
+    const router: Router = express.Router();
+    router.get('/instance', async (req: Request, res: Response) => {
       const response = await axios({
         method: 'get',
         url: config.EC2_URL
       });
       res.status(HTTP_STATUS.OK).send(`Server is running on EC2 instance with id ${response.data} and process id ${process.pid} on ${moment().format('LL')}`);
     });
-
-    return this.router;
+    return router;
   }
 
   public fiboRoutes(): Router {
-    this.router.get('/fibo/:num', async (req: Request, res: Response) => {
+    const router: Router = express.Router();
+    router.get('/fibo/:num', async (req: Request, res: Response) => {
       const { num } = req.params;
       const start: number = performance.now();
       const result: number = this.fibo(parseInt(num, 10));
@@ -56,8 +51,7 @@ class HealthRoutes {
         } and process id ${process.pid} on ${moment().format('LL')}`
       );
     });
-
-    return this.router;
+    return router;
   }
 
   private fibo(data: number): number {

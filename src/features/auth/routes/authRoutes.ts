@@ -3,23 +3,31 @@ import { SignIn } from '@auth/controllers/signin';
 import { SignOut } from '@auth/controllers/signout';
 import { SignUp } from '@auth/controllers/signup';
 import express, { Router } from 'express';
+
 class AuthRoutes {
-  private router: Router;
+  private signUp: SignUp;
+  private signIn: SignIn;
+  private password: Password;
+  private signOut: SignOut;
+
   constructor() {
-    this.router = express.Router();
+    this.signUp = new SignUp();
+    this.signIn = new SignIn();
+    this.password = new Password();
+    this.signOut = new SignOut();
   }
+
   public routes(): Router {
-    this.router.post('/signup', SignUp.prototype.create);
-    this.router.post('/signin', SignIn.prototype.read);
-    this.router.post('/forgot-password', Password.prototype.create);
-    this.router.post('/reset-password/:token', Password.prototype.update);
+    const router: Router = express.Router();
 
-    return this.router;
-  }
-  public signoutRoute(): Router {
-    this.router.get('/signout', SignOut.prototype.update);
+    router.post('/signup', this.signUp.create.bind(this.signUp));
+    router.post('/signin', this.signIn.read.bind(this.signIn));
+    router.post('/forgot-password', this.password.create.bind(this.password));
+    router.post('/reset-password/:token', this.password.update.bind(this.password));
+    router.get('/signout', this.signOut.update.bind(this.signOut));
 
-    return this.router;
+    return router;
   }
 }
+
 export const authRoutes: AuthRoutes = new AuthRoutes();

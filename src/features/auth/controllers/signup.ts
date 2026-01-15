@@ -15,17 +15,23 @@ import { authQueue } from '@service/queues/auth.queue';
 import { userQueue } from '@service/queues/user.queue';
 import { config } from '@root/config';
 import { BadRequestError } from '@global/helpers/error-handler';
+import Logger from 'bunyan';
 
+const log: Logger = config.createLogger('signup');
 const userCache: UserCache = new UserCache();
 
 export class SignUp {
   @joiValidation(signupSchema)
   public async create(req: Request, res: Response): Promise<void> {
     const { username, email, password, avatarColor, avatarImage } = req.body;
+
+    log.info(`Signup attempt for username: ${username}, email: ${email}`);
+
     const checkIfUserExist: IAuthDocument =
       await authService.getUserByUsernameOrEmail(username, email);
     if (checkIfUserExist) {
-      throw new BadRequestError('Invalid credentials');
+      log.warn(`Signup failed: User already exists - username: ${username}, email: ${email}`);
+      throw new BadRequestError('User already exists. Username or email is already taken.');
     }
 
     const authObjectId: ObjectId = new ObjectId();
@@ -39,15 +45,21 @@ export class SignUp {
       password,
       avatarColor,
     });
+
+    log.info(`Uploading avatar image for user: ${username}`);
     const result: UploadApiResponse = (await uploads(
       avatarImage,
       `${userObjectId}`,
       true,
       true,
     )) as UploadApiResponse;
+
     if (!result?.public_id) {
-      throw new BadRequestError('File upload: Error occurred. Try again.');
+      log.error(`Cloudinary upload failed for user: ${username}. Result: ${JSON.stringify(result)}`);
+      throw new BadRequestError(`File upload failed. Please check your image and try again.`);
     }
+
+    log.info(`Avatar uploaded successfully for user: ${username}, public_id: ${result.public_id}`);
 
     // Add to redis cache
     const userDataForCache: IUserDocument = SignUp.prototype.userData(
@@ -63,6 +75,8 @@ export class SignUp {
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
     req.session = { jwt: userJwt };
+
+    log.info(`User created successfully: ${username} (${email})`);
 
     res
       .status(HTTP_STATUS.CREATED)

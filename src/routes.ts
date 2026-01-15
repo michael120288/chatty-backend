@@ -16,14 +16,13 @@ import { Application } from 'express';
 const BASE_PATH = '/api/v1';
 
 export default (app: Application) => {
-  const routes = () => {
+  const setupRoutes = (): void => {
     app.use('/queues', authMiddleware.verifyUser, serverAdapter.getRouter());
-    app.use('', healthRoutes.health());
-    app.use('', authMiddleware.verifyUser, healthRoutes.env());
-    app.use('', authMiddleware.verifyUser, healthRoutes.instance());
-    app.use('', authMiddleware.verifyUser, healthRoutes.fiboRoutes());
+    app.use('/health', healthRoutes.health());
+    app.use('/health-env', authMiddleware.verifyUser, healthRoutes.env());
+    app.use('/health-instance', authMiddleware.verifyUser, healthRoutes.instance());
+    app.use('/fibo', authMiddleware.verifyUser, healthRoutes.fiboRoutes());
     app.use(BASE_PATH, authRoutes.routes());
-    app.use(BASE_PATH, authRoutes.signoutRoute());
 
     app.use(BASE_PATH, authMiddleware.verifyUser, currentUserRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, postRoutes.routes());
@@ -36,5 +35,5 @@ export default (app: Application) => {
     app.use(BASE_PATH, authMiddleware.verifyUser, userRoutes.routes());
 
   };
-  routes();
+  setupRoutes();
 };
