@@ -4,7 +4,10 @@ import { ICommentDocument, ICommentNameList } from '@comment/interfaces/comment.
 import { CommentCache } from '@service/redis/comment.cache';
 import { commentService } from '@service/db/comment.service';
 import mongoose from 'mongoose';
+import { config } from '@root/config';
+import Logger from 'bunyan';
 
+const log: Logger = config.createLogger('getComments');
 const commentCache: CommentCache = new CommentCache();
 
 export class Get {
@@ -21,15 +24,11 @@ export class Get {
   public async commentsNamesFromCache(req: Request, res: Response): Promise<void> {
     const { postId } = req.params;
     const cachedCommentsNames: ICommentNameList[] = await commentCache.getCommentsNamesFromCache(postId);
-    console.log(cachedCommentsNames,"cachedCommentsNames");
+    log.debug({ postId, cached: cachedCommentsNames.length > 0 }, 'Fetching comment names');
     const commentsNames: ICommentNameList[] = cachedCommentsNames.length
       ? cachedCommentsNames
       : await commentService.getPostCommentNames({ postId: new mongoose.Types.ObjectId(postId) }, { createdAt: -1 });
-console.log(commentsNames,"commentsNames");
-// const formattedComments = commentsNames.map(comment => ({
-//   count: comment.count,
-//   names: comment.names
-// }));
+    log.debug({ postId, count: commentsNames.length }, 'Retrieved comment names');
     res.status(HTTP_STATUS.OK).json({ message: 'Post comments names', comments: commentsNames });
   }
 

@@ -14,10 +14,10 @@ const config: Config.InitialOptions = {
   collectCoverageFrom: ['src/**/*.ts', '!src/**/test/*.ts?(x)', '!**/node_modules/**'],
   coverageThreshold: {
     global: {
-      branches: 1,
-      functions: 1,
-      lines: 1,
-      statements: 1
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70
     }
   },
   coverageReporters: ['text-summary', 'lcov'],

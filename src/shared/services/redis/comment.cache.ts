@@ -18,8 +18,8 @@ export class CommentCache extends BaseCache {
       if(!this.client.isOpen) {
         await this.client.connect();
       }
-      await this.client.LPUSH(`comments:${postId}`, value);
-      console.log(await this.client.LPUSH(`comments:${postId}`, value),'1');
+      const result = await this.client.LPUSH(`comments:${postId}`, value);
+      log.debug({ postId, result }, 'Comment saved to cache');
       const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCount');
       let count: number = Helpers.parseJson(commentsCount[0]) as number;
       count += 1;
@@ -63,7 +63,7 @@ export class CommentCache extends BaseCache {
         count: commentsCount,
         names: list
       };
-      console.log(response,'response');
+      log.debug({ postId, count: response.count }, 'Retrieved comment names from cache');
       return [response];
     } catch (error) {
       log.error(error);
