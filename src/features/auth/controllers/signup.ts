@@ -83,6 +83,7 @@ export class SignUp {
         avatarColor: data.avatarColor,
       },
       config.JWT_TOKEN!,
+      { expiresIn: '24h' } 
     );
   }
 
