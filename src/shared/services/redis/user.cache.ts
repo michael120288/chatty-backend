@@ -192,7 +192,9 @@ export class UserCache extends BaseCache {
           const userHash: IUserDocument = (await this.client.HGETALL(
             `users:${key}`,
           )) as unknown as IUserDocument;
-          replies.push(userHash);
+          if (Object.keys(userHash).length && userHash.username) {
+            replies.push(userHash);
+          }
         }
       }
       const excludedUsernameIndex: number = findIndex(replies, [

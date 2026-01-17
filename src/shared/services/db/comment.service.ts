@@ -103,6 +103,11 @@ class CommentService {
     );
     return commentsNamesList;
   }
+
+  public async deleteCommentFromDB(postId: string, commentId: string): Promise<void> {
+    await CommentsModel.deleteOne({ _id: commentId });
+    await PostModel.updateOne({ _id: postId }, { $inc: { commentsCount: -1 } });
+  }
 }
 
 export const commentService: CommentService = new CommentService();

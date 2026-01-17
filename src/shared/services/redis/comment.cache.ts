@@ -91,4 +91,28 @@ export class CommentCache extends BaseCache {
       throw new ServerError('Server error. Try again.');
     }
   }
+
+  public async deleteCommentFromCache(postId: string, commentId: string): Promise<void> {
+    try {
+      if(!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const comments: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
+      for(const item of comments) {
+        const comment: ICommentDocument = Helpers.parseJson(item) as ICommentDocument;
+        if(comment._id === commentId) {
+          await this.client.LREM(`comments:${postId}`, 1, item);
+          break;
+        }
+      }
+      const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCount');
+      let count: number = Helpers.parseJson(commentsCount[0]) as number;
+      count -= 1;
+      await this.client.HSET(`posts:${postId}`, 'commentsCount', `${count}`);
+      log.debug({ postId, commentId }, 'Comment deleted from cache');
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
 }

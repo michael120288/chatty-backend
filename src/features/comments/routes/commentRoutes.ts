@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import { authMiddleware } from '@global/helpers/auth-middleware';
 import { Get } from '@comment/controllers/get-comments';
 import { Add } from '@comment/controllers/add-comment';
+import { Delete } from '@comment/controllers/delete-comment';
 
 class CommentRoutes {
   private router: Router;
@@ -16,6 +17,7 @@ class CommentRoutes {
     this.router.get('/post/single/comment/:postId/:commentId', authMiddleware.checkAuthentication, Get.prototype.singleComment);
 
     this.router.post('/post/comment', authMiddleware.checkAuthentication, Add.prototype.comment);
+    this.router.delete('/post/comment/:postId/:commentId', authMiddleware.checkAuthentication, Delete.prototype.comment);
 
     return this.router;
   }
