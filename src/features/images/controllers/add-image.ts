@@ -11,17 +11,26 @@ import { socketIOImageObject } from '@socket/image';
 import { imageQueue } from '@service/queues/image.queue';
 import { IBgUploadResponse } from '@image/interfaces/image.interface';
 import { Helpers } from '@global/helpers/helpers';
+import { config } from '@root/config';
+import Logger from 'bunyan';
 
+const log: Logger = config.createLogger('addImage');
 const userCache: UserCache = new UserCache();
 
 export class Add {
   @joiValidation(addImageSchema)
   public async profileImage(req: Request, res: Response): Promise<void> {
-    const result: UploadApiResponse = (await uploads(req.body.image, req.currentUser!.userId, true, true)) as UploadApiResponse;
+    const imageData = req.body.image;
+    log.info('Received image data (first 100 chars):', imageData.substring(0, 100));
+
+    const result: UploadApiResponse = (await uploads(imageData, req.currentUser!.userId, true, true)) as UploadApiResponse;
+    log.info('Cloudinary upload result:', result);
     if (!result?.public_id) {
-      throw new BadRequestError('File upload: Error occurred. Try again.');
+      log.error('Upload failed. Result:', result);
+      const errorMessage = result?.message || 'File upload: Error occurred. Try again.';
+      throw new BadRequestError(errorMessage);
     }
-    const url = `https://res.cloudinary.com/dyamr9ym3/image/upload/v${result.version}/${result.public_id}`;
+    const url = `https://res.cloudinary.com/dhcw9nswr/image/upload/v${result.version}/${result.public_id}`;
     const cachedUser: IUserDocument = (await userCache.updateSingleUserItemInCache(
       `${req.currentUser!.userId}`,
       'profilePicture',
@@ -69,14 +78,18 @@ export class Add {
     let version = '';
     let publicId = '';
     if (isDataURL) {
+      log.info('Background image upload - data URL detected (first 100 chars):', image.substring(0, 100));
       const result: UploadApiResponse = (await uploads(image)) as UploadApiResponse;
       if (!result.public_id) {
-        throw new BadRequestError(result.message);
+        const errorMessage = result?.message || 'Background image upload failed. Please try again.';
+        log.error('Background upload failed:', errorMessage);
+        throw new BadRequestError(errorMessage);
       } else {
         version = result.version.toString();
         publicId = result.public_id;
       }
     } else {
+      log.info('Background image upload - using existing URL:', image);
       const value = image.split('/');
       version = value[value.length - 2];
       publicId = value[value.length - 1];

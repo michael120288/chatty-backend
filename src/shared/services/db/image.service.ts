@@ -38,7 +38,7 @@ class ImageService {
       userId,
       bgImageVersion: type === 'background' ? imageVersion : '',
       bgImageId: type === 'background' ? imgId : '',
-      imageVersion: type === 'profile' ? imageVersion : '',
+      imgVersion: type === 'profile' ? imageVersion : '',
       imgId: type === 'profile' ? imgId : '',
     });
   }
