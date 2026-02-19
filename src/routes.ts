@@ -8,6 +8,7 @@ import { imageRoutes } from '@image/routes/imageRoutes';
 import { notificationRoutes } from '@notification/routes/notificationRoutes';
 import { postRoutes } from '@post/routes/postRoutes';
 import { reactionRoutes } from '@reaction/routes/reactionRoutes';
+import { flashcardRoutes } from '@flashcards/routes/flashcardRoutes';
 import { serverAdapter } from '@service/queues/base.queue';
 import { healthRoutes } from '@user/routes/healthRoutes';
 import { userRoutes } from '@user/routes/userRoutes';
@@ -32,6 +33,7 @@ export default (app: Application) => {
     app.use(BASE_PATH, authMiddleware.verifyUser, notificationRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, imageRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, chatRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.verifyUser, flashcardRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, userRoutes.routes());
 
   };
