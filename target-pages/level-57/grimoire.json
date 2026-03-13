@@ -1,0 +1,7 @@
+{
+  "title": "Ancient Grimoire",
+  "spells": ["Fireball", "Teleport", "Invisibility", "Thunder", "Heal"],
+  "spellCount": 5,
+  "author": "The Archmage",
+  "era": "Third Age of Testing"
+}

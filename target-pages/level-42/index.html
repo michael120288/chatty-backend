@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Whisper Chamber — Level 42</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0f0a; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #4ecca3; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .chamber { max-width: 500px; margin: 0 auto; }
+    .ritual-panel {
+      background: #0d1a14; border: 1px solid #1a4a2a; border-radius: 12px; padding: 28px;
+    }
+    .ritual-title { color: #4ecca3; font-size: 15px; font-weight: bold; margin-bottom: 16px; }
+    .spell-btns { display: flex; flex-direction: column; gap: 10px; }
+    .spell-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 18px; background: #0a1410; border: 1px solid #1a4a2a;
+      border-radius: 8px; color: #ccc; font-size: 14px; cursor: pointer;
+      transition: all 0.2s; text-align: left;
+    }
+    .spell-btn:hover { background: #142a1a; border-color: #4ecca3; color: #4ecca3; }
+    .spell-icon { font-size: 20px; }
+    .console-panel {
+      margin-top: 20px; background: #050f08; border: 1px solid #0a2a14;
+      border-radius: 10px; overflow: hidden;
+    }
+    .console-header {
+      background: #0a1a10; padding: 8px 14px; font-size: 12px; color: #555;
+      border-bottom: 1px solid #0a2a14; display: flex; align-items: center; gap: 6px;
+    }
+    .console-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ecca3; }
+    .console-body { padding: 12px 14px; font-family: monospace; font-size: 13px; min-height: 60px; }
+    .log-line { margin-bottom: 4px; color: #888; }
+    .log-line.spell { color: #4ecca3; }
+    .log-line.warn { color: #fbbf24; }
+    .log-line.error { color: #f87171; }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #0a1410; border: 1px solid #1a4a2a;
+      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #4ecca3; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Whisper Chamber</h1>
+  <p class="subtitle">The spirits speak through the console — listen carefully</p>
+
+  <div class="chamber">
+    <div class="ritual-panel">
+      <div class="ritual-title">🔮 Invoke the Spirits</div>
+      <div class="spell-btns">
+        <button class="spell-btn" id="btn-summon">
+          <span class="spell-icon">👻</span> Summon Spirit — logs a message
+        </button>
+        <button class="spell-btn" id="btn-warn">
+          <span class="spell-icon">⚠️</span> Warning Omen — logs a warning
+        </button>
+        <button class="spell-btn" id="btn-secret">
+          <span class="spell-icon">🗝️</span> Secret Chant — logs the pass phrase
+        </button>
+      </div>
+    </div>
+
+    <div class="console-panel">
+      <div class="console-header"><div class="console-dot"></div>Console Output</div>
+      <div class="console-body" id="console-output">
+        <div class="log-line">Awaiting invocation...</div>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      💡 Use <code>const messages = [];<br/>
+      page.on('console', msg => messages.push(msg.text()));</code>
+      before navigating. Click <code>#btn-secret</code> and check
+      that a message containing <code>'ARCANE_PASS: open-sesame'</code> was logged.
+    </div>
+  </div>
+
+  <script>
+    function addLog(text, type = '') {
+      const out = document.getElementById('console-output');
+      const line = document.createElement('div');
+      line.className = `log-line ${type}`;
+      line.textContent = `> ${text}`;
+      out.appendChild(line);
+    }
+
+    document.getElementById('btn-summon').addEventListener('click', () => {
+      console.log('Spirit summoned: Aether Wraith has entered the chamber');
+      addLog('Spirit summoned: Aether Wraith has entered the chamber', 'spell');
+    });
+
+    document.getElementById('btn-warn').addEventListener('click', () => {
+      console.warn('Warning: The veil between worlds grows thin!');
+      addLog('Warning: The veil between worlds grows thin!', 'warn');
+    });
+
+    document.getElementById('btn-secret').addEventListener('click', () => {
+      console.log('ARCANE_PASS: open-sesame');
+      addLog('ARCANE_PASS: open-sesame', 'spell');
+    });
+  </script>
+</body>
+</html>

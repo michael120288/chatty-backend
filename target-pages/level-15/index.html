@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Cookie Vault — Level 15</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0500; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #f97316; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .vault { max-width: 500px; margin: 0 auto; text-align: center; }
+    .vault-door {
+      background: linear-gradient(135deg, #1a0a00, #2a1500);
+      border: 3px solid #f97316; border-radius: 50%; width: 180px; height: 180px;
+      margin: 0 auto 32px; display: flex; align-items: center; justify-content: center;
+      font-size: 72px; transition: all 0.5s;
+    }
+    .vault-door.open { border-color: #4ecca3; background: linear-gradient(135deg, #0a2e14, #0d3a1a); }
+    .vault-panel {
+      background: #1a0a00; border: 1px solid #3a2000; border-radius: 12px; padding: 28px;
+    }
+    #vault-locked { color: #e94560; }
+    #vault-locked h3 { color: #e94560; margin: 0 0 12px; font-size: 20px; }
+    #vault-locked p { color: #888; font-size: 14px; line-height: 1.5; margin: 0; }
+    .required-cookie {
+      background: #2e0a0a; border: 1px solid #e94560; border-radius: 6px;
+      padding: 12px; margin-top: 16px; font-family: monospace; font-size: 13px;
+      text-align: left;
+    }
+    .cookie-key { color: #e94560; }
+    .cookie-val { color: #ffd700; }
+    #vault-content {
+      display: none; color: #4ecca3;
+    }
+    #vault-content h3 { color: #4ecca3; margin: 0 0 12px; font-size: 20px; }
+    #vault-content p { color: #aaa; font-size: 14px; margin: 0 0 16px; }
+    .treasure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+    .treasure-item {
+      background: #0a2e14; border: 1px solid #4ecca3; border-radius: 6px;
+      padding: 10px; text-align: center; font-size: 20px;
+    }
+    .treasure-label { font-size: 11px; color: #888; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>The Cookie Vault</h1>
+  <p class="subtitle">The vault opens only for those bearing the right cookie</p>
+
+  <div class="vault">
+    <div class="vault-door" id="vault-door">🔒</div>
+
+    <div class="vault-panel">
+      <div id="vault-locked">
+        <h3>Access Denied</h3>
+        <p>This vault requires a specific cookie to open. Add the correct cookie to your browser context and reload the page.</p>
+        <div class="required-cookie">
+          <span class="cookie-key">vault-access</span> = <span class="cookie-val">"granted"</span>
+        </div>
+      </div>
+
+      <div id="vault-content">
+        <h3>🏆 Vault Unlocked!</h3>
+        <p>The cookie was verified. Welcome to the inner sanctum.</p>
+        <div class="treasure-grid">
+          <div class="treasure-item">💎<div class="treasure-label">Diamond</div></div>
+          <div class="treasure-item">👑<div class="treasure-label">Crown</div></div>
+          <div class="treasure-item">⚗️<div class="treasure-label">Elixir</div></div>
+          <div class="treasure-item">🗝️<div class="treasure-label">Master Key</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+
+    const accessCookie = getCookie('vault-access');
+    if (accessCookie === 'granted') {
+      document.getElementById('vault-locked').style.display = 'none';
+      document.getElementById('vault-content').style.display = 'block';
+      document.getElementById('vault-door').textContent = '🔓';
+      document.getElementById('vault-door').classList.add('open');
+    }
+  </script>
+</body>
+</html>

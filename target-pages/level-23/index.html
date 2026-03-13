@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Rune Board — Level 23</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #100010; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #d946ef; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .board-area { max-width: 700px; margin: 0 auto; }
+    .board-layout { display: flex; gap: 24px; }
+    .rune-source { flex: 0 0 180px; }
+    .slots-grid { flex: 1; }
+    .source-title, .slots-title {
+      color: #d946ef; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2d1040;
+    }
+    .source-rune {
+      background: #1a0028; border: 2px solid #4d1a7a; border-radius: 8px;
+      padding: 12px; margin-bottom: 8px; cursor: grab; text-align: center;
+      transition: border-color 0.15s, transform 0.1s; user-select: none;
+    }
+    .source-rune:hover { border-color: #d946ef; }
+    .source-rune:active { cursor: grabbing; transform: scale(0.97); }
+    .source-rune .r-icon { font-size: 28px; }
+    .source-rune .r-name { font-size: 12px; color: #888; margin-top: 4px; }
+    .slot-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .rune-slot {
+      background: #1a0028; border: 2px dashed #4d1a7a; border-radius: 8px;
+      padding: 16px; text-align: center; min-height: 70px;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .rune-slot.highlight { border-color: #d946ef; background: #2d0040; border-style: solid; }
+    .rune-slot.filled { border-style: solid; border-color: #d946ef; }
+    .slot-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+    .slot-content { font-size: 28px; }
+    .slot-name { font-size: 11px; color: #d946ef; margin-top: 4px; }
+    #board-result {
+      margin-top: 20px; padding: 16px; border-radius: 8px;
+      background: #1a0028; border: 1px solid #4d1a7a; color: #555; font-size: 13px; text-align: center;
+    }
+    #board-result.complete { background: #0a2e14; border-color: #4ecca3; color: #4ecca3; }
+    #complete-word { font-size: 24px; font-family: monospace; letter-spacing: 4px; margin-top: 8px; color: #ffd700; }
+  </style>
+</head>
+<body>
+  <h1>The Rune Board</h1>
+  <p class="subtitle">Place the runes in the correct slots — combine drag, evaluate & screenshot</p>
+
+  <div class="board-area">
+    <div class="board-layout">
+      <div class="rune-source">
+        <div class="source-title">Source Runes</div>
+        <div class="source-rune" id="src-sun" draggable="true" data-rune="☀️" data-letter="P"><div class="r-icon">☀️</div><div class="r-name">Sun Rune (P)</div></div>
+        <div class="source-rune" id="src-moon" draggable="true" data-rune="🌙" data-letter="W"><div class="r-icon">🌙</div><div class="r-name">Moon Rune (W)</div></div>
+        <div class="source-rune" id="src-star" draggable="true" data-rune="⭐" data-letter="Y"><div class="r-icon">⭐</div><div class="r-name">Star Rune (Y)</div></div>
+      </div>
+
+      <div class="slots-grid">
+        <div class="slots-title">Rune Slots — Reveal the Word</div>
+        <div class="slot-row">
+          <div class="rune-slot" id="slot-1" data-accepts="src-sun"><div class="slot-label">Slot I</div><div class="slot-content" id="slot-1-content">?</div></div>
+          <div class="rune-slot" id="slot-2" data-accepts="src-moon"><div class="slot-label">Slot II</div><div class="slot-content" id="slot-2-content">?</div></div>
+          <div class="rune-slot" id="slot-3" data-accepts="src-star"><div class="slot-label">Slot III</div><div class="slot-content" id="slot-3-content">?</div></div>
+        </div>
+
+        <div id="board-result">Drop all 3 runes into their correct slots to reveal the word.</div>
+        <div id="complete-word"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slotState = { 'slot-1': false, 'slot-2': false, 'slot-3': false };
+
+    document.querySelectorAll('.source-rune').forEach(rune => {
+      rune.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('runeId', rune.id);
+        e.dataTransfer.setData('runeIcon', rune.dataset.rune);
+        e.dataTransfer.setData('runeLetter', rune.dataset.letter);
+      });
+    });
+
+    document.querySelectorAll('.rune-slot').forEach(slot => {
+      slot.addEventListener('dragover', e => e.preventDefault());
+      slot.addEventListener('dragenter', () => slot.classList.add('highlight'));
+      slot.addEventListener('dragleave', () => slot.classList.remove('highlight'));
+      slot.addEventListener('drop', e => {
+        e.preventDefault();
+        slot.classList.remove('highlight');
+        const runeId = e.dataTransfer.getData('runeId');
+        const runeIcon = e.dataTransfer.getData('runeIcon');
+        const letter = e.dataTransfer.getData('runeLetter');
+
+        if (slot.dataset.accepts === runeId) {
+          slot.classList.add('filled');
+          slot.querySelector('.slot-content').textContent = runeIcon;
+          const nameEl = document.createElement('div');
+          nameEl.className = 'slot-name';
+          nameEl.textContent = letter;
+          slot.appendChild(nameEl);
+          slotState[slot.id] = letter;
+          checkComplete();
+        }
+      });
+    });
+
+    function checkComplete() {
+      if (slotState['slot-1'] && slotState['slot-2'] && slotState['slot-3']) {
+        const word = slotState['slot-1'] + slotState['slot-2'] + slotState['slot-3'];
+        document.getElementById('board-result').className = 'complete';
+        document.getElementById('board-result').textContent = 'All runes placed! The word is revealed:';
+        document.getElementById('complete-word').textContent = word;
+        localStorage.setItem('rune-word', word);
+        localStorage.setItem('rune-complete', 'true');
+      }
+    }
+  </script>
+</body>
+</html>

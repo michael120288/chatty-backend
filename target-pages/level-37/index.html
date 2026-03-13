@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Champions Board — Level 37</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0a00; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #fbbf24; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .board { max-width: 480px; margin: 0 auto; }
+    .rank-entry {
+      display: flex; align-items: center; gap: 14px;
+      background: #120e00; border: 1px solid #2a1f00; border-radius: 8px;
+      padding: 14px 18px; margin-bottom: 8px; transition: border-color 0.2s;
+    }
+    .rank-entry:hover { border-color: #fbbf24; }
+    .rank-num { font-size: 20px; font-weight: bold; width: 32px; text-align: center; }
+    .rank-1 .rank-num { color: #fbbf24; }
+    .rank-2 .rank-num { color: #9ca3af; }
+    .rank-3 .rank-num { color: #b45309; }
+    .rank-4 .rank-num, .rank-5 .rank-num { color: #555; }
+    .champion-name { flex: 1; font-size: 15px; font-weight: bold; }
+    .champion-class { font-size: 12px; color: #888; }
+    .champion-score { font-size: 14px; color: #fbbf24; font-weight: bold; }
+    .hint-box {
+      max-width: 480px; margin: 20px auto 0; padding: 14px;
+      background: #100c00; border: 1px solid #2a1f00; border-radius: 8px;
+      font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #fbbf24; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Champions Board</h1>
+  <p class="subtitle">Use index-based locators to pick exact entries from the ranked list</p>
+
+  <div class="board">
+    <div class="rank-entry rank-1" data-rank="1">
+      <span class="rank-num">1</span>
+      <div class="champion-info">
+        <div class="champion-name">Varek Shadowcall</div>
+        <div class="champion-class">Shadow Mage</div>
+      </div>
+      <span class="champion-score">9,820 pts</span>
+    </div>
+    <div class="rank-entry rank-2" data-rank="2">
+      <span class="rank-num">2</span>
+      <div class="champion-info">
+        <div class="champion-name">Lyria Stormweave</div>
+        <div class="champion-class">Fire Mage</div>
+      </div>
+      <span class="champion-score">8,540 pts</span>
+    </div>
+    <div class="rank-entry rank-3" data-rank="3">
+      <span class="rank-num">3</span>
+      <div class="champion-info">
+        <div class="champion-name">Brom Ironshield</div>
+        <div class="champion-class">Warrior</div>
+      </div>
+      <span class="champion-score">7,210 pts</span>
+    </div>
+    <div class="rank-entry rank-4" data-rank="4">
+      <span class="rank-num">4</span>
+      <div class="champion-info">
+        <div class="champion-name">Senna Quickarrow</div>
+        <div class="champion-class">Ranger</div>
+      </div>
+      <span class="champion-score">5,980 pts</span>
+    </div>
+    <div class="rank-entry rank-5" data-rank="5">
+      <span class="rank-num">5</span>
+      <div class="champion-info">
+        <div class="champion-name">Celith Dawnblade</div>
+        <div class="champion-class">Paladin</div>
+      </div>
+      <span class="champion-score">3,120 pts</span>
+    </div>
+  </div>
+
+  <div class="hint-box" style="max-width:480px;margin:20px auto 0">
+    💡 Use <code>.locator('.rank-entry').first()</code> for rank 1,
+    <code>.last()</code> for rank 5, and <code>.nth(2)</code> for rank 3 (0-indexed).
+    Read the <code>.champion-name</code> inside each to verify the correct champion.
+  </div>
+</body>
+</html>

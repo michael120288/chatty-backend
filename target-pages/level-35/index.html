@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Mana Wellspring — Level 35</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #08091a; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #818cf8; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .wellspring { max-width: 480px; margin: 0 auto; text-align: center; }
+    .well-container {
+      background: #0d0e20; border: 1px solid #1e2060; border-radius: 12px;
+      padding: 30px; margin-bottom: 20px;
+    }
+    .well-icon { font-size: 64px; margin-bottom: 16px; }
+    .well-title { font-size: 18px; color: #818cf8; margin-bottom: 20px; }
+    .mana-track { margin-bottom: 20px; }
+    .mana-track-label { font-size: 12px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .mana-bar-bg { height: 20px; background: #1a1a30; border-radius: 10px; border: 1px solid #2a2a50; overflow: hidden; }
+    .mana-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4f46e5, #818cf8); border-radius: 10px; transition: width 0.15s ease; }
+    #mana-bar { font-size: 0; } /* for screen readers, data-level is the value */
+    #mana-text { margin-top: 10px; font-size: 28px; font-weight: bold; color: #818cf8; }
+    .mana-desc { font-size: 14px; color: #666; margin-bottom: 20px; }
+    #ready-msg {
+      display: none; padding: 16px; background: #0a0e2e;
+      border: 2px solid #818cf8; border-radius: 10px;
+      color: #818cf8; font-size: 16px; font-weight: bold;
+    }
+    #ready-msg.visible { display: block; }
+    .ritual-stages { text-align: left; margin-top: 16px; }
+    .stage { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 13px; color: #555; }
+    .stage.reached { color: #818cf8; }
+    .stage-dot { width: 8px; height: 8px; border-radius: 50%; background: #2a2a50; }
+    .stage.reached .stage-dot { background: #818cf8; }
+    .hint-box {
+      padding: 14px; background: #0d0e20; border: 1px solid #1e2060;
+      border-radius: 8px; font-size: 13px; color: #888; line-height: 1.6;
+      text-align: left;
+    }
+    code { color: #818cf8; font-family: monospace; background: #050614; padding: 1px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>The Mana Wellspring</h1>
+  <p class="subtitle">The wellspring fills at its own pace — poll patiently until it overflows</p>
+
+  <div class="wellspring">
+    <div class="well-container">
+      <div class="well-icon">🌀</div>
+      <div class="well-title">Mana Accumulation Ritual</div>
+      <p class="mana-desc">The wellspring fills with arcane energy over time. Wait patiently for it to reach full power.</p>
+
+      <div class="mana-track">
+        <div class="mana-track-label">Mana Level</div>
+        <div class="mana-bar-bg">
+          <div class="mana-fill" id="mana-fill"></div>
+        </div>
+        <div
+          id="mana-bar"
+          data-level="0"
+          aria-valuenow="0"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          role="meter"
+        ></div>
+        <div id="mana-text">0%</div>
+      </div>
+
+      <div class="ritual-stages" id="stages">
+        <div class="stage" id="stage-25">
+          <div class="stage-dot"></div> 25% — Awakening
+        </div>
+        <div class="stage" id="stage-50">
+          <div class="stage-dot"></div> 50% — Rising
+        </div>
+        <div class="stage" id="stage-75">
+          <div class="stage-dot"></div> 75% — Surging
+        </div>
+        <div class="stage" id="stage-100">
+          <div class="stage-dot"></div> 100% — Overflow!
+        </div>
+      </div>
+
+      <div id="ready-msg">
+        ✨ THE WELLSPRING OVERFLOWS — POWER RESTORED!
+      </div>
+    </div>
+
+    <div class="hint-box">
+      💡 Use <code>const &#123; expect &#125; = require('@playwright/test')</code> and then<br/>
+      <code>await expect.poll(async () => &#123;<br/>
+      &nbsp;&nbsp;const v = await page.locator('#mana-bar').getAttribute('data-level');<br/>
+      &nbsp;&nbsp;return parseInt(v);<br/>
+      &#125;, &#123; timeout: 15000 &#125;).toBeGreaterThanOrEqual(100);</code>
+    </div>
+  </div>
+
+  <script>
+    let mana = 0;
+    const fill = document.getElementById('mana-fill');
+    const bar = document.getElementById('mana-bar');
+    const text = document.getElementById('mana-text');
+    const stages = [25, 50, 75, 100];
+
+    const interval = setInterval(() => {
+      mana = Math.min(mana + 10, 100);
+      fill.style.width = mana + '%';
+      bar.setAttribute('data-level', mana);
+      bar.setAttribute('aria-valuenow', mana);
+      text.textContent = mana + '%';
+
+      stages.forEach(s => {
+        if (mana >= s) {
+          document.getElementById('stage-' + s).classList.add('reached');
+        }
+      });
+
+      if (mana >= 100) {
+        clearInterval(interval);
+        document.getElementById('ready-msg').classList.add('visible');
+      }
+    }, 200);
+  </script>
+</body>
+</html>

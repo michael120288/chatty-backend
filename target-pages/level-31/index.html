@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Shadow Realm — Level 31</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a1a2e; margin: 0; padding: 40px; transition: all 0.3s; }
+    body.dark { background: #0a0a1a; color: #eee; }
+
+    h1 { text-align: center; color: #3b82f6; }
+    body.dark h1 { color: #818cf8; }
+
+    .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+    body.dark .subtitle { color: #888; }
+
+    .realm-card { max-width: 480px; margin: 0 auto; background: #fff; border: 2px solid #3b82f6; border-radius: 12px; padding: 30px; text-align: center; }
+    body.dark .realm-card { background: #0d0d20; border-color: #818cf8; }
+
+    .realm-icon { font-size: 64px; margin-bottom: 16px; }
+    #realm-indicator { font-size: 24px; font-weight: bold; color: #3b82f6; margin-bottom: 12px; }
+    body.dark #realm-indicator { color: #818cf8; }
+
+    .realm-desc { font-size: 14px; color: #666; line-height: 1.6; }
+    body.dark .realm-desc { color: #aaa; }
+
+    #dark-secret {
+      display: none; margin-top: 16px; padding: 14px;
+      background: #1a0a2e; border: 1px solid #7c3aed; border-radius: 8px;
+      color: #c084fc; font-size: 14px; font-weight: bold;
+    }
+    body.dark #dark-secret { display: block; }
+
+    .hint-box {
+      max-width: 480px; margin: 20px auto 0; padding: 14px;
+      font-size: 13px; color: #666; line-height: 1.6;
+      background: #f8f4ff; border: 1px solid #ddd6fe; border-radius: 8px;
+    }
+    body.dark .hint-box { background: #0d0920; border-color: #2d1a4a; color: #888; }
+    code { color: #7c3aed; font-family: monospace; background: #f0ebff; padding: 1px 5px; border-radius: 3px; }
+    body.dark code { color: #c084fc; background: #0a0014; }
+  </style>
+</head>
+<body>
+  <h1>The Shadow Realm</h1>
+  <p class="subtitle">Some secrets are only visible in the darkness</p>
+
+  <div class="realm-card">
+    <div class="realm-icon" id="realm-icon">☀️</div>
+    <div id="realm-indicator">Light Realm</div>
+    <p class="realm-desc" id="realm-desc">
+      The world is bathed in sunlight. But legends speak of a Shadow Realm where
+      forbidden knowledge is kept — visible only to those who walk in darkness.
+    </p>
+    <div id="dark-secret">
+      🌑 The Dark Tome speaks: <em>"All tests shall pass in the shadow realm!"</em>
+    </div>
+  </div>
+
+  <div class="hint-box">
+    💡 Use <code>await page.emulateMedia({ colorScheme: 'dark' })</code>
+    BEFORE calling <code>page.goto()</code>. This makes the page think you prefer dark mode.
+    Then verify <code>#realm-indicator</code> shows "Shadow Realm".
+  </div>
+
+  <script>
+    function applyColorScheme() {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        document.body.classList.add('dark');
+        document.getElementById('realm-indicator').textContent = 'Shadow Realm';
+        document.getElementById('realm-icon').textContent = '🌑';
+        document.getElementById('realm-desc').textContent =
+          'You have entered the Shadow Realm. Hidden knowledge is now revealed to you.';
+      } else {
+        document.body.classList.remove('dark');
+        document.getElementById('realm-indicator').textContent = 'Light Realm';
+        document.getElementById('realm-icon').textContent = '☀️';
+      }
+    }
+
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener('change', applyColorScheme);
+    applyColorScheme();
+  </script>
+</body>
+</html>

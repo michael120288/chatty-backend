@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Trace Keeper — Level 58</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #f59e0b; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .observatory { max-width: 500px; margin: 0 auto; text-align: center; }
+    #record-btn { padding: 14px 32px; background: #1a0a00; border: 2px solid #f59e0b; border-radius: 10px; color: #f59e0b; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-bottom: 24px; }
+    #record-btn:hover { background: #2a1000; }
+    #trace-log { background: #050510; border: 1px solid #2a1800; border-radius: 8px; padding: 16px; min-height: 80px; font-family: monospace; font-size: 12px; color: #888; text-align: left; white-space: pre-wrap; }
+    .hint-box { margin-top: 24px; padding: 14px; background: #0a0a18; border: 1px solid #2a1800; border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6; }
+    code { color: #f59e0b; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Arcane Observatory</h1>
+  <p class="subtitle">Record every action — traces capture the full story</p>
+
+  <div class="observatory">
+    <button id="record-btn">🔮 Cast Observation Spell</button>
+    <div id="trace-log">Waiting for observation spell...</div>
+
+    <div class="hint-box">
+      💡 Start tracing <strong>before</strong> page actions:<br/>
+      <code>await context.tracing.start(&#123; screenshots: true, snapshots: true &#125;);</code><br/><br/>
+      Navigate here, click the button, then stop:<br/>
+      <code>await context.tracing.stop(&#123; path: '/tmp/trace-58.zip' &#125;);</code><br/><br/>
+      If no error was thrown, log <code>LEVEL_PASSED</code>.
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('record-btn').addEventListener('click', () => {
+      const log = document.getElementById('trace-log');
+      log.textContent = '[' + new Date().toISOString() + '] Spell cast! Event recorded.\n';
+      log.textContent += '[' + new Date().toISOString() + '] Observation complete.';
+    });
+  </script>
+</body>
+</html>

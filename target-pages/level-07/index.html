@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gallery of Chronicles — Level 7</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a1628; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #4da6ff; text-align: center; font-size: 2.2em; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .gallery { max-width: 800px; margin: 0 auto; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .gallery-card {
+      background: #0d2040; border: 1px solid #1a4070; border-radius: 8px;
+      padding: 20px; text-align: center; transition: transform 0.2s;
+    }
+    .gallery-card:hover { transform: translateY(-4px); }
+    .card-icon { font-size: 48px; margin-bottom: 8px; }
+    .card-title { font-size: 14px; color: #4da6ff; font-weight: bold; }
+    .hero-banner {
+      background: linear-gradient(135deg, #0d2040, #1a4070);
+      border: 2px solid #4da6ff; border-radius: 12px;
+      padding: 32px; text-align: center; margin-bottom: 24px;
+    }
+    .hero-title { font-size: 28px; color: #4da6ff; font-weight: bold; }
+    .hero-sub { color: #888; margin-top: 8px; }
+    .progress-section { margin-top: 24px; }
+    .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
+    .progress-bar-bg { background: #0d2040; border-radius: 4px; height: 12px; margin-bottom: 12px; }
+    .progress-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #4da6ff, #7b61ff); }
+  </style>
+</head>
+<body>
+  <h1>Gallery of Chronicles</h1>
+  <p class="subtitle">Capture visual truth with screenshots</p>
+
+  <div class="gallery">
+    <div class="hero-banner">
+      <div class="hero-title">The Chronicler's Archive</div>
+      <div class="hero-sub">Every pixel tells a story worth preserving</div>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-card"><div class="card-icon">🏰</div><div class="card-title">Castle Keep</div></div>
+      <div class="gallery-card"><div class="card-icon">🌋</div><div class="card-title">Volcano Peak</div></div>
+      <div class="gallery-card"><div class="card-icon">🌊</div><div class="card-title">Abyssal Deep</div></div>
+      <div class="gallery-card"><div class="card-icon">🌲</div><div class="card-title">Ancient Forest</div></div>
+      <div class="gallery-card"><div class="card-icon">⚡</div><div class="card-title">Storm Realm</div></div>
+      <div class="gallery-card"><div class="card-icon">🌙</div><div class="card-title">Shadow Moon</div></div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-label"><span>Chronicles Captured</span><span>73%</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 73%"></div></div>
+      <div class="progress-label"><span>Lore Documented</span><span>91%</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 91%"></div></div>
+      <div class="progress-label"><span>Mysteries Solved</span><span>45%</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 45%; background: linear-gradient(90deg, #e94560, #ff6b9d)"></div></div>
+    </div>
+  </div>
+</body>
+</html>

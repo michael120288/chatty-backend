@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Scroll Repository — Level 16</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0f1a; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #38bdf8; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .repository { max-width: 500px; margin: 0 auto; }
+    .upload-zone {
+      background: #0d1a2e; border: 2px dashed #1a4070; border-radius: 12px;
+      padding: 48px 24px; text-align: center; margin-bottom: 20px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .upload-zone.active { border-color: #38bdf8; background: #0a2040; }
+    .upload-icon { font-size: 64px; margin-bottom: 16px; }
+    .upload-title { color: #38bdf8; font-size: 18px; font-weight: bold; margin-bottom: 8px; }
+    .upload-sub { color: #555; font-size: 14px; margin-bottom: 20px; }
+    #scroll-input { display: none; }
+    .upload-btn {
+      background: #38bdf8; color: #000; border: none; padding: 12px 24px;
+      border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer;
+    }
+    .upload-btn:hover { background: #0ea5e9; }
+    #upload-progress { display: none; margin-top: 16px; }
+    .progress-bar-bg { background: #0a1a2e; border-radius: 4px; height: 8px; }
+    .progress-bar-fill {
+      height: 100%; background: #38bdf8; border-radius: 4px;
+      width: 0%; transition: width 0.5s;
+    }
+    #upload-success {
+      display: none; background: #0a2e14; border: 1px solid #4ecca3;
+      border-radius: 10px; padding: 20px; text-align: center;
+    }
+    #upload-success .success-icon { font-size: 48px; margin-bottom: 12px; }
+    #upload-success h3 { color: #4ecca3; margin: 0 0 8px; }
+    #scroll-name { color: #ffd700; font-family: monospace; font-size: 16px; }
+    #scroll-size { color: #888; font-size: 13px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>The Scroll Repository</h1>
+  <p class="subtitle">Upload your ancient scroll to the arcane archive</p>
+
+  <div class="repository">
+    <div class="upload-zone" id="upload-zone">
+      <div class="upload-icon">📜</div>
+      <div class="upload-title">Submit Your Scroll</div>
+      <div class="upload-sub">Any file type accepted — all scrolls are welcome</div>
+      <input type="file" id="scroll-input" accept="*/*" />
+      <button class="upload-btn" onclick="document.getElementById('scroll-input').click()">
+        Choose Scroll
+      </button>
+    </div>
+
+    <div id="upload-progress">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="upload-success">
+      <div class="success-icon">✅</div>
+      <h3>Scroll Archived!</h3>
+      <div id="scroll-name"></div>
+      <div id="scroll-size"></div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('scroll-input');
+    const zone = document.getElementById('upload-zone');
+    const progress = document.getElementById('upload-progress');
+    const fill = document.getElementById('progress-fill');
+    const success = document.getElementById('upload-success');
+
+    input.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      zone.style.display = 'none';
+      progress.style.display = 'block';
+
+      let width = 0;
+      const interval = setInterval(() => {
+        width = Math.min(width + 20, 100);
+        fill.style.width = width + '%';
+        if (width >= 100) {
+          clearInterval(interval);
+          progress.style.display = 'none';
+          success.style.display = 'block';
+          document.getElementById('scroll-name').textContent = file.name;
+          document.getElementById('scroll-size').textContent =
+            (file.size / 1024).toFixed(1) + ' KB · ' + file.type;
+        }
+      }, 100);
+    });
+  </script>
+</body>
+</html>

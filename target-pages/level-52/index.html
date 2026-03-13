@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Element Oracle — Level 52</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #fb923c; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .archive { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    .crystal-card { background: #0d0d20; border: 1px solid #3a1a00; border-radius: 12px; padding: 24px; }
+    .crystal-title { font-size: 13px; color: #888; margin-bottom: 12px; }
+    #power-crystal { font-size: 42px; text-align: center; padding: 20px; border: 2px solid #fb923c; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin: 0 auto; cursor: default; }
+    .power-label { text-align: center; margin-top: 12px; font-size: 13px; color: #fb923c; font-family: monospace; }
+    #spell-name { font-size: 20px; font-weight: bold; color: #fbbf24; text-align: center; padding: 16px; border: 1px solid #3a2800; border-radius: 8px; }
+    .rune-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .rune { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: bold; font-family: monospace; }
+    .hint-box { margin-top: 10px; padding: 14px; background: #0a0a18; border: 1px solid #3a1a00; border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6; }
+    code { color: #fb923c; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Crystal Archive</h1>
+  <p class="subtitle">Peer into each element's hidden data with locator.evaluate()</p>
+
+  <div class="archive">
+    <div class="crystal-card">
+      <div class="crystal-title">Power Crystal — data-power attribute stores its energy level</div>
+      <div id="power-crystal" data-power="9000">💎</div>
+      <div class="power-label">data-power: ???</div>
+    </div>
+
+    <div class="crystal-card">
+      <div class="crystal-title">Spell Inscription — read its text content via evaluate()</div>
+      <div id="spell-name">Ancient Fireball</div>
+    </div>
+
+    <div class="crystal-card">
+      <div class="crystal-title">Rune Collection — read data-element from each</div>
+      <div class="rune-row">
+        <div class="rune" data-element="fire" style="background:#2e0a00;color:#fb923c;border:1px solid #fb923c">🔥 Fire</div>
+        <div class="rune" data-element="ice" style="background:#001a2e;color:#7dd3fc;border:1px solid #7dd3fc">❄️ Ice</div>
+        <div class="rune" data-element="thunder" style="background:#1a1a00;color:#ffd700;border:1px solid #ffd700">⚡ Thunder</div>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      💡 Use <code>locator.evaluate(el => el.dataset.power)</code> on <code>#power-crystal</code>.<br/>
+      Use <code>locator.evaluate(el => el.textContent.trim())</code> on <code>#spell-name</code>.<br/>
+      If power is <code>'9000'</code> and name includes <code>'Ancient'</code>, log <code>LEVEL_PASSED</code>.
+    </div>
+  </div>
+</body>
+</html>

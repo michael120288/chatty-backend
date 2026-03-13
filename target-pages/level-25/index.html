@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Archmage's Gauntlet — Level 25</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #05000a; color: #eee; margin: 0; }
+    .app-shell { display: flex; height: 100vh; flex-direction: column; }
+    /* Top bar */
+    .app-bar {
+      background: #0d001a; border-bottom: 1px solid #2d0050; padding: 0 24px;
+      height: 52px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .app-brand { color: #a855f7; font-size: 16px; font-weight: bold; }
+    #user-info { font-size: 13px; color: #555; }
+    #user-info.logged-in { color: #a855f7; }
+    /* Body */
+    .app-body { display: flex; flex: 1; overflow: hidden; }
+    /* Sidebar */
+    .sidebar {
+      width: 200px; border-right: 1px solid #1a0030; background: #080010;
+      display: flex; flex-direction: column; padding: 16px 12px;
+    }
+    .sidebar-title { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .sidebar-item {
+      padding: 9px 12px; border-radius: 6px; font-size: 13px; color: #888;
+      cursor: pointer; margin-bottom: 4px; transition: background 0.15s;
+    }
+    .sidebar-item:hover { background: #1a0030; color: #eee; }
+    .sidebar-item.active { background: #1a0030; color: #a855f7; }
+    /* Main content */
+    .main { flex: 1; padding: 24px; overflow-y: auto; }
+    /* Login form */
+    #login-section { max-width: 360px; margin: 0 auto; padding-top: 20px; }
+    #login-section h2 { color: #a855f7; margin: 0 0 20px; }
+    .form-field { margin-bottom: 14px; }
+    .form-field label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; }
+    .form-field input {
+      width: 100%; padding: 10px 12px; background: #0d001a; border: 1px solid #2d0050;
+      border-radius: 6px; color: #eee; font-size: 14px; box-sizing: border-box;
+    }
+    .form-field input:focus { outline: none; border-color: #a855f7; }
+    #login-btn {
+      width: 100%; background: #a855f7; color: white; border: none; padding: 12px;
+      font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 4px;
+    }
+    #login-btn:hover { background: #9333ea; }
+    #login-error { color: #e94560; font-size: 13px; margin-top: 8px; display: none; }
+    /* Dashboard */
+    #dashboard-section { display: none; }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-widget {
+      background: #0d001a; border: 1px solid #2d0050; border-radius: 10px; padding: 18px;
+    }
+    .widget-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .widget-value { font-size: 28px; font-weight: bold; color: #a855f7; }
+    /* Settings panel */
+    #settings-panel {
+      display: none; position: fixed; top: 0; right: 0; width: 320px; height: 100vh;
+      background: #0d001a; border-left: 1px solid #2d0050; padding: 24px;
+      z-index: 200; box-shadow: -4px 0 20px #0005;
+    }
+    #settings-panel h3 { color: #a855f7; margin: 0 0 20px; }
+    .setting-row { margin-bottom: 14px; }
+    .setting-row label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; }
+    .setting-row input[type="text"] {
+      width: 100%; padding: 8px 12px; background: #08000f; border: 1px solid #2d0050;
+      border-radius: 6px; color: #eee; font-size: 13px; box-sizing: border-box;
+    }
+    .close-settings {
+      background: #1a0030; color: #aaa; border: none; padding: 8px 14px;
+      border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: 8px;
+    }
+    #settings-btn {
+      background: #1a0030; color: #a855f7; border: 1px solid #2d0050; padding: 8px 14px;
+      border-radius: 6px; cursor: pointer; font-size: 13px;
+    }
+    /* API section */
+    #api-section { margin-top: 24px; }
+    .api-panel { background: #0d001a; border: 1px solid #2d0050; border-radius: 10px; padding: 18px; }
+    .api-label { font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    #api-data-list { min-height: 40px; }
+    .api-entry { padding: 8px 12px; background: #08000f; border-radius: 6px; margin-bottom: 6px; font-size: 13px; color: #c4b5fd; }
+    #fetch-api-btn {
+      background: #a855f7; color: white; border: none; padding: 8px 16px;
+      border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-bar">
+      <div class="app-brand">🧙 Archmage HQ</div>
+      <div id="user-info">Not logged in</div>
+    </div>
+
+    <div class="app-body">
+      <div class="sidebar">
+        <div class="sidebar-title">Navigation</div>
+        <div class="sidebar-item active" id="nav-dashboard">📊 Dashboard</div>
+        <div class="sidebar-item" id="nav-settings" onclick="openSettings()">⚙️ Settings</div>
+        <div class="sidebar-item" id="nav-api">🔌 API Monitor</div>
+      </div>
+
+      <div class="main">
+        <!-- LOGIN FORM -->
+        <div id="login-section">
+          <h2>Archmage Login</h2>
+          <div class="form-field">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="archmage" autocomplete="off" />
+          </div>
+          <div class="form-field">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••" />
+          </div>
+          <button id="login-btn" onclick="doLogin()">Enter the Sanctum</button>
+          <div id="login-error">Invalid credentials. Try archmage / shadowrealm</div>
+        </div>
+
+        <!-- DASHBOARD (shown after login) -->
+        <div id="dashboard-section">
+          <div class="dashboard-grid">
+            <div class="stat-widget"><div class="widget-label">Spells Cast</div><div class="widget-value" id="spells-cast">0</div></div>
+            <div class="stat-widget"><div class="widget-label">Mana Pool</div><div class="widget-value" id="mana-pool">0</div></div>
+            <div class="stat-widget"><div class="widget-label">Rank</div><div class="widget-value" id="rank-widget">—</div></div>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-bottom:16px;">
+            <button id="settings-btn" onclick="openSettings()">⚙️ Open Settings</button>
+          </div>
+
+          <div id="api-section">
+            <div class="api-panel">
+              <div class="api-label">🔌 Live Arcane Feed — /api/arcane-feed</div>
+              <div id="api-data-list"><div style="color:#555;font-size:13px">No data yet</div></div>
+              <button id="fetch-api-btn" onclick="fetchArcaneFeed()">Fetch Feed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div id="settings-panel">
+    <h3>⚙️ Settings</h3>
+    <div class="setting-row">
+      <label>Display Name</label>
+      <input type="text" id="display-name" value="Grand Archmage" />
+    </div>
+    <div class="setting-row">
+      <label>Theme</label>
+      <input type="text" id="theme-setting" value="dark-purple" />
+    </div>
+    <div class="setting-row">
+      <label>Mana Multiplier</label>
+      <input type="text" id="mana-multiplier" value="1.0" />
+    </div>
+    <button class="close-settings" onclick="closeSettings()">✕ Close</button>
+  </div>
+
+  <script>
+    function doLogin() {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if (u === 'archmage' && p === 'shadowrealm') {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('dashboard-section').style.display = 'block';
+        document.getElementById('user-info').textContent = '🧙 ' + u;
+        document.getElementById('user-info').className = 'logged-in';
+        document.getElementById('spells-cast').textContent = '1,337';
+        document.getElementById('mana-pool').textContent = '9,999';
+        document.getElementById('rank-widget').textContent = 'S+';
+        document.getElementById('login-error').style.display = 'none';
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+    }
+
+    function openSettings() {
+      document.getElementById('settings-panel').style.display = 'block';
+    }
+    function closeSettings() {
+      document.getElementById('settings-panel').style.display = 'none';
+    }
+
+    async function fetchArcaneFeed() {
+      const list = document.getElementById('api-data-list');
+      list.innerHTML = '<div style="color:#555;font-size:13px">Loading...</div>';
+      try {
+        const res = await fetch('/api/arcane-feed');
+        const data = await res.json();
+        list.innerHTML = '';
+        data.spells.forEach(s => {
+          list.innerHTML += `<div class="api-entry">✨ ${s.name} — Power: ${s.power}</div>`;
+        });
+      } catch {
+        list.innerHTML = '<div style="color:#e94560;font-size:13px">Failed to fetch feed</div>';
+      }
+    }
+  </script>
+</body>
+</html>

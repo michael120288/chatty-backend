@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Shape Shifter — Level 14</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a1a; color: #eee; margin: 0; padding: 0; }
+    /* Desktop nav */
+    .desktop-nav {
+      background: #12121f; border-bottom: 1px solid #1e1e3a;
+      padding: 0 40px; height: 56px; display: flex; align-items: center; gap: 24px;
+    }
+    .nav-brand { font-size: 18px; font-weight: bold; color: #7b61ff; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: #aaa; text-decoration: none; font-size: 14px; }
+    /* Mobile nav - hidden on desktop */
+    .mobile-nav {
+      display: none; background: #12121f; border-bottom: 1px solid #1e1e3a;
+      padding: 12px 20px; align-items: center; justify-content: space-between;
+    }
+    #mobile-menu {
+      background: none; border: 1px solid #3a3a5e; color: #aaa; padding: 8px 12px;
+      border-radius: 6px; cursor: pointer; font-size: 18px;
+    }
+    /* Mobile treasure - hidden on desktop */
+    #mobile-treasure { display: none; }
+
+    @media (max-width: 480px) {
+      .desktop-nav { display: none; }
+      .mobile-nav { display: flex; }
+      #mobile-treasure {
+        display: block; margin: 20px; padding: 24px;
+        background: #1a0a2e; border: 2px solid #7b61ff; border-radius: 12px;
+        text-align: center;
+      }
+      #mobile-treasure .treasure-icon { font-size: 48px; margin-bottom: 12px; }
+      #mobile-treasure .treasure-title { color: #7b61ff; font-size: 18px; font-weight: bold; }
+      #mobile-treasure .treasure-text { color: #aaa; font-size: 14px; margin-top: 8px; }
+      .desktop-content { padding: 20px !important; }
+    }
+
+    .desktop-content { padding: 40px; max-width: 700px; margin: 0 auto; }
+    .content-card {
+      background: #12121f; border: 1px solid #1e1e3a; border-radius: 12px; padding: 28px; margin-bottom: 20px;
+    }
+    .content-card h2 { color: #7b61ff; margin: 0 0 12px; }
+    .content-card p { color: #888; line-height: 1.6; margin: 0; }
+    .viewport-display {
+      background: #0a0a14; border: 1px solid #1e1e3a; border-radius: 6px;
+      padding: 10px 14px; font-family: monospace; font-size: 13px; color: #4da6ff;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Desktop navigation -->
+  <nav class="desktop-nav">
+    <span class="nav-brand">ShapeShifter</span>
+    <div class="nav-links">
+      <a href="#">Quests</a>
+      <a href="#">Spells</a>
+      <a href="#">Inventory</a>
+      <a href="#">Settings</a>
+    </div>
+  </nav>
+
+  <!-- Mobile navigation -->
+  <nav class="mobile-nav">
+    <span class="nav-brand">ShapeShifter</span>
+    <button id="mobile-menu">☰</button>
+  </nav>
+
+  <!-- Mobile-only treasure (hidden on desktop) -->
+  <div id="mobile-treasure">
+    <div class="treasure-icon">📱</div>
+    <div class="treasure-title">Mobile Treasure Found!</div>
+    <div class="treasure-text">You have shifted to mobile form and discovered the hidden chest.</div>
+  </div>
+
+  <div class="desktop-content">
+    <div class="content-card">
+      <h2>The Realm of Responsive Design</h2>
+      <p>This realm looks different depending on the shape you take. Resize your viewport to mobile dimensions (≤ 480px wide) to reveal a hidden treasure exclusive to mobile explorers.</p>
+      <div class="viewport-display" id="viewport-info">Current viewport: loading...</div>
+    </div>
+    <div class="content-card">
+      <h2>Hint</h2>
+      <p>Use <code style="color:#4ecca3;">page.setViewportSize({ width: 375, height: 667 })</code> to transform into mobile form, then check if <code style="color:#4ecca3;">#mobile-treasure</code> is visible.</p>
+    </div>
+  </div>
+
+  <script>
+    function updateViewport() {
+      document.getElementById('viewport-info').textContent =
+        'Current viewport: ' + window.innerWidth + 'px × ' + window.innerHeight + 'px';
+    }
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+  </script>
+</body>
+</html>

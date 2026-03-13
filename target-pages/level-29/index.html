@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Cursed Vault — Level 29</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #f87171; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .vault { max-width: 520px; margin: 0 auto; }
+    .resource-list { background: #110a0a; border: 1px solid #3f1515; border-radius: 10px; overflow: hidden; }
+    .resource-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 18px; border-bottom: 1px solid #1f0a0a;
+    }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-icon { font-size: 22px; }
+    .resource-name { flex: 1; font-size: 14px; color: #ccc; }
+    .resource-status { font-size: 12px; font-weight: bold; padding: 3px 10px; border-radius: 10px; }
+    .status-loading { background: #2a2a00; color: #fbbf24; border: 1px solid #d97706; }
+    .status-blocked { background: #1a0a0a; color: #f87171; border: 1px solid #f87171; }
+    .status-loaded { background: #0a1a0a; color: #4ecca3; border: 1px solid #4ecca3; }
+    .vault-state {
+      margin-top: 20px; padding: 18px; border-radius: 10px; text-align: center;
+      background: #110a0a; border: 2px solid #3f1515; font-size: 15px; font-weight: bold; color: #f87171;
+    }
+    .vault-state.protected {
+      background: #0a1a0a; border-color: #4ecca3; color: #4ecca3;
+    }
+    #protection-msg { display: none; }
+    #cursed-msg { display: block; }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #100808; border: 1px solid #3f1515;
+      border-radius: 8px; font-size: 13px; color: #888; line-height: 1.6;
+    }
+    code { color: #f87171; font-family: monospace; background: #0a0000; padding: 1px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>The Cursed Vault</h1>
+  <p class="subtitle">The vault loads cursed scrolls — block them before they corrupt the realm</p>
+
+  <div class="vault">
+    <div class="resource-list">
+      <div class="resource-item" id="item-blessed">
+        <span class="resource-icon">✨</span>
+        <span class="resource-name">blessed-runes.json</span>
+        <span class="resource-status status-loading" id="status-blessed">Loading...</span>
+      </div>
+      <div class="resource-item" id="item-cursed">
+        <span class="resource-icon">💀</span>
+        <span class="resource-name">cursed-tome.json</span>
+        <span class="resource-status status-loading" id="status-cursed">Loading...</span>
+      </div>
+      <div class="resource-item" id="item-shadow">
+        <span class="resource-icon">🌑</span>
+        <span class="resource-name">shadow-manifest.json</span>
+        <span class="resource-status status-loading" id="status-shadow">Loading...</span>
+      </div>
+    </div>
+
+    <div class="vault-state" id="vault-state">
+      <div id="cursed-msg">⚠️ Vault is contaminated — cursed resources loaded</div>
+      <div id="protection-msg">🛡️ Vault is protected — cursed resources blocked!</div>
+    </div>
+
+    <div class="hint-box">
+      💡 Use <code>page.route('**/cursed-tome.json', route => route.abort())</code>
+      and <code>page.route('**/shadow-manifest.json', route => route.abort())</code>
+      before navigating. When blocked, the vault enters protection mode!
+    </div>
+  </div>
+
+  <script>
+    async function loadResources() {
+      let cursedBlocked = false;
+      let shadowBlocked = false;
+
+      // Load blessed resource (always succeeds)
+      try {
+        await fetch('/pages/level-29/blessed-runes.json');
+        document.getElementById('status-blessed').textContent = 'Loaded';
+        document.getElementById('status-blessed').className = 'resource-status status-loaded';
+      } catch (e) {
+        document.getElementById('status-blessed').textContent = 'Failed';
+      }
+
+      // Try to load cursed resource
+      try {
+        await fetch('/pages/level-29/cursed-tome.json');
+        document.getElementById('status-cursed').textContent = 'Loaded';
+        document.getElementById('status-cursed').className = 'resource-status status-loaded';
+      } catch (e) {
+        document.getElementById('status-cursed').textContent = 'BLOCKED';
+        document.getElementById('status-cursed').className = 'resource-status status-blocked';
+        cursedBlocked = true;
+      }
+
+      // Try to load shadow resource
+      try {
+        await fetch('/pages/level-29/shadow-manifest.json');
+        document.getElementById('status-shadow').textContent = 'Loaded';
+        document.getElementById('status-shadow').className = 'resource-status status-loaded';
+      } catch (e) {
+        document.getElementById('status-shadow').textContent = 'BLOCKED';
+        document.getElementById('status-shadow').className = 'resource-status status-blocked';
+        shadowBlocked = true;
+      }
+
+      // Update vault state
+      if (cursedBlocked && shadowBlocked) {
+        const state = document.getElementById('vault-state');
+        state.classList.add('protected');
+        document.getElementById('cursed-msg').style.display = 'none';
+        document.getElementById('protection-msg').style.display = 'block';
+      }
+    }
+
+    loadResources();
+  </script>
+</body>
+</html>

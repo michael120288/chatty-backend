@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Hover Sanctum — Level 36</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0f0a; color: #eee; margin: 0; padding: 0; }
+    .top-nav {
+      display: flex; align-items: center; gap: 4px;
+      background: #0d1a0d; border-bottom: 1px solid #1a3a1a; padding: 0 24px;
+    }
+    .nav-item { position: relative; }
+    .nav-trigger {
+      display: block; padding: 16px 20px; color: #86efac; font-size: 14px;
+      font-weight: 600; cursor: pointer; user-select: none;
+      border-bottom: 2px solid transparent; transition: border-color 0.2s;
+    }
+    .nav-trigger:hover { border-bottom-color: #86efac; }
+    .dropdown {
+      display: none; position: absolute; top: 100%; left: 0;
+      background: #0d1a0d; border: 1px solid #1a4a1a; border-radius: 0 0 8px 8px;
+      min-width: 180px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .nav-item:hover .dropdown { display: block; }
+    .dropdown a {
+      display: block; padding: 10px 16px; color: #ccc; text-decoration: none;
+      font-size: 13px; border-bottom: 1px solid #1a3a1a; transition: background 0.15s;
+    }
+    .dropdown a:last-child { border-bottom: none; border-radius: 0 0 8px 8px; }
+    .dropdown a:hover { background: #1a3a1a; color: #86efac; }
+    .page-body { padding: 40px; }
+    h1 { color: #86efac; }
+    .subtitle { color: #888; margin-bottom: 30px; }
+    .spell-display {
+      max-width: 440px; background: #0d1a0d; border: 1px solid #1a4a1a;
+      border-radius: 10px; padding: 24px;
+    }
+    .spell-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    #selected-spell { font-size: 22px; font-weight: bold; color: #86efac; min-height: 32px; }
+    #spell-power { font-size: 14px; color: #888; margin-top: 6px; }
+    .hint-box {
+      max-width: 440px; margin-top: 20px; padding: 14px;
+      background: #0a140a; border: 1px solid #1a3a1a; border-radius: 8px;
+      font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #86efac; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-item" id="menu-spells">
+      <span class="nav-trigger">⚡ Spells ▾</span>
+      <div class="dropdown" id="spells-dropdown">
+        <a href="#" id="spell-fireball" data-power="150">🔥 Fireball</a>
+        <a href="#" id="spell-lightning" data-power="200">⚡ Lightning Bolt</a>
+        <a href="#" id="spell-frost" data-power="120">❄️ Frost Nova</a>
+        <a href="#" id="spell-arcane" data-power="300">✨ Arcane Surge</a>
+      </div>
+    </div>
+    <div class="nav-item" id="menu-skills">
+      <span class="nav-trigger">🛡️ Skills ▾</span>
+      <div class="dropdown">
+        <a href="#" data-power="80">⚔️ Slash</a>
+        <a href="#" data-power="60">🏃 Dash</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-body">
+    <h1>The Hover Sanctum</h1>
+    <p class="subtitle">Hover over the menu to reveal hidden spells — then click to select</p>
+
+    <div class="spell-display">
+      <div class="spell-label">Selected Spell</div>
+      <div id="selected-spell">None selected</div>
+      <div id="spell-power"></div>
+    </div>
+
+    <div class="hint-box">
+      💡 Use <code>await page.locator('#menu-spells').hover()</code> to reveal the dropdown,
+      then <code>await page.locator('#spell-lightning').click()</code> to select Lightning Bolt.
+      Verify <code>#selected-spell</code> shows "Lightning Bolt".
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.dropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('selected-spell').textContent = link.textContent.trim().replace(/^[^\s]+\s/, '').trim();
+        document.getElementById('spell-power').textContent = `Power: ${link.dataset.power}`;
+      });
+    });
+  </script>
+</body>
+</html>

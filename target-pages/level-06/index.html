@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Marketplace of Many — Level 6</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0d0d1a; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #ff6b9d; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .marketplace { max-width: 700px; margin: 0 auto; }
+    .marketplace-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #16162a; border: 1px solid #2a2a4a; border-radius: 8px;
+      padding: 14px 18px; margin-bottom: 10px; gap: 12px;
+    }
+    .marketplace-item.item-rare {
+      border-color: #e94560; background: #1a0e1e;
+    }
+    .marketplace-item.item-common { border-color: #2a2a4a; }
+    .marketplace-item.item-epic { border-color: #7b61ff; background: #11082e; }
+    .item-name { font-weight: bold; font-size: 16px; }
+    .item-rare .item-name { color: #e94560; }
+    .item-epic .item-name { color: #7b61ff; }
+    .item-common .item-name { color: #aaa; }
+    .item-price { color: #ffd700; font-size: 14px; }
+    .item-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 12px;
+      font-size: 11px; font-weight: bold; text-transform: uppercase;
+    }
+    .badge-rare { background: #e94560; color: white; }
+    .badge-common { background: #555; color: white; }
+    .badge-epic { background: #7b61ff; color: white; }
+    .stats-bar {
+      margin-top: 24px; padding: 16px; background: #16162a;
+      border: 1px solid #2a2a4a; border-radius: 8px; display: flex; gap: 20px;
+    }
+    .stat-item { text-align: center; flex: 1; }
+    .stat-num { font-size: 24px; font-weight: bold; color: #ff6b9d; }
+    .stat-lbl { font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>Marketplace of Many</h1>
+  <p class="subtitle">Find the rare among the common</p>
+
+  <div class="marketplace">
+    <div class="marketplace-item item-common">
+      <span class="item-name">Wooden Staff</span>
+      <span class="item-badge badge-common">Common</span>
+      <span class="item-price">10 gold</span>
+    </div>
+    <div class="marketplace-item item-rare">
+      <span class="item-name">Flame Dagger</span>
+      <span class="item-badge badge-rare">Rare</span>
+      <span class="item-price">250 gold</span>
+    </div>
+    <div class="marketplace-item item-common">
+      <span class="item-name">Leather Boots</span>
+      <span class="item-badge badge-common">Common</span>
+      <span class="item-price">25 gold</span>
+    </div>
+    <div class="marketplace-item item-rare">
+      <span class="item-name">Shadow Cloak</span>
+      <span class="item-badge badge-rare">Rare</span>
+      <span class="item-price">400 gold</span>
+    </div>
+    <div class="marketplace-item item-epic">
+      <span class="item-name">Void Blade</span>
+      <span class="item-badge badge-epic">Epic</span>
+      <span class="item-price">1200 gold</span>
+    </div>
+    <div class="marketplace-item item-common">
+      <span class="item-name">Iron Shield</span>
+      <span class="item-badge badge-common">Common</span>
+      <span class="item-price">80 gold</span>
+    </div>
+    <div class="marketplace-item item-rare">
+      <span class="item-name">Phoenix Feather</span>
+      <span class="item-badge badge-rare">Rare</span>
+      <span class="item-price">550 gold</span>
+    </div>
+    <div class="marketplace-item item-common">
+      <span class="item-name">Rope of Binding</span>
+      <span class="item-badge badge-common">Common</span>
+      <span class="item-price">15 gold</span>
+    </div>
+    <div class="marketplace-item item-epic">
+      <span class="item-name">Stormcaller Staff</span>
+      <span class="item-badge badge-epic">Epic</span>
+      <span class="item-price">2000 gold</span>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num" id="total-items">9</div>
+        <div class="stat-lbl">Total Items</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="rare-count">3</div>
+        <div class="stat-lbl">Rare Items</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="epic-count">2</div>
+        <div class="stat-lbl">Epic Items</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Realm of Async — Level 5</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a1a; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #4da6ff; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .realm { max-width: 500px; margin: 0 auto; text-align: center; }
+    .loading-indicator {
+      font-size: 48px; margin-bottom: 20px; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    #treasure-chest {
+      display: none;
+      background: linear-gradient(135deg, #1a0a00, #3a2000);
+      border: 2px solid #ffd700; border-radius: 12px; padding: 32px;
+      margin-top: 24px;
+    }
+    #treasure-chest.visible { display: block; animation: appear 0.5s ease; }
+    @keyframes appear { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+    .chest-icon { font-size: 64px; }
+    .chest-title { color: #ffd700; font-size: 20px; font-weight: bold; margin: 12px 0 8px; }
+    .chest-desc { color: #aaa; font-size: 14px; }
+    #loading-text { color: #4da6ff; font-size: 14px; animation: pulse 1.5s ease infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    #timer { color: #555; font-size: 12px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Realm of Async</h1>
+  <p class="subtitle">Patience is a virtue — and a superpower</p>
+
+  <div class="realm">
+    <div class="loading-indicator" id="loading-spinner">⏳</div>
+    <div id="loading-text">Summoning treasure chest...</div>
+    <div id="timer">0.0s elapsed</div>
+
+    <div id="treasure-chest" data-treasure="golden-key">
+      <div class="chest-icon">🏆</div>
+      <div class="chest-title">Treasure Chest Discovered!</div>
+      <div class="chest-desc">The golden key glimmers in the light.</div>
+    </div>
+  </div>
+
+  <script>
+    const start = Date.now();
+    const timerEl = document.getElementById('timer');
+    const tick = setInterval(() => {
+      timerEl.textContent = ((Date.now() - start) / 1000).toFixed(1) + 's elapsed';
+    }, 100);
+
+    setTimeout(() => {
+      clearInterval(tick);
+      document.getElementById('loading-spinner').style.display = 'none';
+      document.getElementById('loading-text').style.display = 'none';
+      document.getElementById('timer').style.display = 'none';
+      document.getElementById('treasure-chest').classList.add('visible');
+    }, 2500);
+  </script>
+</body>
+</html>

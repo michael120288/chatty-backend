@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Rune Circle — Level 17</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0010; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a855f7; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .arena { max-width: 600px; margin: 0 auto; }
+    .arena-layout { display: flex; gap: 24px; align-items: flex-start; }
+    .spell-rack { flex: 1; }
+    .rack-title {
+      color: #a855f7; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a1a3e;
+    }
+    .rune {
+      background: #1a0a2e; border: 2px solid #4a2a6e; border-radius: 8px;
+      padding: 14px 16px; margin-bottom: 10px; cursor: grab; display: flex;
+      align-items: center; gap: 12px; user-select: none; transition: border-color 0.2s, transform 0.1s;
+    }
+    .rune:active { cursor: grabbing; transform: scale(0.98); }
+    .rune:hover { border-color: #a855f7; }
+    .rune-icon { font-size: 24px; }
+    .rune-name { font-size: 14px; font-weight: 600; }
+    .rune-power { font-size: 12px; color: #888; }
+
+    #rune-fire { border-color: #7a2a0a; }
+    #rune-fire:hover { border-color: #f97316; }
+    #rune-fire .rune-name { color: #f97316; }
+
+    #rune-ice { border-color: #0a2a5e; }
+    #rune-ice:hover { border-color: #38bdf8; }
+    #rune-ice .rune-name { color: #38bdf8; }
+
+    #rune-lightning { border-color: #3a3a0a; }
+    #rune-lightning:hover { border-color: #fde047; }
+    #rune-lightning .rune-name { color: #fde047; }
+
+    .casting-zone { flex: 0 0 200px; }
+    .zone-title {
+      color: #a855f7; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a1a3e;
+    }
+    #casting-circle {
+      width: 180px; height: 180px; border-radius: 50%;
+      border: 3px dashed #4a2a6e; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; text-align: center; transition: all 0.3s;
+      font-size: 13px; color: #555; font-style: italic;
+    }
+    #casting-circle.ready { border-color: #a855f7; border-style: solid; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 #a855f744; } 50% { box-shadow: 0 0 0 12px #a855f700; } }
+    #casting-circle.activated { border-style: solid; }
+    #casting-circle.fire-active { border-color: #f97316; background: #1a0800; }
+    #casting-circle.ice-active { border-color: #38bdf8; background: #001a2e; }
+    #casting-circle.lightning-active { border-color: #fde047; background: #1a1800; }
+    #cast-icon { font-size: 48px; }
+    #cast-text { margin-top: 8px; font-style: normal; }
+    #cast-text.fire { color: #f97316; }
+    #cast-text.ice { color: #38bdf8; }
+    #cast-text.lightning { color: #fde047; }
+    .result-panel {
+      margin-top: 24px; padding: 16px; background: #12091e; border: 1px solid #2a1a3e;
+      border-radius: 8px; font-size: 13px; color: #888; min-height: 48px;
+    }
+  </style>
+</head>
+<body>
+  <h1>The Rune Circle</h1>
+  <p class="subtitle">Drag a rune into the casting circle to activate its power</p>
+
+  <div class="arena">
+    <div class="arena-layout">
+      <div class="spell-rack">
+        <div class="rack-title">🔮 Spell Rack</div>
+
+        <div class="rune" id="rune-fire" draggable="true">
+          <span class="rune-icon">🔥</span>
+          <div><div class="rune-name">Fire Rune</div><div class="rune-power">Deals 120 flame damage</div></div>
+        </div>
+        <div class="rune" id="rune-ice" draggable="true">
+          <span class="rune-icon">❄️</span>
+          <div><div class="rune-name">Ice Rune</div><div class="rune-power">Freezes target for 3 turns</div></div>
+        </div>
+        <div class="rune" id="rune-lightning" draggable="true">
+          <span class="rune-icon">⚡</span>
+          <div><div class="rune-name">Lightning Rune</div><div class="rune-power">Chain strikes 3 enemies</div></div>
+        </div>
+      </div>
+
+      <div class="casting-zone">
+        <div class="zone-title">✨ Casting Circle</div>
+        <div id="casting-circle" class="ready">
+          <span id="cast-icon">🌀</span>
+          <div id="cast-text">Drop a rune here</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-panel" id="result-panel">
+      Drag a rune from the spell rack into the casting circle to cast a spell.
+    </div>
+  </div>
+
+  <script>
+    const circle = document.getElementById('casting-circle');
+    const castIcon = document.getElementById('cast-icon');
+    const castText = document.getElementById('cast-text');
+    const resultPanel = document.getElementById('result-panel');
+
+    document.querySelectorAll('.rune').forEach(rune => {
+      rune.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('runeId', rune.id);
+        e.dataTransfer.setData('runeName', rune.querySelector('.rune-name').textContent);
+      });
+    });
+
+    circle.addEventListener('dragover', (e) => { e.preventDefault(); });
+    circle.addEventListener('dragenter', () => { circle.style.borderStyle = 'solid'; });
+    circle.addEventListener('dragleave', () => { circle.style.borderStyle = 'dashed'; });
+
+    circle.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const runeId = e.dataTransfer.getData('runeId');
+      const runeName = e.dataTransfer.getData('runeName');
+
+      circle.className = 'activated';
+      if (runeId === 'rune-fire') {
+        circle.classList.add('fire-active');
+        castIcon.textContent = '🔥';
+        castText.textContent = 'Fire Rune Activated!';
+        castText.className = 'fire';
+        resultPanel.innerHTML = '<span style="color:#f97316">🔥 Fire Rune Activated!</span> The circle blazes with 120 flame damage. The rune has been cast!';
+      } else if (runeId === 'rune-ice') {
+        circle.classList.add('ice-active');
+        castIcon.textContent = '❄️';
+        castText.textContent = 'Ice Rune Activated!';
+        castText.className = 'ice';
+        resultPanel.innerHTML = '<span style="color:#38bdf8">❄️ Ice Rune Activated!</span> The circle freezes with cold power.';
+      } else if (runeId === 'rune-lightning') {
+        circle.classList.add('lightning-active');
+        castIcon.textContent = '⚡';
+        castText.textContent = 'Lightning Rune Activated!';
+        castText.className = 'lightning';
+        resultPanel.innerHTML = '<span style="color:#fde047">⚡ Lightning Rune Activated!</span> Electricity crackles through the circle.';
+      }
+    });
+  </script>
+</body>
+</html>

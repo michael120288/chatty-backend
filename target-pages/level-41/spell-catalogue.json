@@ -1,0 +1,8 @@
+{
+  "spells": [
+    { "name": "Mana Bolt", "power": 10, "icon": "💧" },
+    { "name": "Flame Lash", "power": 85, "icon": "🔥" },
+    { "name": "Shadow Step", "power": 60, "icon": "🌑" },
+    { "name": "Ice Lance", "power": 75, "icon": "❄️" }
+  ]
+}

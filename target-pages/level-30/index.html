@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Chronicles — Chapter I — Level 30</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a100a; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #86efac; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .chapter-card { max-width: 520px; margin: 0 auto; background: #0d180d; border: 1px solid #1a4a1a; border-radius: 10px; padding: 30px; }
+    .chapter-badge { display: inline-block; background: #1a3a1a; color: #86efac; padding: 4px 14px; border-radius: 12px; font-size: 13px; margin-bottom: 16px; }
+    .chapter-title { font-size: 22px; color: #86efac; margin-bottom: 12px; }
+    .chapter-text { color: #aaa; line-height: 1.7; margin-bottom: 24px; }
+    .nav-btn {
+      display: inline-block; padding: 10px 24px; background: #1a4a1a;
+      border: 1px solid #86efac; border-radius: 8px; color: #86efac;
+      text-decoration: none; font-size: 14px; cursor: pointer; margin-right: 10px;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: #2a5a2a; }
+    .hint-box {
+      max-width: 520px; margin: 20px auto 0; padding: 14px;
+      background: #0d180d; border: 1px solid #1a4a1a; border-radius: 8px;
+      font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #86efac; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Chronicles</h1>
+  <p class="subtitle">Navigate the chapters using the browser's history</p>
+
+  <div class="chapter-card">
+    <span class="chapter-badge">📖 Chapter I</span>
+    <div class="chapter-title">The Beginning</div>
+    <p class="chapter-text">
+      In the age before the Great Testing, all was chaos. Pages loaded without assertion,
+      selectors failed without warning, and flaky tests plagued the realm. Then came
+      the Playwright — a hero foretold to bring order to the digital wilds.
+    </p>
+    <a href="/pages/level-30/chapter-2.html" class="nav-btn" id="next-btn">Next Chapter →</a>
+  </div>
+
+  <div class="hint-box">
+    💡 Navigate to Chapter III via the links, then use <code>page.goBack()</code>
+    and <code>page.goForward()</code> to travel through the history.
+    Verify you land on Chapter III using <code>page.title()</code>.
+  </div>
+</body>
+</html>

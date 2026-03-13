@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hall of Truth — Level 4</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #1a1500; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #ffd700; text-align: center; font-size: 2.4em; margin-bottom: 8px; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .hall { max-width: 600px; margin: 0 auto; }
+    .badge-container { text-align: center; margin-bottom: 32px; }
+    #hero-badge {
+      display: inline-block; padding: 12px 32px; border-radius: 30px;
+      font-size: 18px; font-weight: bold; letter-spacing: 1px;
+    }
+    .badge-gold { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; }
+    .truth-list { list-style: none; padding: 0; }
+    .truth-list li {
+      background: #1a1500; border: 1px solid #3a3000; border-radius: 8px;
+      padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+    }
+    .truth-list li::before { content: '⚖️'; font-size: 20px; }
+    .truth-list li span { color: #ffd700; font-size: 13px; }
+    .stat-row { display: flex; gap: 16px; margin-top: 24px; }
+    .stat {
+      flex: 1; background: #1a1500; border: 1px solid #3a3000; border-radius: 8px;
+      padding: 16px; text-align: center;
+    }
+    .stat-value { font-size: 28px; font-weight: bold; color: #ffd700; }
+    .stat-label { font-size: 12px; color: #888; margin-top: 4px; }
+    .hidden-truth { color: #333; font-size: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Hall of Truth</h1>
+  <p class="subtitle">Where assertions reign supreme</p>
+
+  <div class="hall">
+    <div class="badge-container">
+      <span id="hero-badge" class="badge-gold">GRAND ASSERTER</span>
+    </div>
+
+    <ul class="truth-list">
+      <li>All visible elements must be visible <span data-truth="visible">verified</span></li>
+      <li>Text must match exactly what is expected <span data-truth="text">verified</span></li>
+      <li>Attributes must hold their promised values <span data-truth="attr">verified</span></li>
+      <li>Classes shall not lie about their nature <span data-truth="class">verified</span></li>
+    </ul>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-value" id="assertion-count">42</div>
+        <div class="stat-label">Assertions Passed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="truth-score">100%</div>
+        <div class="stat-label">Truth Score</div>
+      </div>
+    </div>
+
+    <p class="hidden-truth" data-secret="xyzzy">The hidden truth endures.</p>
+  </div>
+</body>
+</html>

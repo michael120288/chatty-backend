@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The HAR Recorder — Level 59</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #c084fc; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .network-nexus { max-width: 520px; margin: 0 auto; }
+    .request-feed { background: #0d0d20; border: 1px solid #2a0a40; border-radius: 12px; padding: 20px; min-height: 120px; }
+    .request-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #1a0a2e; font-size: 13px; font-family: monospace; }
+    .request-item:last-child { border-bottom: none; }
+    .req-method { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; background: #001a0a; color: #4ecca3; border: 1px solid #4ecca3; }
+    .req-url { color: #c084fc; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .req-status { color: #4ecca3; font-size: 12px; }
+    #loading { text-align: center; color: #555; padding: 20px; }
+    .hint-box { margin-top: 20px; padding: 14px; background: #0a0a18; border: 1px solid #2a0a40; border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6; }
+    code { color: #c084fc; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Network Nexus</h1>
+  <p class="subtitle">Record all network traffic as a HAR archive</p>
+
+  <div class="network-nexus">
+    <div class="request-feed" id="feed">
+      <div id="loading">Loading network data...</div>
+    </div>
+
+    <div class="hint-box">
+      💡 Create the context with HAR recording <strong>before</strong> navigating:<br/>
+      <code>const context = await browser.newContext(&#123;<br/>
+      &nbsp;&nbsp;recordHar: &#123; path: '/tmp/network-59.har' &#125;<br/>
+      &#125;);</code><br/><br/>
+      Navigate here, then close the context to flush the HAR:<br/>
+      <code>await context.close();</code><br/>
+      Then log <code>LEVEL_PASSED</code>.
+    </div>
+  </div>
+
+  <script>
+    const feed = document.getElementById('feed');
+    const loading = document.getElementById('loading');
+    const endpoints = [
+      '/pages/level-57/grimoire.json',
+      '/health',
+    ];
+    const results = [];
+    Promise.all(
+      endpoints.map(url =>
+        fetch('http://localhost:4000' + url)
+          .then(r => ({ url, status: r.status, ok: r.ok }))
+          .catch(() => ({ url, status: 0, ok: false }))
+      )
+    ).then(data => {
+      loading.remove();
+      data.forEach(r => {
+        const item = document.createElement('div');
+        item.className = 'request-item';
+        item.innerHTML = `<span class="req-method">GET</span><span class="req-url">${r.url}</span><span class="req-status">${r.status}</span>`;
+        feed.appendChild(item);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nexus of Networks — Level 8</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #00ff88; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .nexus { max-width: 600px; margin: 0 auto; }
+    .network-panel {
+      background: #0d1a0d; border: 1px solid #00ff88; border-radius: 12px;
+      padding: 24px; margin-bottom: 20px;
+    }
+    .panel-title { color: #00ff88; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+    #items-list { list-style: none; padding: 0; margin: 0; min-height: 60px; }
+    .item-entry {
+      background: #071407; border: 1px solid #003300; border-radius: 6px;
+      padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+    }
+    .item-entry::before { content: '◆'; color: #00ff88; font-size: 10px; }
+    #loading-state { color: #555; font-style: italic; }
+    #error-state { color: #e94560; display: none; }
+    .fetch-btn {
+      background: #00ff88; color: #000; border: none; padding: 12px 24px;
+      border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;
+    }
+    .fetch-btn:hover { background: #00cc70; }
+    .status-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px;
+    }
+    .status-ok { background: #003300; color: #00ff88; border: 1px solid #00ff88; }
+    .status-mock { background: #1a0a00; color: #ffd700; border: 1px solid #ffd700; }
+    #fetch-status { margin-top: 12px; font-size: 12px; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>Nexus of Networks</h1>
+  <p class="subtitle">Intercept the flow of data</p>
+
+  <div class="nexus">
+    <div class="network-panel">
+      <div class="panel-title">▶ Live API Feed — /api/items</div>
+      <button class="fetch-btn" id="fetch-btn" onclick="fetchItems()">Fetch Items</button>
+      <div id="fetch-status"></div>
+    </div>
+
+    <div class="network-panel">
+      <div class="panel-title">◀ Received Items</div>
+      <ul id="items-list">
+        <li id="loading-state">Awaiting fetch...</li>
+      </ul>
+      <div id="error-state">Failed to load items.</div>
+    </div>
+  </div>
+
+  <script>
+    async function fetchItems() {
+      const btn = document.getElementById('fetch-btn');
+      const status = document.getElementById('fetch-status');
+      const list = document.getElementById('items-list');
+      const loadingEl = document.getElementById('loading-state');
+
+      btn.disabled = true;
+      btn.textContent = 'Fetching...';
+      status.textContent = 'Requesting /api/items...';
+      loadingEl.style.display = 'list-item';
+
+      try {
+        const res = await fetch('/api/items');
+        const data = await res.json();
+        list.innerHTML = '';
+        data.items.forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'item-entry';
+          li.textContent = item;
+          list.appendChild(li);
+        });
+        status.innerHTML = '<span class="status-badge status-ok">200 OK</span> Items loaded successfully';
+      } catch (err) {
+        loadingEl.style.display = 'none';
+        document.getElementById('error-state').style.display = 'block';
+        status.innerHTML = '<span class="status-badge" style="background:#2e0a0a;color:#e94560;border:1px solid #e94560">ERR</span> ' + err.message;
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Fetch Items';
+    }
+
+    // Auto-fetch on load
+    window.addEventListener('load', fetchItems);
+  </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Summoning Circle — Level 48</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a78bfa; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .circle { max-width: 520px; margin: 0 auto; }
+    .summon-btn {
+      display: block; width: 100%; padding: 14px; background: #1a0a2e;
+      border: 1px solid #7c3aed; border-radius: 10px; color: #a78bfa;
+      font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 20px;
+      transition: background 0.2s;
+    }
+    .summon-btn:hover { background: #2a1a3e; }
+    .summon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .summon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .entity-card {
+      background: #0d0d20; border: 1px solid #2a2050; border-radius: 10px;
+      padding: 16px; text-align: center; opacity: 0; transition: opacity 0.4s;
+    }
+    .entity-card.appeared { opacity: 1; }
+    .entity-icon { font-size: 36px; margin-bottom: 8px; }
+    .entity-name { font-size: 14px; font-weight: bold; color: #eee; }
+    .entity-power { font-size: 12px; color: #888; margin-top: 4px; }
+    #summon-status {
+      text-align: center; font-size: 14px; color: #888; padding: 16px;
+      min-height: 48px;
+    }
+    #summon-status.done { color: #4ecca3; font-weight: bold; }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #0a0a18; border: 1px solid #2a2050;
+      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #a78bfa; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Summoning Circle</h1>
+  <p class="subtitle">Entities arrive in waves — wait for the network to settle before asserting</p>
+
+  <div class="circle">
+    <button class="summon-btn" id="summon-btn">🌀 Begin Summoning Ritual</button>
+    <div id="summon-status">Ready to summon...</div>
+    <div class="summon-grid" id="entity-grid"></div>
+
+    <div class="hint-box">
+      💡 Click the button, then use <code>await page.waitForLoadState('networkidle')</code>
+      to wait until all async fetches complete (network is quiet for 500ms).
+      Then assert all 4 entity cards are visible with <code>toHaveCount(4)</code>.
+    </div>
+  </div>
+
+  <script>
+    const entities = [
+      { name: 'Void Wraith', power: 450, icon: '👻', delay: 300 },
+      { name: 'Storm Elemental', power: 680, icon: '⚡', delay: 800 },
+      { name: 'Stone Golem', power: 920, icon: '🪨', delay: 1400 },
+      { name: 'Flame Drake', power: 1100, icon: '🐉', delay: 2000 }
+    ];
+
+    document.getElementById('summon-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('summon-btn');
+      const grid = document.getElementById('entity-grid');
+      const status = document.getElementById('summon-status');
+
+      btn.disabled = true;
+      grid.innerHTML = '';
+      status.textContent = 'Summoning entities from the void...';
+      status.className = '';
+
+      // Create placeholder cards
+      entities.forEach(() => {
+        const card = document.createElement('div');
+        card.className = 'entity-card';
+        grid.appendChild(card);
+      });
+
+      // Simulate sequential async fetches (each with a small delay)
+      for (let i = 0; i < entities.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, entities[i].delay));
+        // Simulate a fetch for each entity
+        await fetch('/pages/level-48/entity-' + (i + 1) + '.json').catch(() => {});
+        const card = grid.children[i];
+        const e = entities[i];
+        card.innerHTML = `<div class="entity-icon">${e.icon}</div>
+          <div class="entity-name">${e.name}</div>
+          <div class="entity-power">Power: ${e.power}</div>`;
+        card.classList.add('entity-card', 'appeared');
+      }
+
+      status.textContent = '✅ All entities summoned — the circle is complete!';
+      status.className = 'done';
+    });
+  </script>
+</body>
+</html>

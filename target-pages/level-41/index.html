@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Spell Catalogue — Level 41</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #f472b6; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .catalogue { max-width: 520px; margin: 0 auto; }
+    .fetch-btn {
+      display: block; width: 100%; padding: 14px; background: #2d0a1f;
+      border: 1px solid #f472b6; border-radius: 10px; color: #f472b6;
+      font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 20px;
+      transition: background 0.2s;
+    }
+    .fetch-btn:hover { background: #3d1a2f; }
+    #spell-list { display: flex; flex-direction: column; gap: 8px; }
+    .spell-card {
+      display: flex; align-items: center; gap: 14px;
+      background: #120a18; border: 1px solid #2a1a30; border-radius: 8px;
+      padding: 14px 18px;
+    }
+    .spell-icon { font-size: 24px; }
+    .spell-name { flex: 1; font-size: 15px; font-weight: bold; }
+    .spell-power { color: #f472b6; font-size: 13px; font-weight: bold; }
+    #loading-msg { text-align: center; color: #888; font-size: 14px; padding: 20px; display: none; }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #0a0810; border: 1px solid #2a1a30;
+      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #f472b6; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Spell Catalogue</h1>
+  <p class="subtitle">Intercept the catalogue fetch — modify the response before it renders</p>
+
+  <div class="catalogue">
+    <button class="fetch-btn" id="fetch-btn">📖 Load Spell Catalogue</button>
+    <div id="loading-msg">Channeling the arcane catalogue...</div>
+    <div id="spell-list"></div>
+
+    <div class="hint-box">
+      💡 Use <code>page.route('**/spell-catalogue.json', async route => {<br/>
+      &nbsp;&nbsp;const response = await route.fetch();<br/>
+      &nbsp;&nbsp;const data = await response.json();<br/>
+      &nbsp;&nbsp;data.spells[0].power = 9999;<br/>
+      &nbsp;&nbsp;await route.fulfill(&#123; json: data &#125;);<br/>
+      &#125;)</code> to intercept and modify the response.
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('fetch-btn').addEventListener('click', async () => {
+      document.getElementById('loading-msg').style.display = 'block';
+      document.getElementById('fetch-btn').disabled = true;
+
+      try {
+        const res = await fetch('/pages/level-41/spell-catalogue.json');
+        const data = await res.json();
+        const list = document.getElementById('spell-list');
+        list.innerHTML = '';
+        data.spells.forEach(spell => {
+          const card = document.createElement('div');
+          card.className = 'spell-card';
+          card.innerHTML = `<span class="spell-icon">${spell.icon}</span>
+            <span class="spell-name">${spell.name}</span>
+            <span class="spell-power" data-power="${spell.power}">⚡ ${spell.power}</span>`;
+          list.appendChild(card);
+        });
+      } finally {
+        document.getElementById('loading-msg').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

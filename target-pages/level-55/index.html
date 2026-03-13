@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Focus Keeper — Level 55</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #67e8f9; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .portal-form { max-width: 480px; margin: 0 auto; background: #0d0d20; border: 1px solid #0e3a4a; border-radius: 12px; padding: 28px; }
+    .field { margin-bottom: 18px; }
+    label { display: block; font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    input[type="text"] { width: 100%; padding: 12px 14px; background: #050510; border: 1px solid #1a2a30; border-radius: 8px; color: #eee; font-size: 14px; box-sizing: border-box; transition: border-color 0.2s, box-shadow 0.2s; }
+    input[type="text"]:focus { border-color: #67e8f9; box-shadow: 0 0 0 2px rgba(103,232,249,0.15); outline: none; }
+    #focused-id { text-align: center; font-size: 13px; color: #555; margin-top: 20px; min-height: 20px; }
+    #focused-id.active { color: #67e8f9; }
+    .hint-box { margin-top: 20px; padding: 14px; background: #0a0a18; border: 1px solid #0e3a4a; border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6; }
+    code { color: #67e8f9; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Arcane Portal Form</h1>
+  <p class="subtitle">Navigate by focus — keyboard warriors need no mouse</p>
+
+  <div class="portal-form">
+    <div class="field">
+      <label for="realm-input">Realm</label>
+      <input type="text" id="realm-input" placeholder="Enter your realm..." tabindex="1" />
+    </div>
+    <div class="field">
+      <label for="title-input">Title</label>
+      <input type="text" id="title-input" placeholder="Enter your title..." tabindex="2" />
+    </div>
+    <div class="field">
+      <label for="power-input">Power Level</label>
+      <input type="text" id="power-input" placeholder="Enter your power level..." tabindex="3" />
+    </div>
+    <div id="focused-id">Click a field or use focus() to start</div>
+  </div>
+
+  <div class="hint-box" style="max-width:480px;margin:20px auto 0">
+    💡 Use <code>page.locator('#realm-input').focus()</code> to focus the first field.<br/>
+    Then <code>page.keyboard.press('Tab')</code> twice to reach the third field.<br/>
+    Check <code>page.evaluate(() => document.activeElement.id)</code>.<br/>
+    If active element id is <code>'power-input'</code>, log <code>LEVEL_PASSED</code>.
+  </div>
+
+  <script>
+    document.addEventListener('focusin', (e) => {
+      const el = document.getElementById('focused-id');
+      if (e.target.id) {
+        el.textContent = `Focused: #${e.target.id}`;
+        el.className = 'active';
+      }
+    });
+  </script>
+</body>
+</html>

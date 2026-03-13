@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Waypoint Nexus — Level 40</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a10; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #818cf8; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .nexus { max-width: 500px; margin: 0 auto; }
+    .waypoints { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .waypoint-btn {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px; background: #0d0d1a; border: 1px solid #2a2a50;
+      border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: left;
+    }
+    .waypoint-btn:hover { background: #14143a; border-color: #818cf8; }
+    .waypoint-icon { font-size: 28px; }
+    .waypoint-name { font-size: 15px; font-weight: bold; color: #eee; }
+    .waypoint-path { font-size: 12px; color: #555; font-family: monospace; margin-top: 2px; }
+    #current-location {
+      padding: 20px; background: #0d0d1a; border: 1px solid #2a2a50;
+      border-radius: 10px; text-align: center;
+    }
+    .location-label { font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    #location-name { font-size: 20px; font-weight: bold; color: #818cf8; }
+    #location-hash { font-size: 13px; color: #555; font-family: monospace; margin-top: 4px; }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #0a0a18; border: 1px solid #2a2a50;
+      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #818cf8; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Waypoint Nexus</h1>
+  <p class="subtitle">Navigate to a waypoint — assert the URL with precision</p>
+
+  <div class="nexus">
+    <div class="waypoints">
+      <div class="waypoint-btn" id="wp-sanctum" data-hash="sanctum">
+        <span class="waypoint-icon">🏰</span>
+        <div>
+          <div class="waypoint-name">The Sanctum</div>
+          <div class="waypoint-path">#sanctum</div>
+        </div>
+      </div>
+      <div class="waypoint-btn" id="wp-void" data-hash="void-realm">
+        <span class="waypoint-icon">🌑</span>
+        <div>
+          <div class="waypoint-name">The Void Realm</div>
+          <div class="waypoint-path">#void-realm</div>
+        </div>
+      </div>
+      <div class="waypoint-btn" id="wp-peak" data-hash="crystal-peak">
+        <span class="waypoint-icon">💎</span>
+        <div>
+          <div class="waypoint-name">Crystal Peak</div>
+          <div class="waypoint-path">#crystal-peak</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="current-location">
+      <div class="location-label">Current Waypoint</div>
+      <div id="location-name">Nexus Entrance</div>
+      <div id="location-hash">(no hash)</div>
+    </div>
+
+    <div class="hint-box">
+      💡 Click <code>#wp-void</code> then use
+      <code>await page.waitForURL('**/#void-realm')</code> to wait for navigation,
+      then assert with <code>await expect(page).toHaveURL(/#void-realm/)</code>.
+    </div>
+  </div>
+
+  <script>
+    const names = { sanctum: 'The Sanctum', 'void-realm': 'The Void Realm', 'crystal-peak': 'Crystal Peak' };
+
+    function updateFromHash() {
+      const hash = window.location.hash.slice(1);
+      document.getElementById('location-name').textContent = names[hash] || 'Nexus Entrance';
+      document.getElementById('location-hash').textContent = hash ? `#${hash}` : '(no hash)';
+    }
+
+    document.querySelectorAll('.waypoint-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.location.hash = btn.dataset.hash;
+      });
+    });
+
+    window.addEventListener('hashchange', updateFromHash);
+    updateFromHash();
+  </script>
+</body>
+</html>

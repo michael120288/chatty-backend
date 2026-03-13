@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Arcane Observatory — Level 47</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0f14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #22d3ee; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .observatory { max-width: 520px; margin: 0 auto; }
+    .control-panel {
+      background: #0d1520; border: 1px solid #1e3a52; border-radius: 12px;
+      padding: 24px; margin-bottom: 20px;
+    }
+    .panel-title { color: #22d3ee; font-size: 15px; font-weight: bold; margin-bottom: 16px; }
+    .api-btns { display: flex; flex-direction: column; gap: 10px; }
+    .api-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: #061520; border: 1px solid #1e3a52;
+      border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    }
+    .api-btn:hover { border-color: #22d3ee; }
+    .api-btn-info { display: flex; align-items: center; gap: 10px; }
+    .api-icon { font-size: 20px; }
+    .api-name { font-size: 14px; font-weight: bold; }
+    .api-url { font-size: 11px; color: #555; font-family: monospace; }
+    .api-method { font-size: 12px; color: #22d3ee; font-weight: bold; padding: 2px 8px; background: #061a20; border: 1px solid #22d3ee; border-radius: 4px; }
+    .request-log { background: #060e14; border: 1px solid #1e3a52; border-radius: 10px; overflow: hidden; }
+    .log-header { background: #0a1a20; padding: 8px 14px; font-size: 12px; color: #555; border-bottom: 1px solid #1e3a52; }
+    .log-body { padding: 12px 14px; font-family: monospace; font-size: 12px; min-height: 80px; }
+    .log-entry { margin-bottom: 6px; display: flex; gap: 8px; }
+    .log-status { font-weight: bold; }
+    .log-200 { color: #4ecca3; }
+    .log-url { color: #888; overflow: hidden; text-overflow: ellipsis; }
+    .log-empty { color: #555; font-size: 13px; }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #0a1520; border: 1px solid #1e3a52;
+      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #22d3ee; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Arcane Observatory</h1>
+  <p class="subtitle">Monitor every request and response as they flow through the network</p>
+
+  <div class="observatory">
+    <div class="control-panel">
+      <div class="panel-title">🔭 Signal Transmitters</div>
+      <div class="api-btns">
+        <div class="api-btn" id="btn-stars">
+          <div class="api-btn-info">
+            <span class="api-icon">⭐</span>
+            <div>
+              <div class="api-name">Star Catalogue</div>
+              <div class="api-url">/pages/level-47/stars.json</div>
+            </div>
+          </div>
+          <span class="api-method">GET</span>
+        </div>
+        <div class="api-btn" id="btn-prophecy">
+          <div class="api-btn-info">
+            <span class="api-icon">🔮</span>
+            <div>
+              <div class="api-name">Prophecy Feed</div>
+              <div class="api-url">/pages/level-47/prophecy.json</div>
+            </div>
+          </div>
+          <span class="api-method">GET</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="request-log">
+      <div class="log-header">📡 Network Activity</div>
+      <div class="log-body" id="log-body">
+        <div class="log-empty">No requests yet...</div>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      💡 Set up listeners BEFORE navigating:<br/>
+      <code>page.on('request', req => ...)</code> and
+      <code>page.on('response', res => ...)</code><br/>
+      Click <code>#btn-prophecy</code> and verify a response with URL containing
+      <code>'prophecy.json'</code> and status <code>200</code> was received.
+    </div>
+  </div>
+
+  <script>
+    const logBody = document.getElementById('log-body');
+
+    function addLog(method, url, status) {
+      if (logBody.querySelector('.log-empty')) logBody.innerHTML = '';
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `<span class="log-status log-${status}">${status}</span><span class="log-url">${method} ${url.split('/').pop()}</span>`;
+      logBody.appendChild(entry);
+    }
+
+    async function fetchResource(url) {
+      try {
+        const res = await fetch(url);
+        addLog('GET', url, res.status);
+        return res;
+      } catch (e) {
+        addLog('GET', url, 'ERR');
+      }
+    }
+
+    document.getElementById('btn-stars').addEventListener('click', () => fetchResource('/pages/level-47/stars.json'));
+    document.getElementById('btn-prophecy').addEventListener('click', () => fetchResource('/pages/level-47/prophecy.json'));
+  </script>
+</body>
+</html>

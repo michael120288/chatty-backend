@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Library of Elements — Level 1</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #e94560; text-align: center; margin-bottom: 10px; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .library { max-width: 600px; margin: 0 auto; }
+    .item-card {
+      background: #16213e; border: 1px solid #0f3460; border-radius: 8px;
+      padding: 20px; margin-bottom: 16px;
+    }
+    .item-card h2 { margin: 0 0 8px; color: #e94560; }
+    .item-card p { margin: 0; color: #aaa; font-size: 14px; }
+    #featured-item {
+      background: linear-gradient(135deg, #0f3460, #16213e);
+      border-color: #e94560; border-width: 2px;
+      font-size: 18px; font-weight: bold; color: #ffd700;
+      padding: 24px; text-align: center; border-radius: 8px; margin-bottom: 20px;
+    }
+    .item-testid { border-color: #4ecca3; }
+    .item-role { border-color: #7b61ff; }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 12px; margin-left: 8px;
+    }
+    .badge-legendary { background: #e94560; color: white; }
+    .badge-common { background: #555; color: white; }
+    .badge-rare { background: #4ecca3; color: #000; }
+  </style>
+</head>
+<body>
+  <h1>Library of Elements</h1>
+  <p class="subtitle">Master the art of selection</p>
+
+  <div class="library">
+    <div id="featured-item">Magic Sword</div>
+
+    <div class="item-card">
+      <h2>Scroll of Wisdom <span class="badge badge-legendary">Legendary</span></h2>
+      <p data-testid="scroll-description">An ancient scroll containing the secrets of the DOM.</p>
+    </div>
+
+    <div class="item-card item-testid" data-testid="potion-card">
+      <h2>Health Potion <span class="badge badge-common">Common</span></h2>
+      <p>Restores 50 HP when consumed.</p>
+    </div>
+
+    <div class="item-card item-role" role="article" aria-label="Dragon Scale">
+      <h2>Dragon Scale <span class="badge badge-rare">Rare</span></h2>
+      <p>Dropped by the ancient fire drake. Fireproof.</p>
+    </div>
+  </div>
+</body>
+</html>

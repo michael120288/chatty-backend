@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Sorcerer's Duel — Level 20</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0010; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #e879f9; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .duel-arena { max-width: 520px; margin: 0 auto; }
+    .arena-banner {
+      text-align: center; background: linear-gradient(135deg, #1a0028, #0a0010);
+      border: 2px solid #e879f9; border-radius: 12px; padding: 28px; margin-bottom: 24px;
+    }
+    .vs-icon { font-size: 64px; margin-bottom: 12px; }
+    .arena-title { color: #e879f9; font-size: 20px; font-weight: bold; }
+    .arena-sub { color: #888; font-size: 14px; margin-top: 4px; }
+    .spell-panel { background: #12001a; border: 1px solid #3d1a55; border-radius: 10px; padding: 24px; margin-bottom: 16px; }
+    .spell-label { color: #e879f9; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    #spell-input {
+      width: 100%; padding: 12px 16px; background: #0a0010; border: 2px solid #3d1a55;
+      border-radius: 8px; color: #eee; font-size: 16px; font-family: monospace;
+      letter-spacing: 2px; box-sizing: border-box; transition: border-color 0.2s;
+    }
+    #spell-input:focus { outline: none; border-color: #e879f9; }
+    .cast-hint { color: #555; font-size: 12px; margin-top: 8px; }
+    #duel-btn {
+      width: 100%; background: #e879f9; color: #000; border: none; padding: 14px;
+      font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 12px;
+    }
+    #duel-btn:hover { background: #d946ef; }
+    #duel-result {
+      padding: 20px; border-radius: 10px; text-align: center; min-height: 60px;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      gap: 8px; font-size: 18px; font-weight: bold;
+      background: #12001a; border: 1px solid #3d1a55; color: #555; font-style: italic;
+      transition: all 0.3s;
+    }
+    #duel-result.victory { background: #0a2e14; border-color: #4ecca3; color: #4ecca3; font-style: normal; }
+    #duel-result.defeat { background: #2e0a0a; border-color: #e94560; color: #e94560; font-style: normal; }
+    #duel-sub { font-size: 13px; font-weight: normal; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>The Sorcerer's Duel</h1>
+  <p class="subtitle">Type the incantation, confirm the challenge, claim victory</p>
+
+  <div class="duel-arena">
+    <div class="arena-banner">
+      <div class="vs-icon">⚔️</div>
+      <div class="arena-title">You vs. The Shadow Sorcerer</div>
+      <div class="arena-sub">Only the correct incantation wins the duel</div>
+    </div>
+
+    <div class="spell-panel">
+      <div class="spell-label">🔮 Cast Your Incantation</div>
+      <input type="text" id="spell-input" placeholder="Type the spell..." autocomplete="off" spellcheck="false" />
+      <div class="cast-hint">Type the spell, then press Enter or click Duel</div>
+      <button id="duel-btn">⚔️ Initiate Duel</button>
+    </div>
+
+    <div id="duel-result">
+      <span>Awaiting your challenge...</span>
+    </div>
+  </div>
+
+  <script>
+    function triggerDuel() {
+      const spell = document.getElementById('spell-input').value.trim().toUpperCase();
+      if (!spell) return;
+
+      const confirmed = confirm(`You cast "${spell}" — do you commit to this duel?`);
+      const result = document.getElementById('duel-result');
+
+      if (!confirmed) {
+        result.className = 'defeat';
+        result.innerHTML = '<span>You fled!</span><span id="duel-sub">The Shadow Sorcerer mocks your cowardice.</span>';
+        return;
+      }
+
+      if (spell === 'LUMINOS') {
+        result.className = 'victory';
+        result.innerHTML = '<span>⚡ Victory!</span><span id="duel-sub">LUMINOS shattered the Shadow Sorcerer\'s defences!</span>';
+      } else {
+        result.className = 'defeat';
+        result.innerHTML = '<span>💀 Defeated!</span><span id="duel-sub">"' + spell + '" was the wrong incantation.</span>';
+      }
+    }
+
+    document.getElementById('duel-btn').addEventListener('click', triggerDuel);
+    document.getElementById('spell-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') triggerDuel();
+    });
+  </script>
+</body>
+</html>

@@ -12,12 +12,24 @@ import { flashcardRoutes } from '@flashcards/routes/flashcardRoutes';
 import { serverAdapter } from '@service/queues/base.queue';
 import { healthRoutes } from '@user/routes/healthRoutes';
 import { userRoutes } from '@user/routes/userRoutes';
+import { gameRoutes } from '@game/routes/gameRoutes';
+import { progressRoutes } from '@progress/routes/progressRoutes';
 import { Application } from 'express';
+import express from 'express';
+import path from 'path';
+import { Request, Response, NextFunction } from 'express';
 
 const BASE_PATH = '/api/v1';
 
 export default (app: Application) => {
   const setupRoutes = (): void => {
+    // Serve test-quest target pages (allow iframing)
+    const targetPagesPath = path.join(__dirname, '..', '..', 'target-pages');
+    app.use('/pages', (_req: Request, res: Response, next: NextFunction) => {
+      res.setHeader('X-Frame-Options', 'ALLOWALL');
+      next();
+    }, express.static(targetPagesPath));
+
     app.use('/queues', authMiddleware.verifyUser, serverAdapter.getRouter());
     app.use('/health', healthRoutes.health());
     app.use('/health-env', authMiddleware.verifyUser, healthRoutes.env());
@@ -35,6 +47,8 @@ export default (app: Application) => {
     app.use(BASE_PATH, authMiddleware.verifyUser, chatRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, flashcardRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, userRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.verifyUser, gameRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.verifyUser, progressRoutes.routes());
 
   };
   setupRoutes();

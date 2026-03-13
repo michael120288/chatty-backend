@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Rarity Vault — Level 38</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a78bfa; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .vault { max-width: 520px; margin: 0 auto; }
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+    .filter-btn {
+      padding: 6px 16px; border-radius: 20px; border: 1px solid #3a2a6a;
+      background: #12102a; color: #888; font-size: 13px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active { background: #2d1a6a; border-color: #a78bfa; color: #a78bfa; }
+    .item-list { display: flex; flex-direction: column; gap: 8px; }
+    .item-card {
+      display: flex; align-items: center; gap: 12px;
+      background: #12102a; border: 1px solid #2a2050; border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .item-card[data-rarity="legendary"] { border-color: #f59e0b; }
+    .item-card[data-rarity="rare"] { border-color: #3b82f6; }
+    .item-card[data-rarity="common"] { border-color: #2a2050; }
+    .item-card.hidden { display: none; }
+    .item-icon { font-size: 24px; }
+    .item-name { flex: 1; font-size: 14px; font-weight: bold; }
+    .item-rarity {
+      font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 8px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .rarity-legendary { background: #2d1f00; color: #f59e0b; border: 1px solid #f59e0b; }
+    .rarity-rare { background: #0a1a2e; color: #3b82f6; border: 1px solid #3b82f6; }
+    .rarity-common { background: #1a1a1a; color: #888; border: 1px solid #444; }
+    .count-display { margin-top: 16px; font-size: 13px; color: #888; text-align: right; }
+    #visible-count { color: #a78bfa; font-weight: bold; }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #0d0a20; border: 1px solid #2a2050;
+      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #a78bfa; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Rarity Vault</h1>
+  <p class="subtitle">Filter the collection — then count what remains</p>
+
+  <div class="vault">
+    <div class="filter-bar">
+      <button class="filter-btn active" id="filter-all" data-filter="all">All Items</button>
+      <button class="filter-btn" id="filter-legendary" data-filter="legendary">⭐ Legendary</button>
+      <button class="filter-btn" id="filter-rare" data-filter="rare">💎 Rare</button>
+      <button class="filter-btn" id="filter-common" data-filter="common">⚪ Common</button>
+    </div>
+
+    <div class="item-list" id="item-list">
+      <div class="item-card" data-rarity="legendary"><span class="item-icon">🗡️</span><span class="item-name">Dragon Fang Blade</span><span class="item-rarity rarity-legendary">Legendary</span></div>
+      <div class="item-card" data-rarity="common"><span class="item-icon">🪨</span><span class="item-name">Stone Pebble</span><span class="item-rarity rarity-common">Common</span></div>
+      <div class="item-card" data-rarity="rare"><span class="item-icon">📿</span><span class="item-name">Sapphire Amulet</span><span class="item-rarity rarity-rare">Rare</span></div>
+      <div class="item-card" data-rarity="legendary"><span class="item-icon">🔮</span><span class="item-name">Orb of Eternity</span><span class="item-rarity rarity-legendary">Legendary</span></div>
+      <div class="item-card" data-rarity="common"><span class="item-icon">🍄</span><span class="item-name">Forest Mushroom</span><span class="item-rarity rarity-common">Common</span></div>
+      <div class="item-card" data-rarity="rare"><span class="item-icon">🪄</span><span class="item-name">Wand of Sparks</span><span class="item-rarity rarity-rare">Rare</span></div>
+      <div class="item-card" data-rarity="legendary"><span class="item-icon">👑</span><span class="item-name">Crown of the Archmage</span><span class="item-rarity rarity-legendary">Legendary</span></div>
+    </div>
+
+    <div class="count-display">Showing <span id="visible-count">7</span> items</div>
+
+    <div class="hint-box">
+      💡 Click <code>#filter-legendary</code> to filter, then use
+      <code>await expect(page.locator('.item-card:not(.hidden)')).toHaveCount(3)</code>
+      to verify exactly 3 legendary items are visible.
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        let count = 0;
+        document.querySelectorAll('.item-card').forEach(card => {
+          const show = filter === 'all' || card.dataset.rarity === filter;
+          card.classList.toggle('hidden', !show);
+          if (show) count++;
+        });
+        document.getElementById('visible-count').textContent = count;
+      });
+    });
+  </script>
+</body>
+</html>

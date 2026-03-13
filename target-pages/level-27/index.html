@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Guild Roster — Level 27</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0a1a; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a78bfa; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .roster { max-width: 600px; margin: 0 auto; }
+    .roster-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #2d1a4a;
+    }
+    .roster-title { color: #a78bfa; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+    .roster-count { color: #555; font-size: 13px; }
+    .guild-member {
+      display: flex; align-items: center; gap: 14px;
+      background: #16102a; border: 1px solid #2d1a4a; border-radius: 8px;
+      padding: 14px 18px; margin-bottom: 10px;
+    }
+    .member-avatar { font-size: 28px; }
+    .member-info { flex: 1; }
+    .member-name { font-size: 15px; font-weight: bold; color: #eee; }
+    .member-class { font-size: 12px; color: #888; margin-top: 2px; }
+    .member-status {
+      padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold;
+    }
+    .member-status.Active { background: #0a2e14; color: #4ecca3; border: 1px solid #4ecca3; }
+    .member-status.Inactive { background: #1a1a1a; color: #555; border: 1px solid #333; }
+    .member-level { color: #a78bfa; font-size: 13px; margin-left: 8px; }
+    .filter-hint {
+      margin-top: 20px; padding: 16px; background: #12091e; border: 1px solid #2d1a4a;
+      border-radius: 8px; font-size: 13px; color: #888; line-height: 1.6;
+    }
+    code { color: #a78bfa; font-family: monospace; background: #0a0010; padding: 1px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>The Guild Roster</h1>
+  <p class="subtitle">Not all members are equal — filter to find the worthy</p>
+
+  <div class="roster">
+    <div class="roster-header">
+      <span class="roster-title">⚔️ Adventurer's Guild</span>
+      <span class="roster-count">7 members registered</span>
+    </div>
+
+    <div class="guild-member" data-id="m1">
+      <span class="member-avatar">🧙</span>
+      <div class="member-info">
+        <div class="member-name">Lyria Stormweave</div>
+        <div class="member-class">Mage · Fire School</div>
+      </div>
+      <span class="member-status Active">Active</span>
+      <span class="member-level">Lv 42</span>
+    </div>
+
+    <div class="guild-member" data-id="m2">
+      <span class="member-avatar">⚔️</span>
+      <div class="member-info">
+        <div class="member-name">Brom Ironshield</div>
+        <div class="member-class">Warrior · Defense</div>
+      </div>
+      <span class="member-status Inactive">Inactive</span>
+      <span class="member-level">Lv 38</span>
+    </div>
+
+    <div class="guild-member" data-id="m3">
+      <span class="member-avatar">🏹</span>
+      <div class="member-info">
+        <div class="member-name">Senna Quickarrow</div>
+        <div class="member-class">Ranger · Scout</div>
+      </div>
+      <span class="member-status Active">Active</span>
+      <span class="member-level">Lv 35</span>
+    </div>
+
+    <div class="guild-member" data-id="m4">
+      <span class="member-avatar">🧙</span>
+      <div class="member-info">
+        <div class="member-name">Varek Shadowcall</div>
+        <div class="member-class">Mage · Shadow School</div>
+      </div>
+      <span class="member-status Active">Active</span>
+      <span class="member-level">Lv 55</span>
+    </div>
+
+    <div class="guild-member" data-id="m5">
+      <span class="member-avatar">🗡️</span>
+      <div class="member-info">
+        <div class="member-name">Celith Dawnblade</div>
+        <div class="member-class">Warrior · Assault</div>
+      </div>
+      <span class="member-status Active">Active</span>
+      <span class="member-level">Lv 29</span>
+    </div>
+
+    <div class="guild-member" data-id="m6">
+      <span class="member-avatar">🧙</span>
+      <div class="member-info">
+        <div class="member-name">Oryn Frostwhisper</div>
+        <div class="member-class">Mage · Ice School</div>
+      </div>
+      <span class="member-status Inactive">Inactive</span>
+      <span class="member-level">Lv 61</span>
+    </div>
+
+    <div class="guild-member" data-id="m7">
+      <span class="member-avatar">🛡️</span>
+      <div class="member-info">
+        <div class="member-name">Talia Hearthguard</div>
+        <div class="member-class">Warrior · Paladin</div>
+      </div>
+      <span class="member-status Inactive">Inactive</span>
+      <span class="member-level">Lv 44</span>
+    </div>
+
+    <div class="filter-hint">
+      💡 Use <code>locator('.guild-member').filter({ has: page.locator('.member-status.Active') })</code>
+      to get only active members, then chain another <code>.filter()</code> for Mages.
+    </div>
+  </div>
+</body>
+</html>

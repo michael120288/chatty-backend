@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Portal — Level 9</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a001f; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #7b61ff; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .portal-area { max-width: 700px; margin: 0 auto; }
+    .portal-description {
+      background: #12072e; border: 1px solid #3d2a6e; border-radius: 8px;
+      padding: 20px; margin-bottom: 24px; color: #aaa; font-size: 14px; line-height: 1.6;
+    }
+    .portal-container {
+      border: 3px solid #7b61ff; border-radius: 12px; overflow: hidden;
+      position: relative; background: #0a001f;
+    }
+    .portal-label {
+      background: #7b61ff; color: white; padding: 8px 16px;
+      font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    #portal-frame {
+      width: 100%; height: 280px; border: none; display: block;
+    }
+    .outer-content {
+      padding: 24px; background: #12072e;
+    }
+    .outer-info { color: #555; font-size: 13px; }
+    .frame-indicator {
+      display: flex; align-items: center; gap: 8px; margin-top: 16px;
+      padding: 10px 14px; background: #1a0a3e; border-radius: 6px; font-size: 13px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #7b61ff; animation: blink 1.5s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  </style>
+</head>
+<body>
+  <h1>The Portal</h1>
+  <p class="subtitle">Cross the frame boundary, brave traveler</p>
+
+  <div class="portal-area">
+    <div class="portal-description">
+      A magical portal (iframe) has opened in this realm. The secret you seek lies within the portal's inner dimension.
+      Use <code>frameLocator</code> to cross the boundary and retrieve what is hidden there.
+    </div>
+
+    <div class="portal-container">
+      <div class="portal-label">
+        <span>🌀</span>
+        <span>Portal Frame — id="portal-frame"</span>
+      </div>
+      <iframe id="portal-frame" src="inner.html" title="Portal Inner Realm"></iframe>
+    </div>
+
+    <div class="outer-content">
+      <div class="outer-info">This text is in the outer document. The secret code lives inside the iframe above.</div>
+      <div class="frame-indicator">
+        <div class="dot"></div>
+        <span>Portal active — inner realm accessible</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

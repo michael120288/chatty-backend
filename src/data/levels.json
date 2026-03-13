@@ -1,0 +1,1597 @@
+[
+  {
+    "id": "level-01",
+    "order": 1,
+    "title": "The Selector Sage",
+    "story": "You have arrived at the ancient Library of Elements. The ancient tomes speak of powerful selectors — mystical incantations that allow you to locate any element in the DOM realm. Master the art of selection, and the library's secrets shall be yours.",
+    "objective": "Use Playwright selectors to find the featured item by its ID, then verify its text content. Log 'LEVEL_PASSED' if the item's text is 'Magic Sword'.",
+    "targetUrl": "http://localhost:5000/pages/level-01/",
+    "xpReward": 100,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-01/');\n  \n  // TODO: Use locator('#featured-item') to find the featured item\n  // TODO: Get its text content\n  // TODO: If text === 'Magic Sword', console.log('LEVEL_PASSED')\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use page.locator('#featured-item') to find an element by its ID.",
+      "Call .textContent() on the locator to retrieve the text inside the element.",
+      "Use an if-statement to compare the text, then console.log('LEVEL_PASSED') if it matches 'Magic Sword'."
+    ],
+    "tags": [
+      "selectors",
+      "locator",
+      "textContent",
+      "id"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-02",
+    "order": 2,
+    "title": "The Clicker",
+    "story": "Deep in the Forest of Interactions, a mysterious button awaits. It is said that clicking this button reveals a hidden secret. Warriors who have mastered the click have unlocked powers beyond imagination. Are you ready to interact?",
+    "objective": "Click the 'Reveal Secret' button, then check if the secret message appears. Log 'LEVEL_PASSED' when you find the revealed text.",
+    "targetUrl": "http://localhost:5000/pages/level-02/",
+    "xpReward": 150,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-02/');\n  \n  // TODO: Find the 'Reveal Secret' button using getByRole('button', { name: 'Reveal Secret' })\n  // TODO: Click the button\n  // TODO: Check if #secret-message is visible\n  // TODO: If visible, log 'LEVEL_PASSED'\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use page.getByRole('button', { name: 'Reveal Secret' }) to find the button by its accessible role and name.",
+      "Call .click() on the button locator to trigger the click event.",
+      "After clicking, use page.locator('#secret-message').isVisible() to check if the message appeared, then log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "click",
+      "getByRole",
+      "interaction",
+      "DOM state"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-03",
+    "order": 3,
+    "title": "Form Alchemist",
+    "story": "The Gate of Authentication bars your path. Only those who can fill forms with perfect precision may pass. The ancient login ritual requires a username, a password, and the courage to submit. Transform raw input into magical authentication.",
+    "objective": "Fill in the login form with username 'wizard' and password 'playwright123', then submit it. Log 'LEVEL_PASSED' if you see the success message.",
+    "targetUrl": "http://localhost:5000/pages/level-03/",
+    "xpReward": 175,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-03/');\n  \n  // TODO: Fill the username field (getByLabel('Username')) with 'wizard'\n  // TODO: Fill the password field (getByLabel('Password')) with 'playwright123'\n  // TODO: Click the Submit button\n  // TODO: Check if the success message is visible and log 'LEVEL_PASSED'\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use page.getByLabel('Username') and page.getByLabel('Password') to find form fields by their label text.",
+      "Call .fill('yourValue') on each locator to type text into the fields.",
+      "After filling, click the submit button, then check page.locator('#success-message').isVisible() to confirm login success."
+    ],
+    "tags": [
+      "fill",
+      "forms",
+      "getByLabel",
+      "submit"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-04",
+    "order": 4,
+    "title": "The Asserter",
+    "story": "In the Hall of Truth, nothing is taken at face value. The great Asserters wield the power of expect() — they verify reality itself. Only by confirming what truly exists can you advance through this realm of verification.",
+    "objective": "Use Playwright assertions to verify the page title says 'Hall of Truth' and the hero badge has class 'badge-gold'. Log 'LEVEL_PASSED' after both assertions pass.",
+    "targetUrl": "http://localhost:5000/pages/level-04/",
+    "xpReward": 200,
+    "starterCode": "const { chromium, expect } = require('@playwright/test');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-04/');\n  \n  // TODO: Assert that page.locator('h1') has text 'Hall of Truth'\n  // TODO: Assert that page.locator('#hero-badge') has class 'badge-gold'\n  // TODO: If both pass without throwing, log 'LEVEL_PASSED'\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await expect(page.locator('h1')).toHaveText('Hall of Truth') to assert text content.",
+      "Use await expect(page.locator('#hero-badge')).toHaveClass(/badge-gold/) to assert a CSS class.",
+      "If both assertions pass (no errors thrown), log 'LEVEL_PASSED'. Wrap in try/catch if needed to debug."
+    ],
+    "tags": [
+      "expect",
+      "assertions",
+      "toHaveText",
+      "toHaveClass"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-05",
+    "order": 5,
+    "title": "The Waiter",
+    "story": "The Realm of Async is treacherous. Elements appear and disappear like phantoms. Patience is not a weakness here — it is power. Master the art of waiting, and nothing in the dynamic web shall elude you.",
+    "objective": "Wait for the delayed treasure chest to appear (it shows after 2 seconds), then read its data-treasure attribute. Log 'LEVEL_PASSED' if the value is 'golden-key'.",
+    "targetUrl": "http://localhost:5000/pages/level-05/",
+    "xpReward": 225,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-05/');\n  \n  // TODO: Wait for '#treasure-chest' to be visible (it appears after ~2 seconds)\n  // TODO: Get the 'data-treasure' attribute value\n  // TODO: If value === 'golden-key', log 'LEVEL_PASSED'\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await page.waitForSelector('#treasure-chest', { state: 'visible' }) to wait for the element to appear.",
+      "Alternatively, use await page.locator('#treasure-chest').waitFor({ state: 'visible' }).",
+      "After it's visible, use .getAttribute('data-treasure') to read the attribute, then compare and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "waitForSelector",
+      "waitFor",
+      "async",
+      "attributes"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-06",
+    "order": 6,
+    "title": "The Multiplier",
+    "story": "The Marketplace of Many holds countless items, each with different properties. True masters can handle multiple elements at once — finding all, filtering the worthy, and verifying each in turn. Show your mastery of the many.",
+    "objective": "Find all items in the marketplace list. Count how many have the class 'item-rare'. Log 'LEVEL_PASSED' if there are exactly 3 rare items.",
+    "targetUrl": "http://localhost:5000/pages/level-06/",
+    "xpReward": 250,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-06/');\n  \n  // TODO: Get all items using page.locator('.marketplace-item').all()\n  // TODO: Count items that have the class 'item-rare'\n  // TODO: If count === 3, log 'LEVEL_PASSED'\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await page.locator('.marketplace-item').all() to get an array of all item locators.",
+      "Loop through the array and use locator.getAttribute('class') or locator.evaluate(el => el.classList.contains('item-rare')) to check each.",
+      "Count how many return true, then compare to 3 and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "locator.all",
+      "multiple elements",
+      "filtering",
+      "classList"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-07",
+    "order": 7,
+    "title": "The Chronicler",
+    "story": "History must be preserved. The Chroniclers capture moments in time — frozen images of the web's ever-changing face. Learn to screenshot and you become the keeper of visual truth.",
+    "objective": "Navigate to the gallery page, take a full-page screenshot, and output its base64 representation. Log 'LEVEL_PASSED' followed by the first 20 chars of the base64 string.",
+    "targetUrl": "http://localhost:5000/pages/level-07/",
+    "xpReward": 275,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-07/');\n  \n  // TODO: Take a screenshot as a Buffer using page.screenshot({ fullPage: true })\n  // TODO: Convert to base64 using buffer.toString('base64')\n  // TODO: Log 'LEVEL_PASSED' and the first 20 chars of the base64 string\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use const screenshot = await page.screenshot({ fullPage: true }) to capture the page as a Buffer.",
+      "Convert with const base64 = screenshot.toString('base64').",
+      "Log both: console.log('LEVEL_PASSED'); console.log(base64.substring(0, 20));"
+    ],
+    "tags": [
+      "screenshot",
+      "base64",
+      "visual testing"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-08",
+    "order": 8,
+    "title": "The Interceptor",
+    "story": "In the Nexus of Networks, requests flow like rivers. The Interceptors are masters of traffic — they intercept API calls, redirect flows, and forge responses. Control the network, and you control the page's reality.",
+    "objective": "Intercept the fake API call to '/api/items' and return a custom response with items containing a 'dragon-scale'. Then verify the page shows 'dragon-scale'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-08/",
+    "xpReward": 300,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  // TODO: Set up route interception BEFORE navigating\n  // TODO: Intercept '**/api/items' and fulfill with { items: ['dragon-scale', 'fire-gem'] }\n  await page.route('**/api/items', async (route) => {\n    // TODO: fulfill with JSON response\n  });\n  \n  await page.goto('http://localhost:5000/pages/level-08/');\n  \n  // TODO: Wait for the items to render, then check if 'dragon-scale' is visible\n  // TODO: Log 'LEVEL_PASSED'\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Inside the route handler, call await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ items: ['dragon-scale', 'fire-gem'] }) }).",
+      "After navigating, wait for the list to render: await page.waitForSelector('.item-entry').",
+      "Use page.getByText('dragon-scale').isVisible() to verify the intercepted response rendered correctly."
+    ],
+    "tags": [
+      "page.route",
+      "network interception",
+      "fulfill",
+      "mocking"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-09",
+    "order": 9,
+    "title": "The Portal",
+    "story": "Beyond the Veil lies an iframe — a portal to another realm within the realm. Lesser testers falter here, confused by the boundary. But the true Portal Master knows how to cross frames and assert truths in worlds within worlds.",
+    "objective": "Navigate the page, use frameLocator to access the embedded iframe, and find the secret code displayed inside it. Log 'LEVEL_PASSED' if the code is 'XYZZY'.",
+    "targetUrl": "http://localhost:5000/pages/level-09/",
+    "xpReward": 350,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-09/');\n  \n  // TODO: Use page.frameLocator('#portal-frame') to access the iframe\n  // TODO: Inside the frame, find '#secret-code' and get its text\n  // TODO: If text === 'XYZZY', log 'LEVEL_PASSED'\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use const frame = page.frameLocator('#portal-frame') to get a frame locator.",
+      "Then use frame.locator('#secret-code') to find elements inside the iframe.",
+      "Call .textContent() on the inner locator to get the text, trim it, and compare to 'XYZZY'."
+    ],
+    "tags": [
+      "frameLocator",
+      "iframe",
+      "cross-frame",
+      "portals"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-10",
+    "order": 10,
+    "title": "The Grand Quest",
+    "story": "You have come so far, young Playwright. This final challenge tests everything you have learned. Before you stands the legendary Todo App — a beast of forms, lists, and dynamic state. Conquer it, and earn your place among the Playwright masters.",
+    "objective": "Complete the full todo E2E: add 3 items ('Slay Dragon', 'Rescue Princess', 'Claim Treasure'), mark the first one complete, delete the second one, then verify only 2 items remain. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-10/",
+    "xpReward": 500,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  \n  await page.goto('http://localhost:5000/pages/level-10/');\n  \n  // TODO: Add todo item 'Slay Dragon' (fill #todo-input, click #add-btn)\n  // TODO: Add todo item 'Rescue Princess'\n  // TODO: Add todo item 'Claim Treasure'\n  // TODO: Check off the first item (click its checkbox)\n  // TODO: Delete the second item (click its delete button)\n  // TODO: Count remaining items — should be 2\n  // TODO: Log 'LEVEL_PASSED'\n  \n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Add items by filling page.locator('#todo-input') and clicking page.locator('#add-btn') for each.",
+      "Each todo item has a checkbox with class '.todo-check' and a delete button with class '.todo-delete'. Use .nth(0), .nth(1) to target specific items.",
+      "After operations, use await page.locator('.todo-item').count() to get remaining items, compare to 2, and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "E2E",
+      "todo",
+      "forms",
+      "list manipulation",
+      "full test"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-11",
+    "order": 11,
+    "title": "The Keyboard Warrior",
+    "story": "In the Chamber of Inscriptions, words have power — but only when spoken through the keyboard. The ancient rune input awaits a sacred word. You must type it with precision and commit it with a keystroke. The pen is mightier, but the keyboard is mightier still.",
+    "objective": "Focus the #enchanted-input, type 'PLAYWRIGHT' using keyboard.type(), then press Enter. Log 'LEVEL_PASSED' if #inscription-result contains 'Inscribed!'.",
+    "targetUrl": "http://localhost:5000/pages/level-11/",
+    "xpReward": 325,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-11/');\n\n  // TODO: Click #enchanted-input to focus it\n  // TODO: Use page.keyboard.type('PLAYWRIGHT') to type the word\n  // TODO: Use page.keyboard.press('Enter') to submit\n  // TODO: Get the text of #inscription-result\n  // TODO: If it includes 'Inscribed!', log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "First click the input to focus it: await page.click('#enchanted-input').",
+      "Then type: await page.keyboard.type('PLAYWRIGHT'). This simulates real keystrokes character by character.",
+      "Press Enter with await page.keyboard.press('Enter'), then check: const text = await page.locator('#inscription-result').textContent(); if (text.includes('Inscribed!')) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "keyboard",
+      "keyboard.type",
+      "keyboard.press",
+      "keystrokes"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-12",
+    "order": 12,
+    "title": "The Dialogue Keeper",
+    "story": "The Oracle speaks through dialogs — alert, confirm, and prompt. Untrained testers freeze when these windows appear, blocking all progress. The Dialogue Keeper, however, intercepts them before they open. Listen for dialogs, respond wisely, and the Oracle's secrets are yours.",
+    "objective": "Set up a dialog handler with page.on('dialog') to accept the confirm dialog, then click 'Challenge the Oracle'. Log 'LEVEL_PASSED' if #oracle-result contains 'Challenge Accepted!'.",
+    "targetUrl": "http://localhost:5000/pages/level-12/",
+    "xpReward": 350,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-12/');\n\n  // TODO: Register a dialog handler BEFORE clicking\n  // page.on('dialog', async (dialog) => { await dialog.accept(); });\n  \n  // TODO: Click the 'Challenge the Oracle' button (#confirm-btn)\n  // TODO: Wait briefly for the result to update\n  // TODO: Get text of #oracle-result\n  // TODO: If it includes 'Challenge Accepted!', log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Register the listener BEFORE the action: page.on('dialog', async dialog => { await dialog.accept(); });",
+      "Then click: await page.click('#confirm-btn'). Playwright will auto-handle the dialog via your listener.",
+      "After clicking, wait a moment: await page.waitForTimeout(500), then read #oracle-result and check for 'Challenge Accepted!'."
+    ],
+    "tags": [
+      "dialog",
+      "page.on",
+      "dialog.accept",
+      "alert",
+      "confirm"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-13",
+    "order": 13,
+    "title": "The Evaluator",
+    "story": "Not all truths are visible in the DOM. Some secrets live only in the JavaScript realm — in window variables, computed values, and hidden state. The Evaluator steps beyond the boundary of HTML and reaches directly into the browser's soul with page.evaluate().",
+    "objective": "Use page.evaluate() to read window.SECRET_RUNE from the page's JavaScript context. Log 'LEVEL_PASSED' if the value equals 'EXCALIBUR'.",
+    "targetUrl": "http://localhost:5000/pages/level-13/",
+    "xpReward": 375,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-13/');\n\n  // TODO: Use page.evaluate() to read window.SECRET_RUNE\n  // const secretRune = await page.evaluate(() => window.SECRET_RUNE);\n  // TODO: If secretRune === 'EXCALIBUR', log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "page.evaluate() runs a function inside the browser context and returns its result.",
+      "Use: const val = await page.evaluate(() => window.SECRET_RUNE);",
+      "Then simply: if (val === 'EXCALIBUR') console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "page.evaluate",
+      "JavaScript context",
+      "window",
+      "browser eval"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-14",
+    "order": 14,
+    "title": "The Shape Shifter",
+    "story": "The web is a shapeshifter — it changes form depending on who is watching. Mobile devices see one world; desktops see another. The Shape Shifter can assume any form. Change your viewport, and previously invisible elements reveal themselves.",
+    "objective": "Set the viewport to 375x667 (mobile), then check if #mobile-treasure is visible. Log 'LEVEL_PASSED' if it is.",
+    "targetUrl": "http://localhost:5000/pages/level-14/",
+    "xpReward": 400,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-14/');\n\n  // TODO: Set viewport to mobile size: page.setViewportSize({ width: 375, height: 667 })\n  // TODO: Check if '#mobile-treasure' is visible\n  // TODO: If visible, log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await page.setViewportSize({ width: 375, height: 667 }) to resize the viewport to iPhone size.",
+      "After resizing, the CSS media query (max-width: 480px) will trigger, showing the mobile-only element.",
+      "Check with: const visible = await page.locator('#mobile-treasure').isVisible(); then log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "viewport",
+      "setViewportSize",
+      "responsive",
+      "mobile emulation"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-15",
+    "order": 15,
+    "title": "The Cookie Keeper",
+    "story": "Cookies are the keys to the kingdom. Without them, the vault door stays sealed. But the Cookie Keeper knows how to forge the perfect cookie and present it to the gate. Add the right cookie to the browser context, and walls become doorways.",
+    "objective": "Add a cookie named 'vault-access' with value 'granted' for localhost, reload the page, then verify #vault-content is visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-15/",
+    "xpReward": 425,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const context = await browser.newContext();\n  const page = await context.newPage();\n  await page.goto('http://localhost:5000/pages/level-15/');\n\n  // TODO: Add a cookie using context.addCookies()\n  // context.addCookies([{ name: 'vault-access', value: 'granted', url: '...' }])\n  // TODO: Reload the page\n  // TODO: Check if '#vault-content' is visible\n  // TODO: If visible, log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use context.addCookies([{ name: 'vault-access', value: 'granted', url: 'http://host.docker.internal:4000' }]).",
+      "After adding the cookie, call await page.reload() so the page re-reads document.cookie.",
+      "Then check: const visible = await page.locator('#vault-content').isVisible(); and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "cookies",
+      "addCookies",
+      "browser context",
+      "session"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-16",
+    "order": 16,
+    "title": "The Uploader",
+    "story": "The Scroll Repository demands an offering — a file, any file. The ancient custodian does not care about contents, only that the sacred act of upload is completed. Master setInputFiles(), and no upload gate shall stop you.",
+    "objective": "Upload a file to #scroll-input using setInputFiles() with a Buffer (no real file needed). Log 'LEVEL_PASSED' if #upload-success becomes visible.",
+    "targetUrl": "http://localhost:5000/pages/level-16/",
+    "xpReward": 450,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-16/');\n\n  // TODO: Use setInputFiles with a virtual file (no real file needed!)\n  // await page.locator('#scroll-input').setInputFiles({\n  //   name: 'ancient-scroll.txt',\n  //   mimeType: 'text/plain',\n  //   buffer: Buffer.from('Ancient wisdom within')\n  // });\n  // TODO: Wait for #upload-success to become visible\n  // TODO: Log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "setInputFiles() accepts a virtual file object: { name, mimeType, buffer } — no actual file on disk needed.",
+      "Use: await page.locator('#scroll-input').setInputFiles({ name: 'spell.txt', mimeType: 'text/plain', buffer: Buffer.from('hello') });",
+      "Then wait: await page.locator('#upload-success').waitFor({ state: 'visible' }); and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "setInputFiles",
+      "file upload",
+      "Buffer",
+      "virtual file"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-17",
+    "order": 17,
+    "title": "The Drag Master",
+    "story": "Power flows to those who can move things. In the Rune Circle arena, spells are cast not by clicking but by dragging. The Drag Master commands elements across the screen with fluid precision, placing runes exactly where they must go.",
+    "objective": "Drag the Fire Rune (#rune-fire) into the casting circle (#casting-circle). Log 'LEVEL_PASSED' if the circle shows 'Fire Rune Activated!'.",
+    "targetUrl": "http://localhost:5000/pages/level-17/",
+    "xpReward": 475,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-17/');\n\n  // TODO: Use page.dragAndDrop() to drag the fire rune to the casting circle\n  // await page.dragAndDrop('#rune-fire', '#casting-circle');\n  // TODO: Get text of #casting-circle and check for 'Fire Rune Activated!'\n  // TODO: Log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await page.dragAndDrop('#rune-fire', '#casting-circle') — the simplest way to perform drag and drop.",
+      "After dragging, the casting circle's text should update.",
+      "Read it with: const text = await page.locator('#casting-circle').textContent(); then check if it includes 'Fire Rune Activated!'."
+    ],
+    "tags": [
+      "dragAndDrop",
+      "drag and drop",
+      "mouse",
+      "interaction"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-18",
+    "order": 18,
+    "title": "The Tab Keeper",
+    "story": "Some portals open doors to entirely new realms — new browser tabs that exist in parallel. The Tab Keeper does not lose track of these new pages. They listen for the popup event, step through the portal, and retrieve what lies beyond.",
+    "objective": "Click #open-portal-btn, capture the new tab with page.waitForEvent('popup'), then get its title. Log 'LEVEL_PASSED' if the title is 'Secret Portal'.",
+    "targetUrl": "http://localhost:5000/pages/level-18/",
+    "xpReward": 500,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-18/');\n\n  // TODO: Listen for popup BEFORE clicking\n  // const [popup] = await Promise.all([\n  //   page.waitForEvent('popup'),\n  //   page.click('#open-portal-btn')\n  // ]);\n  // TODO: Wait for the popup to load\n  // TODO: Get its title\n  // TODO: If title === 'Secret Portal', log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use Promise.all to simultaneously wait for the popup and trigger the click — order matters here.",
+      "After getting the popup Page object: await popup.waitForLoadState(); to ensure it's fully loaded.",
+      "Then: const title = await popup.title(); if (title === 'Secret Portal') console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "popup",
+      "waitForEvent",
+      "multi-tab",
+      "new page",
+      "window.open"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-19",
+    "order": 19,
+    "title": "The Storage Sage",
+    "story": "localStorage is a magical tome that persists across page loads — a silent memory that shapes how the page presents itself. The Storage Sage knows that identity can be rewritten between sessions. Set the right value, reload, and the page transforms completely.",
+    "objective": "Use page.evaluate() to set localStorage item 'realm-rank' to 'archmage', then reload the page. Log 'LEVEL_PASSED' if #rank-display shows 'Grand Archmage'.",
+    "targetUrl": "http://localhost:5000/pages/level-19/",
+    "xpReward": 525,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-19/');\n\n  // TODO: Use page.evaluate to set localStorage\n  // await page.evaluate(() => localStorage.setItem('realm-rank', 'archmage'));\n  // TODO: Reload the page to apply the change\n  // TODO: Get text of #rank-display\n  // TODO: If it includes 'Grand Archmage', log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await page.evaluate(() => localStorage.setItem('realm-rank', 'archmage')); to write to localStorage.",
+      "Then reload: await page.reload(); — the page re-reads localStorage on each load.",
+      "Read: const text = await page.locator('#rank-display').textContent(); then check if it includes 'Grand Archmage'."
+    ],
+    "tags": [
+      "localStorage",
+      "page.evaluate",
+      "reload",
+      "storage"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-20",
+    "order": 20,
+    "title": "The Sorcerer's Duel",
+    "story": "The Shadow Sorcerer awaits. This boss challenge combines keyboard mastery with dialog handling. You must type the ancient incantation 'LUMINOS', then confirm your commitment when the sorcerer demands it. Hesitate and you lose. Act with precision and victory is yours.",
+    "objective": "Type 'LUMINOS' into #spell-input using keyboard.type(), set up a dialog handler to accept the confirm, then trigger the duel. Log 'LEVEL_PASSED' if #duel-result has class 'victory'.",
+    "targetUrl": "http://localhost:5000/pages/level-20/",
+    "xpReward": 600,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-20/');\n\n  // TODO: Click #spell-input to focus it\n  // TODO: Type 'LUMINOS' using page.keyboard.type()\n  // TODO: Set up dialog handler to accept: page.on('dialog', d => d.accept())\n  // TODO: Click #duel-btn to trigger the duel (which shows a confirm dialog)\n  // TODO: Wait for #duel-result, check its class contains 'victory'\n  // TODO: Log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Register the dialog handler before clicking the duel button: page.on('dialog', async d => await d.accept());",
+      "Type the spell first: await page.click('#spell-input'); await page.keyboard.type('LUMINOS');",
+      "Then click the duel button and check: const cls = await page.locator('#duel-result').getAttribute('class'); if (cls.includes('victory')) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "keyboard",
+      "dialog",
+      "boss",
+      "multi-concept",
+      "keyboard.type",
+      "page.on"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-21",
+    "order": 21,
+    "title": "The Twin API Master",
+    "story": "The dashboard draws from two springs: the Heroes Registry and the Quest Board. Both are real network requests — and both can be intercepted. The Twin API Master intercepts multiple routes in one test, mocking both feeds to show exactly what they want the page to display.",
+    "objective": "Intercept both GET /api/heroes and GET /api/quests. Mock heroes with [{name:'Aria',class:'Mage',level:99}] and quests with [{title:'Slay the Dragon',difficulty:'Hard',reward:500}]. Then verify both items render on the page. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-21/",
+    "xpReward": 650,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Intercept /api/heroes — fulfill with { heroes: [{name:'Aria',class:'Mage',level:99}] }\n  await page.route('**/api/heroes', async (route) => {\n    // await route.fulfill({ contentType: 'application/json', body: JSON.stringify(...) });\n  });\n\n  // TODO: Intercept /api/quests — fulfill with { quests: [{title:'Slay the Dragon',difficulty:'Hard',reward:500}] }\n  await page.route('**/api/quests', async (route) => {\n    // await route.fulfill({ ... });\n  });\n\n  await page.goto('http://localhost:5000/pages/level-21/');\n\n  // TODO: Wait for heroes and quests to render\n  // TODO: Verify 'Aria' appears in the heroes panel\n  // TODO: Verify 'Slay the Dragon' appears in the quests panel\n  // TODO: Log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Route handlers must be set up BEFORE page.goto(). Both routes can be registered independently.",
+      "Use route.fulfill({ contentType: 'application/json', body: JSON.stringify({ heroes: [...] }) }) for each.",
+      "After navigation, check: await page.getByText('Aria').isVisible() and await page.getByText('Slay the Dragon').isVisible() — if both true, log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "page.route",
+      "multiple routes",
+      "boss",
+      "network mocking",
+      "fulfill"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-22",
+    "order": 22,
+    "title": "The Cookie & Portal Nexus",
+    "story": "True mastery means combining skills. The nexus portal only grants access to those who bear the right cookie — and that cookie must be set in the browser context before the portal opens. Set the cookie, open the portal tab, and verify the new page reflects it.",
+    "objective": "Add cookie 'nexus-pass'='open', click #open-nexus-btn to open the popup, wait for it, then verify #portal-access-msg contains 'Nexus Access Granted'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-22/",
+    "xpReward": 700,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const context = await browser.newContext();\n  const page = await context.newPage();\n  await page.goto('http://localhost:5000/pages/level-22/');\n\n  // TODO: Add cookie 'nexus-pass'='open' to the context\n  // await context.addCookies([{ name: 'nexus-pass', value: 'open', url: '...' }]);\n\n  // TODO: Click the portal button and capture the popup\n  // const [popup] = await Promise.all([\n  //   page.waitForEvent('popup'),\n  //   page.click('#open-nexus-btn')\n  // ]);\n\n  // TODO: Wait for popup to load, verify #portal-access-msg\n  // TODO: Log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Add the cookie to the context (not the page): await context.addCookies([{ name: 'nexus-pass', value: 'open', url: 'http://host.docker.internal:4000' }]);",
+      "Capture the popup with Promise.all — set up the waitForEvent before the click.",
+      "After await popup.waitForLoadState(), read: const text = await popup.locator('#portal-access-msg').textContent(); and check for 'Nexus Access Granted'."
+    ],
+    "tags": [
+      "cookies",
+      "popup",
+      "multi-tab",
+      "boss",
+      "context",
+      "multi-concept"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-23",
+    "order": 23,
+    "title": "The Rune Weaver",
+    "story": "Three runes. Three slots. One hidden word. The Rune Weaver drags each rune to its destined position, then reads the result from both the DOM and localStorage — and immortalises the moment in a screenshot. Drag, evaluate, and chronicle.",
+    "objective": "Drag all 3 runes to their correct slots (Sun→Slot I, Moon→Slot II, Star→Slot III). Then verify localStorage 'rune-word' equals 'PWY' via page.evaluate(). Take a screenshot and log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-23/",
+    "xpReward": 750,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-23/');\n\n  // TODO: Drag Sun rune to Slot I\n  // await page.dragAndDrop('#src-sun', '#slot-1');\n  // TODO: Drag Moon rune to Slot II\n  // TODO: Drag Star rune to Slot III\n\n  // TODO: Read localStorage 'rune-word' via page.evaluate\n  // const word = await page.evaluate(() => localStorage.getItem('rune-word'));\n\n  // TODO: Take a screenshot\n  // const screenshot = await page.screenshot();\n  // console.log('Screenshot taken:', screenshot.length, 'bytes');\n\n  // TODO: If word === 'PWY', log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Do three separate dragAndDrop calls: #src-sun→#slot-1, #src-moon→#slot-2, #src-star→#slot-3.",
+      "After all drops, read storage: const word = await page.evaluate(() => localStorage.getItem('rune-word')); It should be 'PWY'.",
+      "Take a screenshot with await page.screenshot(), log its byte size, then if word === 'PWY' log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "dragAndDrop",
+      "localStorage",
+      "screenshot",
+      "boss",
+      "multi-concept",
+      "evaluate"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-24",
+    "order": 24,
+    "title": "The Grand Emporium",
+    "story": "The Grand Emporium is the ultimate merchant challenge. Products must be added, a coupon intercepted from the network, a checkout initiated, and victory confirmed. This is no simple test — it demands mastery of forms, routing, and assertions in a single sweep.",
+    "objective": "Add 'Mana Potion' and 'Dragon Sword' to cart. Intercept /api/coupon to return a 100 gold discount. Apply coupon code 'ARCANE100'. Click checkout and verify #checkout-success is visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-24/",
+    "xpReward": 800,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Intercept /api/coupon to return a valid discount\n  await page.route('**/api/coupon**', async (route) => {\n    await route.fulfill({\n      contentType: 'application/json',\n      body: JSON.stringify({ valid: true, discount: 100, message: '100 gold off!' })\n    });\n  });\n\n  await page.goto('http://localhost:5000/pages/level-24/');\n\n  // TODO: Click 'Add to Cart' for Mana Potion (#add-p1) and Dragon Sword (#add-p2)\n  // TODO: Fill #coupon-input with 'ARCANE100'\n  // TODO: Click #apply-coupon\n  // TODO: Click #checkout-btn\n  // TODO: Verify #checkout-success is visible\n  // TODO: Log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Set up the /api/coupon route intercept BEFORE navigating to the page.",
+      "Add items with await page.click('#add-p1'); then fill the coupon: await page.fill('#coupon-input', 'ARCANE100'); await page.click('#apply-coupon');",
+      "After clicking #checkout-btn, check: const visible = await page.locator('#checkout-success').isVisible(); and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "E2E",
+      "shopping cart",
+      "page.route",
+      "forms",
+      "boss",
+      "multi-concept"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-25",
+    "order": 25,
+    "title": "The Archmage's Gauntlet",
+    "story": "The final trial. Every skill you have mastered must now be wielded as one. Login the archmage. Open the settings panel. Mock the arcane feed API. Read the mana pool from the DOM via evaluate. Screenshot the dashboard. Only those who have truly learned the way of Playwright can claim this title.",
+    "objective": "Login with 'archmage'/'shadowrealm', open the settings panel (#settings-btn), intercept /api/arcane-feed with custom spells, click 'Fetch Feed', read #mana-pool text via evaluate, take a screenshot. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-25/",
+    "xpReward": 1000,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Intercept /api/arcane-feed with mocked spells\n  await page.route('**/api/arcane-feed', async (route) => {\n    await route.fulfill({\n      contentType: 'application/json',\n      body: JSON.stringify({ spells: [{ name: 'Arcane Blast', power: 9999 }] })\n    });\n  });\n\n  await page.goto('http://localhost:5000/pages/level-25/');\n\n  // TODO: Fill login form (getByLabel or #username / #password) and click #login-btn\n  // TODO: Wait for #dashboard-section to be visible\n  // TODO: Click #settings-btn to open settings panel\n  // TODO: Verify #settings-panel is visible, then close it\n  // TODO: Click #fetch-api-btn to fetch the mocked feed\n  // TODO: Wait for 'Arcane Blast' to appear in the feed\n  // TODO: Read #mana-pool value via page.evaluate\n  // TODO: Take a full-page screenshot\n  // TODO: Log 'LEVEL_PASSED'\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Login: await page.fill('#username', 'archmage'); await page.fill('#password', 'shadowrealm'); await page.click('#login-btn'); await page.locator('#dashboard-section').waitFor({ state: 'visible' });",
+      "Open settings: await page.click('#settings-btn'); verify: await expect(page.locator('#settings-panel')).toBeVisible(); then close it.",
+      "Fetch the feed: await page.click('#fetch-api-btn'); await page.getByText('Arcane Blast').waitFor(); read mana: const mana = await page.evaluate(() => document.getElementById('mana-pool').textContent); take screenshot: await page.screenshot({ fullPage: true }); then log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "boss",
+      "ultimate",
+      "multi-concept",
+      "login",
+      "API mock",
+      "evaluate",
+      "screenshot",
+      "settings"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-26",
+    "order": 26,
+    "title": "The Double Clicker",
+    "story": "In the Archive of Arcane Files, a tome hides its secrets behind a double-click. A single click merely selects — you must strike twice in swift succession to unlock the rename ritual. Master the art of the double-click and rename the ancient tome.",
+    "objective": "Double-click on the file '#target-file' (tome.md) to open the rename box. Then type a new name in '#rename-input' and press Enter. Verify '#rename-success' is visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-26/",
+    "xpReward": 350,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-26/');\n\n  // TODO: Double-click on '#target-file' to open the rename box\n  // await page.dblclick('#target-file');\n\n  // TODO: Wait for '#rename-input' to be visible, then clear and type a new name\n  // await page.locator('#rename-input').waitFor({ state: 'visible' });\n  // await page.fill('#rename-input', 'ancient-tome-renamed.md');\n\n  // TODO: Press Enter to confirm the rename\n  // await page.keyboard.press('Enter');\n\n  // TODO: Verify '#rename-success' is visible and log 'LEVEL_PASSED'\n  const success = await page.locator('#rename-success').isVisible();\n  if (success) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await page.dblclick('#target-file') — this fires both a click AND a dblclick event, which opens the rename box.",
+      "After double-clicking, the #rename-input should appear. Use await page.fill('#rename-input', 'new-name.md') to set the new value.",
+      "Press Enter with await page.keyboard.press('Enter') to confirm. Then check await page.locator('#rename-success').isVisible() and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "dblclick",
+      "keyboard",
+      "interaction",
+      "double-click"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-27",
+    "order": 27,
+    "title": "The Filter Sage",
+    "story": "The Guild Roster is crowded. Seven adventurers of varying status and class have registered. The Sage needs only Active Mages — those rare few who wield the arcane arts and stand ready for battle. Learn to chain locator filters to find the worthy among the many.",
+    "objective": "Find all active mage guild members by chaining locator.filter() calls. First filter '.guild-member' for those with '.member-status.Active', then filter again for those containing 'Mage'. Count them and log 'LEVEL_PASSED' if there are exactly 2.",
+    "targetUrl": "http://localhost:5000/pages/level-27/",
+    "xpReward": 375,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-27/');\n\n  // TODO: Get all active mages by chaining two .filter() calls\n  // Start with all guild members, filter for active status, then filter for Mage class\n  const activeMages = page\n    .locator('.guild-member')\n    .filter({ has: page.locator('.member-status.Active') })\n    .filter({ hasText: 'Mage' });\n\n  // TODO: Count the results\n  const count = await activeMages.count();\n\n  // TODO: Log 'LEVEL_PASSED' if there are exactly 2 active mages\n  if (count === 2) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use page.locator('.guild-member') to get all 7 members, then chain .filter({ has: page.locator('.member-status.Active') }) to keep only active ones.",
+      "Chain a second .filter({ hasText: 'Mage' }) to keep only those whose text contains 'Mage' (matches both 'Mage · Fire School' and 'Mage · Shadow School').",
+      "Use await activeMages.count() to get the number. There should be exactly 2 active mages. Log 'LEVEL_PASSED' if count === 2."
+    ],
+    "tags": [
+      "locator.filter",
+      "filter",
+      "chaining",
+      "DOM traversal"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-28",
+    "order": 28,
+    "title": "The Response Watcher",
+    "story": "The Oracle speaks only through the network. When the button is pressed, a hidden request is sent to the oracle's data scroll. A true Watcher intercepts this response and reads the prophecy within — verifying the oracle's confidence before trusting her words.",
+    "objective": "Click '#consult-btn' to trigger a fetch to oracle-data.json. Use page.waitForResponse() to capture the response. Parse its JSON and verify the 'confidence' field equals 99. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-28/",
+    "xpReward": 400,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-28/');\n\n  // TODO: Set up a waitForResponse promise BEFORE clicking\n  // const responsePromise = page.waitForResponse(resp => resp.url().includes('oracle-data.json'));\n\n  // TODO: Click the consult button to trigger the fetch\n  // await page.click('#consult-btn');\n\n  // TODO: Await the response and parse its JSON\n  // const response = await responsePromise;\n  // const data = await response.json();\n\n  // TODO: Verify confidence === 99 and log 'LEVEL_PASSED'\n  // if (data.confidence === 99) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "The key: set up the waitForResponse promise BEFORE clicking the button. Use: const responsePromise = page.waitForResponse(resp => resp.url().includes('oracle-data.json'));",
+      "Then click: await page.click('#consult-btn'); then resolve the promise: const response = await responsePromise;",
+      "Parse the response: const data = await response.json(); then check data.confidence === 99 and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "waitForResponse",
+      "network",
+      "response interception",
+      "JSON"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-29",
+    "order": 29,
+    "title": "The Network Blocker",
+    "story": "The Cursed Vault loads two malevolent scrolls that taint everything they touch. Before even entering the vault, a skilled Blocker must intercept these cursed requests and abort them. Only when the vault detects both requests aborted will it enter protection mode.",
+    "objective": "Before navigating to the page, set up route handlers to abort requests matching '**/cursed-tome.json' and '**/shadow-manifest.json'. After navigation, verify '#protection-msg' is visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-29/",
+    "xpReward": 425,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Abort requests for cursed resources BEFORE navigating\n  // await page.route('**/cursed-tome.json', route => route.abort());\n  // await page.route('**/shadow-manifest.json', route => route.abort());\n\n  await page.goto('http://localhost:5000/pages/level-29/');\n\n  // TODO: Wait for the page to process the blocked requests\n  // await page.waitForSelector('#protection-msg', { state: 'visible', timeout: 5000 });\n\n  // TODO: Verify vault is in protection mode\n  const isProtected = await page.locator('#protection-msg').isVisible();\n  if (isProtected) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Set up both route handlers BEFORE calling page.goto(). Use: await page.route('**/cursed-tome.json', route => route.abort());",
+      "Do the same for shadow-manifest.json. The page's JS catches the network failures and sets the vault to protection mode.",
+      "After goto(), wait for the async fetch handlers: await page.waitForSelector('#protection-msg', { state: 'visible', timeout: 5000 }); then check isVisible() and log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "route.abort",
+      "network blocking",
+      "page.route",
+      "request interception"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-30",
+    "order": 30,
+    "title": "The Navigator",
+    "story": "The Chronicles of the Realm span three chapters. To prove mastery of navigation, you must journey forward to the final chapter, then step back through time, then advance once more. The browser's history holds the path — goBack, goForward, and claim the final seal.",
+    "objective": "Navigate to Chapter I. Click through to Chapter II, then to Chapter III. Use page.goBack() to return to Chapter II. Then use page.goForward() to advance to Chapter III again. Verify the page title contains 'Chapter III'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-30/",
+    "xpReward": 450,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-30/');\n\n  // TODO: Navigate to Chapter II by clicking the 'Next Chapter' link\n  // await page.click('#next-btn');\n  // await page.waitForLoadState('load');\n\n  // TODO: Navigate to Chapter III\n  // await page.click('#next-btn');\n  // await page.waitForLoadState('load');\n\n  // TODO: Go back to Chapter II\n  // await page.goBack();\n  // await page.waitForLoadState('load');\n\n  // TODO: Go forward to Chapter III again\n  // await page.goForward();\n  // await page.waitForLoadState('load');\n\n  // TODO: Verify the page title contains 'Chapter III'\n  const title = await page.title();\n  if (title.includes('Chapter III')) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Click '#next-btn' twice to navigate from Chapter I → II → III. Wait for each load: await page.waitForLoadState('load');",
+      "Use await page.goBack() to go back to Chapter II, then await page.waitForLoadState('load');",
+      "Use await page.goForward() to advance to Chapter III, await the load, then check: const title = await page.title(); if (title.includes('Chapter III')) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "goBack",
+      "goForward",
+      "navigation",
+      "browser history"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-31",
+    "order": 31,
+    "title": "The Dark Mage",
+    "story": "The Shadow Realm is only accessible to those who embrace the darkness. The page reads the system color scheme preference and reveals hidden knowledge only to those who walk in dark mode. A true Dark Mage must instruct the browser to appear as a dark-mode devotee.",
+    "objective": "Use page.emulateMedia({ colorScheme: 'dark' }) BEFORE navigating to the page. Then verify that '#realm-indicator' displays 'Shadow Realm'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-31/",
+    "xpReward": 475,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Emulate dark color scheme BEFORE navigating\n  // await page.emulateMedia({ colorScheme: 'dark' });\n\n  await page.goto('http://localhost:5000/pages/level-31/');\n\n  // TODO: Read the realm indicator text\n  const indicator = await page.locator('#realm-indicator').textContent();\n\n  // TODO: Verify it shows 'Shadow Realm' and log 'LEVEL_PASSED'\n  if (indicator === 'Shadow Realm') console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Call await page.emulateMedia({ colorScheme: 'dark' }) before page.goto(). This makes the page's matchMedia('(prefers-color-scheme: dark)') return true.",
+      "The page reads the media query on load and sets the realm indicator text accordingly.",
+      "After navigating, read the text: const text = await page.locator('#realm-indicator').textContent(); If text === 'Shadow Realm', log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "emulateMedia",
+      "colorScheme",
+      "dark mode",
+      "media emulation"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-32",
+    "order": 32,
+    "title": "The Time Bender",
+    "story": "The Ancient One sleeps behind a 30-second seal. In the real world, you would wait. But a Time Bender bends the clock itself — installing a fake timer and fast-forwarding 30 seconds in an instant. Time is not a constraint; it is a tool.",
+    "objective": "Install the fake clock with page.clock.install() BEFORE navigating. Navigate to the page. Run the clock forward 30 seconds with page.clock.runFor(30000). Verify '#awakened-msg' is visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-32/",
+    "xpReward": 650,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Install the fake clock BEFORE navigating (intercepts setTimeout/setInterval)\n  // await page.clock.install();\n\n  await page.goto('http://localhost:5000/pages/level-32/');\n\n  // TODO: Run the clock forward by 30 seconds (fires all setInterval ticks)\n  // await page.clock.runFor(30000);\n\n  // TODO: Verify the awakened message is visible\n  const awakened = await page.locator('#awakened-msg').isVisible();\n  if (awakened) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Call await page.clock.install() BEFORE page.goto(). This replaces the browser's real timers with Playwright-controlled fake ones.",
+      "After navigating, call await page.clock.runFor(30000) to advance time by 30,000ms — this fires ALL setInterval callbacks in chronological order (unlike fastForward which only fires each timer once).",
+      "Then check: const visible = await page.locator('#awakened-msg').isVisible(); if (visible) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "page.clock",
+      "clock.install",
+      "runFor",
+      "time",
+      "boss",
+      "timers"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-33",
+    "order": 33,
+    "title": "The Style Inspector",
+    "story": "Beyond text and visibility lies a deeper truth — the visual properties of elements. The Arcane Gallery holds a legendary hero card. Its data-rarity attribute, its golden border, its power bar role — all must be verified with precision. Inspect everything.",
+    "objective": "Use @playwright/test's expect with toHaveAttribute, toHaveCSS, and toHaveRole. Verify: #hero-card has data-rarity='legendary'; #hero-card has CSS border-style='solid'; #power-bar has ARIA role 'progressbar'. Log 'LEVEL_PASSED' after all assertions pass.",
+    "targetUrl": "http://localhost:5000/pages/level-33/",
+    "xpReward": 600,
+    "starterCode": "const { chromium } = require('playwright');\nconst { expect } = require('@playwright/test');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-33/');\n\n  // TODO: Verify data-rarity attribute is 'legendary'\n  // await expect(page.locator('#hero-card')).toHaveAttribute('data-rarity', 'legendary');\n\n  // TODO: Verify the border-style CSS property is 'solid'\n  // await expect(page.locator('#hero-card')).toHaveCSS('border-style', 'solid');\n\n  // TODO: Verify #power-bar has the 'progressbar' ARIA role\n  // await expect(page.locator('#power-bar')).toHaveRole('progressbar');\n\n  // If all assertions passed (they throw on failure), log 'LEVEL_PASSED'\n  console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Import expect from @playwright/test: const { expect } = require('@playwright/test'); This gives you access to toHaveAttribute, toHaveCSS, and toHaveRole.",
+      "Check the attribute: await expect(page.locator('#hero-card')).toHaveAttribute('data-rarity', 'legendary'); and CSS: await expect(page.locator('#hero-card')).toHaveCSS('border-style', 'solid');",
+      "For the ARIA role: await expect(page.locator('#power-bar')).toHaveRole('progressbar'); The role='progressbar' is set explicitly on the element. If all pass without throwing, log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "toHaveAttribute",
+      "toHaveCSS",
+      "toHaveRole",
+      "CSS assertions",
+      "ARIA",
+      "boss"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-34",
+    "order": 34,
+    "title": "The Location Oracle",
+    "story": "The Oracle reads the coordinates of those who seek her wisdom, but she demands permission first. You must create a browser context that grants geolocation access and sets a precise location. Only then will the oracle reveal the ancient coordinates of London.",
+    "objective": "Create a browser context with grantPermissions(['geolocation']) and setGeolocation({ latitude: 51.5074, longitude: -0.1278 }). Create a page from that context. Navigate, click '#locate-btn', wait for '#location-display' to appear, verify '#lat-display' contains '51'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-34/",
+    "xpReward": 700,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n\n  // TODO: Create a context and grant geolocation permissions\n  // const context = await browser.newContext();\n  // await context.grantPermissions(['geolocation']);\n  // await context.setGeolocation({ latitude: 51.5074, longitude: -0.1278 });\n\n  // TODO: Create a page from the context (not directly from browser)\n  // const page = await context.newPage();\n\n  const page = await browser.newPage(); // Replace this with context.newPage()\n  await page.goto('http://localhost:5000/pages/level-34/');\n\n  // TODO: Click the locate button\n  // await page.click('#locate-btn');\n\n  // TODO: Wait for the location display to appear\n  // await page.locator('#location-display').waitFor({ state: 'visible' });\n\n  // TODO: Read latitude and verify it contains '51' (London)\n  // const lat = await page.locator('#lat-display').textContent();\n  // if (lat && lat.includes('51')) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Permissions must be set on a CONTEXT, not a page. Create a context: const context = await browser.newContext(); then await context.grantPermissions(['geolocation']);",
+      "Set the location: await context.setGeolocation({ latitude: 51.5074, longitude: -0.1278 }); Then create a page from the context: const page = await context.newPage();",
+      "After goto(), click '#locate-btn', wait: await page.locator('#location-display').waitFor({ state: 'visible' }); read lat: const lat = await page.locator('#lat-display').textContent(); if (lat.includes('51')) log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "grantPermissions",
+      "setGeolocation",
+      "context",
+      "geolocation",
+      "boss"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-35",
+    "order": 35,
+    "title": "The Resilient Tester",
+    "story": "The final trial of the ultimate Playwright master. The Mana Wellspring fills gradually over time — no events, no promises, just slow accumulation. A Resilient Tester does not wait blindly nor poll naively. They wield expect.poll() to retry assertions until the stars align and the mana reaches its peak.",
+    "objective": "The wellspring's #mana-bar fills via data-level attribute (0 to 100) over ~2 seconds. Use expect.poll() from @playwright/test to repeatedly check the data-level attribute until it reaches 100. Then verify '#ready-msg' is visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-35/",
+    "xpReward": 1000,
+    "starterCode": "const { chromium } = require('playwright');\nconst { expect } = require('@playwright/test');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-35/');\n\n  // TODO: Use expect.poll() to wait until #mana-bar data-level reaches 100\n  // await expect.poll(\n  //   async () => {\n  //     const level = await page.locator('#mana-bar').getAttribute('data-level');\n  //     return parseInt(level);\n  //   },\n  //   { timeout: 15000 }\n  // ).toBeGreaterThanOrEqual(100);\n\n  // TODO: Verify the ready message is visible and log 'LEVEL_PASSED'\n  // const ready = await page.locator('#ready-msg').isVisible();\n  // if (ready) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "expect.poll() repeatedly calls an async function until the result satisfies the assertion. Import expect from @playwright/test first.",
+      "Use: await expect.poll(async () => { const v = await page.locator('#mana-bar').getAttribute('data-level'); return parseInt(v); }, { timeout: 15000 }).toBeGreaterThanOrEqual(100);",
+      "After polling succeeds, check: const ready = await page.locator('#ready-msg').isVisible(); if (ready) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "expect.poll",
+      "polling",
+      "async waiting",
+      "ultimate",
+      "boss",
+      "@playwright/test"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-36",
+    "order": 36,
+    "title": "The Hoverer",
+    "story": "The Hover Sanctum guards its spells behind invisible barriers. A simple click reveals nothing — only by hovering over the menu does the dropdown appear, and only then can the spell be selected. Master the hover, and the sanctum's powers are yours.",
+    "objective": "Hover over '#menu-spells' to reveal the dropdown. Then click '#spell-lightning' to select Lightning Bolt. Verify '#selected-spell' contains 'Lightning Bolt'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-36/",
+    "xpReward": 400,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-36/');\n\n  // TODO: Hover over the spells menu to reveal the dropdown\n  // await page.locator('#menu-spells').hover();\n\n  // TODO: Click the Lightning Bolt spell\n  // await page.locator('#spell-lightning').click();\n\n  // TODO: Verify the selection and log 'LEVEL_PASSED'\n  const text = await page.locator('#selected-spell').textContent();\n  if (text && text.includes('Lightning Bolt')) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await page.locator('#menu-spells').hover() to simulate hovering — this triggers the CSS :hover state that reveals the dropdown.",
+      "After hovering, the dropdown is visible and #spell-lightning becomes clickable. Use await page.locator('#spell-lightning').click();",
+      "Read the result: const text = await page.locator('#selected-spell').textContent(); if (text.includes('Lightning Bolt')) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "hover",
+      "locator.hover",
+      "dropdown",
+      "CSS hover",
+      "interaction"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-37",
+    "order": 37,
+    "title": "The Index Master",
+    "story": "The Champions Board lists warriors by rank. You cannot know their names in advance — you must navigate by position. The first is the champion, the last the challenger, and the third holds a special secret. Index-based selection is the key.",
+    "objective": "Use locator.first() to get rank 1's name, locator.last() to get rank 5's name, and locator.nth(2) to get rank 3's name. Verify rank 1 is 'Varek Shadowcall' and rank 5 is 'Celith Dawnblade'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-37/",
+    "xpReward": 425,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-37/');\n\n  // TODO: Get rank 1 champion using .first()\n  // const champion = await page.locator('.rank-entry').first().locator('.champion-name').textContent();\n\n  // TODO: Get rank 5 using .last()\n  // const lastPlace = await page.locator('.rank-entry').last().locator('.champion-name').textContent();\n\n  // TODO: Get rank 3 (0-indexed: 2) using .nth(2)\n  // const third = await page.locator('.rank-entry').nth(2).locator('.champion-name').textContent();\n\n  // TODO: Verify and log 'LEVEL_PASSED'\n  // if (champion.includes('Varek') && lastPlace.includes('Celith')) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use page.locator('.rank-entry').first() to get the first element, then chain .locator('.champion-name').textContent() to read the name.",
+      "Use .last() for the 5th entry. Use .nth(2) for the 3rd entry (nth is 0-indexed, so nth(0)=1st, nth(2)=3rd).",
+      "Rank 1 should be 'Varek Shadowcall', rank 5 is 'Celith Dawnblade'. Check both, then log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "nth",
+      "first",
+      "last",
+      "index",
+      "locator chaining"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-38",
+    "order": 38,
+    "title": "The Count Keeper",
+    "story": "The Rarity Vault holds seven items of varying power. Most are common or rare — but only three are legendary. A Count Keeper does not manually count; they assert the exact number using toHaveCount. Filter, then verify.",
+    "objective": "Click '#filter-legendary' to show only legendary items. Then use expect(locator).toHaveCount(3) to verify exactly 3 are visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-38/",
+    "xpReward": 425,
+    "starterCode": "const { chromium } = require('playwright');\nconst { expect } = require('@playwright/test');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-38/');\n\n  // TODO: Click the legendary filter button\n  // await page.click('#filter-legendary');\n\n  // TODO: Assert exactly 3 legendary items are visible (not hidden)\n  // await expect(page.locator('.item-card:not(.hidden)')).toHaveCount(3);\n\n  // If assertion passed without throwing, log 'LEVEL_PASSED'\n  console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "First click the filter: await page.click('#filter-legendary'); This hides non-legendary items by adding class 'hidden'.",
+      "Use: await expect(page.locator('.item-card:not(.hidden)')).toHaveCount(3); This selects all non-hidden item cards and asserts exactly 3.",
+      "toHaveCount() throws if the count doesn't match. If it passes without error, then log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "toHaveCount",
+      "count assertion",
+      "@playwright/test",
+      "filter",
+      "CSS selector"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-39",
+    "order": 39,
+    "title": "The Value Inspector",
+    "story": "The Binding Ritual form holds state — pre-filled values, checked oaths, and a locked submit button. An Inspector does not just look; they assert. Verify each field's state with precision before the seal is complete.",
+    "objective": "Verify: '#guild-name' has value 'Order of the Arcane' (toHaveValue), '#oath-truth' is checked (toBeChecked), '#submit-btn' is disabled initially (toBeDisabled). Fill '#mage-title', then verify '#submit-btn' is enabled (toBeEnabled). Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-39/",
+    "xpReward": 450,
+    "starterCode": "const { chromium } = require('playwright');\nconst { expect } = require('@playwright/test');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-39/');\n\n  // TODO: Verify the pre-filled guild name value\n  // await expect(page.locator('#guild-name')).toHaveValue('Order of the Arcane');\n\n  // TODO: Verify the first oath checkbox is checked\n  // await expect(page.locator('#oath-truth')).toBeChecked();\n\n  // TODO: Verify submit button is disabled before filling the title\n  // await expect(page.locator('#submit-btn')).toBeDisabled();\n\n  // TODO: Fill in the mage title\n  // await page.fill('#mage-title', 'Grand Sorcerer');\n\n  // TODO: Verify submit button is now enabled\n  // await expect(page.locator('#submit-btn')).toBeEnabled();\n\n  console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await expect(page.locator('#guild-name')).toHaveValue('Order of the Arcane'); for input value assertion.",
+      "For checkbox: await expect(page.locator('#oath-truth')).toBeChecked(); For disabled: await expect(page.locator('#submit-btn')).toBeDisabled();",
+      "After await page.fill('#mage-title', 'Grand Sorcerer');, the button enables. Assert: await expect(page.locator('#submit-btn')).toBeEnabled(); then log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "toHaveValue",
+      "toBeChecked",
+      "toBeDisabled",
+      "toBeEnabled",
+      "form assertions"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-40",
+    "order": 40,
+    "title": "The URL Oracle",
+    "story": "The Waypoint Nexus teleports between realms by changing the URL. A URL Oracle does not just navigate — they assert the exact destination. Use waitForURL to confirm arrival, then seal the truth with toHaveURL.",
+    "objective": "Navigate to the page. Click '#wp-void' to travel to the Void Realm. Use page.waitForURL('**/#void-realm') to wait for the URL change. Then assert with expect(page).toHaveURL(/#void-realm/). Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-40/",
+    "xpReward": 475,
+    "starterCode": "const { chromium } = require('playwright');\nconst { expect } = require('@playwright/test');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-40/');\n\n  // TODO: Click the Void Realm waypoint button\n  // await page.click('#wp-void');\n\n  // TODO: Wait for the URL to change to include #void-realm\n  // await page.waitForURL('**/#void-realm');\n\n  // TODO: Assert the URL contains 'void-realm'\n  // await expect(page).toHaveURL(/#void-realm/);\n\n  console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "After clicking '#wp-void', the page uses window.location.hash = 'void-realm' which changes the URL to .../level-40/#void-realm.",
+      "Use await page.waitForURL('**/#void-realm') to wait for this URL change to complete.",
+      "Then assert: await expect(page).toHaveURL(/#void-realm/); — the regex matches any URL containing 'void-realm'. Log 'LEVEL_PASSED' if all assertions pass."
+    ],
+    "tags": [
+      "waitForURL",
+      "toHaveURL",
+      "URL assertion",
+      "navigation",
+      "hash routing"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-41",
+    "order": 41,
+    "title": "The Request Modifier",
+    "story": "The Spell Catalogue fetches its data from the arcane network. A Request Modifier does not merely intercept — they fetch the real response, alter its contents, and send back a modified version. The first spell's power must be raised to 9999.",
+    "objective": "Use page.route() with route.fetch() to intercept '**/spell-catalogue.json'. Fetch the real response, parse its JSON, set spells[0].power = 9999, then fulfill with the modified data. Click '#fetch-btn', verify the first spell shows power 9999. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-41/",
+    "xpReward": 550,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Intercept the spell catalogue and modify the first spell's power\n  await page.route('**/spell-catalogue.json', async (route) => {\n    // Fetch the real response\n    // const response = await route.fetch();\n    // const data = await response.json();\n    // Modify first spell\n    // data.spells[0].power = 9999;\n    // Fulfill with modified data\n    // await route.fulfill({ json: data });\n    await route.continue(); // Remove this line when implementing above\n  });\n\n  await page.goto('http://localhost:5000/pages/level-41/');\n  await page.click('#fetch-btn');\n  await page.waitForSelector('.spell-card');\n\n  // TODO: Verify the first spell shows power 9999\n  const firstPower = await page.locator('.spell-power').first().getAttribute('data-power');\n  if (firstPower === '9999') console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Inside the route handler: const response = await route.fetch(); fetches the real data from the server.",
+      "const data = await response.json(); gives you the parsed JSON. Modify: data.spells[0].power = 9999; then await route.fulfill({ json: data });",
+      "After clicking #fetch-btn and waiting for .spell-card, check: const power = await page.locator('.spell-power').first().getAttribute('data-power'); if (power === '9999') log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "route.fetch",
+      "route.fulfill",
+      "response modification",
+      "network interception",
+      "JSON"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-42",
+    "order": 42,
+    "title": "The Console Listener",
+    "story": "The Whisper Chamber communicates secrets through the browser console. Most explorers never check the console — but a true listener hears everything. The secret pass phrase is hidden in a console.log — intercept it before it fades.",
+    "objective": "Set up a console message listener with page.on('console', ...) BEFORE navigating. Navigate, then click '#btn-secret'. Capture all console messages and verify one contains 'ARCANE_PASS: open-sesame'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-42/",
+    "xpReward": 500,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Set up console listener BEFORE navigating\n  const consoleMessages = [];\n  // page.on('console', msg => consoleMessages.push(msg.text()));\n\n  await page.goto('http://localhost:5000/pages/level-42/');\n\n  // TODO: Click the secret chant button\n  // await page.click('#btn-secret');\n\n  // TODO: Check if 'ARCANE_PASS: open-sesame' was logged\n  const found = consoleMessages.some(msg => msg.includes('ARCANE_PASS: open-sesame'));\n  if (found) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Set up the listener BEFORE goto(): page.on('console', msg => consoleMessages.push(msg.text())); The event fires for every console.log/warn/error on the page.",
+      "Then navigate and click: await page.goto(...); await page.click('#btn-secret');",
+      "Check the captured messages: const found = consoleMessages.some(m => m.includes('ARCANE_PASS: open-sesame')); if (found) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "page.on('console')",
+      "console events",
+      "console listener",
+      "event monitoring"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-43",
+    "order": 43,
+    "title": "The Session Keeper",
+    "story": "The Arcane Registry demands login — but a true Session Keeper logs in once and saves their state. On the next visit, the registry recognises the saved session and shows the dashboard without requiring login again. Master storageState.",
+    "objective": "Login with 'archmage'/'spellbound'. Save the session: const state = await context.storageState(). Create a new context with { storageState: state }. Navigate to the page in the new context and verify '#dashboard-panel' is visible without logging in. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-43/",
+    "xpReward": 600,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n\n  // --- Session 1: Login and save state ---\n  const context1 = await browser.newContext();\n  const page1 = await context1.newPage();\n  await page1.goto('http://localhost:5000/pages/level-43/');\n\n  // TODO: Login with archmage / spellbound\n  // await page1.fill('#username', 'archmage');\n  // await page1.fill('#password', 'spellbound');\n  // await page1.click('#login-btn');\n  // await page1.locator('#dashboard-panel').waitFor({ state: 'visible' });\n\n  // TODO: Save the storage state (includes localStorage)\n  // const state = await context1.storageState();\n  // await context1.close();\n\n  // --- Session 2: Use saved state ---\n  // const context2 = await browser.newContext({ storageState: state });\n  // const page2 = await context2.newPage();\n  // await page2.goto('http://localhost:5000/pages/level-43/');\n\n  // TODO: Verify dashboard is visible (no login needed)\n  // const isDashboard = await page2.locator('#dashboard-panel').isVisible();\n  // if (isDashboard) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "After login, save state: const state = await context1.storageState(); — this captures localStorage, sessionStorage, and cookies from context1.",
+      "Create new context with that state: const context2 = await browser.newContext({ storageState: state }); const page2 = await context2.newPage();",
+      "Navigate with page2 to the same URL. The page's JS reads localStorage on load and shows the dashboard directly. Check: if (await page2.locator('#dashboard-panel').isVisible()) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "storageState",
+      "context.storageState",
+      "session",
+      "authentication",
+      "localStorage",
+      "boss"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-44",
+    "order": 44,
+    "title": "The Header Mage",
+    "story": "The Sealed Vault demands a magic key — not a password, but a request header. Every request from a Header Mage carries the X-Magic-Key. The vault's guardian inspects all incoming headers and only grants access to those who carry the key.",
+    "objective": "Create a context with context.setExtraHTTPHeaders({'X-Magic-Key': 'open-sesame'}). Set up page.route to intercept '**/vault-treasure.json', inspect request.headers()['x-magic-key'], and fulfill with treasure data if correct. Click '#open-vault-btn', verify '#treasure-name' is visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-44/",
+    "xpReward": 525,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n\n  // TODO: Create context with extra headers\n  // const context = await browser.newContext();\n  // await context.setExtraHTTPHeaders({ 'X-Magic-Key': 'open-sesame' });\n  // const page = await context.newPage();\n\n  const page = await browser.newPage(); // Replace with context.newPage() above\n\n  // TODO: Intercept vault-treasure.json and check the header\n  await page.route('**/vault-treasure.json', async (route, request) => {\n    const headers = request.headers();\n    // if (headers['x-magic-key'] === 'open-sesame') {\n    //   await route.fulfill({ json: { treasure: 'Dragon Heart Crystal', power: 9999 } });\n    // } else {\n    //   await route.fulfill({ status: 403, body: 'Access Denied' });\n    // }\n    await route.fulfill({ status: 403, body: 'Access Denied' }); // Remove when fixed\n  });\n\n  await page.goto('http://localhost:5000/pages/level-44/');\n  await page.click('#open-vault-btn');\n  await page.waitForTimeout(500);\n\n  const visible = await page.locator('#vault-contents').isVisible();\n  if (visible) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Create context first: const context = await browser.newContext(); await context.setExtraHTTPHeaders({'X-Magic-Key': 'open-sesame'}); const page = await context.newPage();",
+      "In the route handler, check: const headers = request.headers(); if (headers['x-magic-key'] === 'open-sesame') { await route.fulfill({ json: { treasure: 'Dragon Heart Crystal', power: 9999 } }); }",
+      "After clicking #open-vault-btn and waiting, check if #vault-contents is visible. The page shows it when the fetch returns valid treasure data."
+    ],
+    "tags": [
+      "setExtraHTTPHeaders",
+      "custom headers",
+      "request.headers",
+      "context",
+      "network"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-45",
+    "order": 45,
+    "title": "The Scroll Master",
+    "story": "The Deep Archive hides its greatest relic far below the visible page. You cannot click what you cannot see — but a Scroll Master need not scroll manually. One command brings any element into view, no matter how deep it is buried.",
+    "objective": "Navigate to the page. Use locator.scrollIntoViewIfNeeded() on '#buried-relic' to bring it into view. Then click '#claim-btn'. Verify '#claimed-msg' is visible. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-45/",
+    "xpReward": 450,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-45/');\n\n  // TODO: Scroll the buried relic into view\n  // await page.locator('#buried-relic').scrollIntoViewIfNeeded();\n\n  // TODO: Click the claim button\n  // await page.click('#claim-btn');\n\n  // TODO: Verify claimed message is visible\n  const visible = await page.locator('#claimed-msg').isVisible();\n  if (visible) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use await page.locator('#buried-relic').scrollIntoViewIfNeeded(); — this scrolls the page until the element enters the viewport.",
+      "Once in view, the element is interactable. Click: await page.click('#claim-btn');",
+      "Check visibility: const visible = await page.locator('#claimed-msg').isVisible(); if (visible) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "scrollIntoViewIfNeeded",
+      "scroll",
+      "viewport",
+      "off-screen elements"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-46",
+    "order": 46,
+    "title": "The Mouse Wizard",
+    "story": "The Mana Conduit is a custom slider that rejects all fill() attempts. It was crafted by an ancient wizard who trusted only raw mouse control. To charge it, you must move the mouse to its track, press the mouse button, drag to the end, and release. Only then will it be fully charged.",
+    "objective": "Get the bounding box of '#slider-track'. Use page.mouse.move(), page.mouse.down(), page.mouse.move() to the end (with steps), and page.mouse.up() to drag the slider to 100%. Verify '#mana-value' shows '100%'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-46/",
+    "xpReward": 625,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-46/');\n\n  // TODO: Get the slider track's bounding box\n  // const box = await page.locator('#slider-track').boundingBox();\n\n  // TODO: Move to the left edge of the slider, press down, drag to right edge, release\n  // await page.mouse.move(box.x, box.y + box.height / 2);\n  // await page.mouse.down();\n  // await page.mouse.move(box.x + box.width, box.y + box.height / 2, { steps: 20 });\n  // await page.mouse.up();\n\n  // TODO: Verify mana is at 100% and log 'LEVEL_PASSED'\n  const value = await page.locator('#mana-value').textContent();\n  if (value === '100%') console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Get the bounding box first: const box = await page.locator('#slider-track').boundingBox(); This gives you { x, y, width, height }.",
+      "Simulate the drag: await page.mouse.move(box.x, box.y + box.height/2); await page.mouse.down(); await page.mouse.move(box.x + box.width, box.y + box.height/2, { steps: 20 }); await page.mouse.up();",
+      "The { steps: 20 } option fires 20 intermediate mousemove events for smooth dragging. Check: const val = await page.locator('#mana-value').textContent(); if (val === '100%') log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "page.mouse",
+      "mouse.move",
+      "mouse.down",
+      "mouse.up",
+      "boundingBox",
+      "drag",
+      "boss"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-47",
+    "order": 47,
+    "title": "The Network Sentinel",
+    "story": "The Arcane Observatory sends signals across the network. A Sentinel watches every transmission — not by intercepting, but by listening. Set your ears to the request and response events, let the signals pass unmodified, and report what you have observed.",
+    "objective": "Set up page.on('request') and page.on('response') listeners BEFORE navigating. Click '#btn-prophecy'. Verify that a response event fired for a URL containing 'prophecy.json' with status 200. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-47/",
+    "xpReward": 575,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  // TODO: Set up request and response listeners BEFORE navigating\n  const responses = [];\n  // page.on('request', req => console.log('REQ:', req.url()));\n  // page.on('response', res => responses.push({ url: res.url(), status: res.status() }));\n\n  await page.goto('http://localhost:5000/pages/level-47/');\n\n  // TODO: Click the prophecy fetch button\n  // await page.click('#btn-prophecy');\n  // await page.waitForTimeout(500); // allow response to be captured\n\n  // TODO: Find the prophecy response and verify status 200\n  const prophecyResponse = responses.find(r => r.url.includes('prophecy.json'));\n  if (prophecyResponse && prophecyResponse.status === 200) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Set up BEFORE goto(): page.on('response', res => responses.push({ url: res.url(), status: res.status() }));",
+      "After navigating and clicking '#btn-prophecy', wait briefly: await page.waitForTimeout(500);",
+      "Find the prophecy response: const r = responses.find(r => r.url.includes('prophecy.json')); if (r && r.status === 200) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "page.on('request')",
+      "page.on('response')",
+      "network events",
+      "event listener",
+      "monitoring"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-48",
+    "order": 48,
+    "title": "The Load Watcher",
+    "story": "The Summoning Circle brings entities from the void one by one — each through a separate network request. A hasty tester asserts before all entities arrive and finds only partial results. A Load Watcher waits for the network to fall silent before making any claims.",
+    "objective": "Click '#summon-btn' to start the ritual. Use page.waitForLoadState('networkidle') to wait for all async fetches to complete. Then assert all 4 entity cards appeared using toHaveCount(4). Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-48/",
+    "xpReward": 500,
+    "starterCode": "const { chromium } = require('playwright');\nconst { expect } = require('@playwright/test');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-48/');\n\n  // TODO: Click the summon button to start the ritual\n  // await page.click('#summon-btn');\n\n  // TODO: Wait for network to be idle (all async fetches complete)\n  // await page.waitForLoadState('networkidle');\n\n  // TODO: Assert exactly 4 entity cards are visible\n  // await expect(page.locator('.entity-card.appeared')).toHaveCount(4);\n\n  console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Click the button: await page.click('#summon-btn'); This starts 4 sequential async fetches with delays up to 2 seconds.",
+      "Wait for network silence: await page.waitForLoadState('networkidle'); This waits until no network requests have occurred for 500ms.",
+      "Then assert: await expect(page.locator('.entity-card.appeared')).toHaveCount(4); If all 4 arrived, log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "waitForLoadState",
+      "networkidle",
+      "async loading",
+      "toHaveCount",
+      "network"
+    ],
+    "category": "api"
+  },
+  {
+    "id": "level-49",
+    "order": 49,
+    "title": "The Mobile Shapeshifter",
+    "story": "The Shapeshifter's page wears different forms for different visitors. Desktop users see a full navigation bar. Mobile users see a hamburger menu and a special mobile banner. A true Shapeshifter Tester can become any device — and assert what that device would see.",
+    "objective": "Use const { devices } = require('playwright') and create a context with browser.newContext({ ...devices['iPhone 12'] }). Navigate to the page. Verify '#hamburger' is visible and '#layout-badge' contains 'Mobile Experience'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-49/",
+    "xpReward": 650,
+    "starterCode": "const { chromium, devices } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n\n  // TODO: Create a context emulating iPhone 12\n  // const iPhone = devices['iPhone 12'];\n  // const context = await browser.newContext({ ...iPhone });\n  // const page = await context.newPage();\n\n  const page = await browser.newPage(); // Replace with context.newPage() above\n  await page.goto('http://localhost:5000/pages/level-49/');\n\n  // TODO: Verify hamburger menu is visible on mobile\n  // const hamburgerVisible = await page.locator('#hamburger').isVisible();\n\n  // TODO: Verify the layout badge shows mobile experience\n  // const badgeText = await page.locator('#layout-badge').textContent();\n\n  // if (hamburgerVisible && badgeText.includes('Mobile Experience')) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Import devices: const { chromium, devices } = require('playwright'); then const iPhone = devices['iPhone 12']; const context = await browser.newContext({ ...iPhone });",
+      "Spread the device config: { ...iPhone } sets the userAgent, viewport (390x844), and touch capabilities for iPhone 12.",
+      "After navigating, check: const visible = await page.locator('#hamburger').isVisible(); const text = await page.locator('#layout-badge').textContent(); if (visible && text.includes('Mobile Experience')) log 'LEVEL_PASSED'."
+    ],
+    "tags": [
+      "devices",
+      "mobile emulation",
+      "browser.newContext",
+      "responsive",
+      "viewport",
+      "userAgent",
+      "boss"
+    ],
+    "category": "ui"
+  },
+  {
+    "id": "level-50",
+    "order": 50,
+    "category": "ui",
+    "title": "The Accessible Seeker",
+    "story": "The Guild Hall of Marks holds elements bearing sacred identifiers — test IDs inscribed by developers, placeholder whispers in input fields, and alt text descriptions on images. A true seeker uses all three to locate the unmarked.",
+    "objective": "Use page.getByTestId('hero-badge') to find the badge and read its text. Use page.getByPlaceholder('Search spells...') to find the search input. Use page.getByRole('img', { name: 'Arcane Staff' }) for the icon. If badge text is 'Champion', log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-50/",
+    "xpReward": 200,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  await page.goto('http://localhost:5000/pages/level-50/');\n\n  // TODO: Find badge by test ID\n  // const badge = page.getByTestId('hero-badge');\n  // const badgeText = await badge.textContent();\n\n  // TODO: Find input by placeholder\n  // const search = page.getByPlaceholder('Search spells...');\n\n  // TODO: Find icon by role + name\n  // const staff = page.getByRole('img', { name: 'Arcane Staff' });\n\n  // TODO: If badgeText.trim() === 'Champion', console.log('LEVEL_PASSED')\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use page.getByTestId('hero-badge') to find any element with data-testid='hero-badge'.",
+      "page.getByPlaceholder('Search spells...') finds inputs or textareas by their placeholder attribute.",
+      "page.getByRole('img', { name: 'Arcane Staff' }) finds an element with role='img' and accessible name 'Arcane Staff'. Get the badge textContent, compare to 'Champion', log LEVEL_PASSED."
+    ],
+    "tags": [
+      "getByTestId",
+      "getByPlaceholder",
+      "getByRole",
+      "accessibility",
+      "selectors"
+    ]
+  },
+  {
+    "id": "level-51",
+    "order": 51,
+    "category": "ui",
+    "title": "The Form Enchanter",
+    "story": "The Spell Registration Office demands precision. Checkboxes must be ticked, dropdowns chosen with care. Only those who master check(), uncheck(), and selectOption() may earn their certification.",
+    "objective": "Check the #fire-mastery and #ice-mastery checkboxes. Select 'Archmage' from the #rank-select dropdown. Verify inputValue() returns 'Archmage'. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-51/",
+    "xpReward": 225,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  await page.goto('http://localhost:5000/pages/level-51/');\n\n  // TODO: Check both checkboxes\n  // await page.locator('#fire-mastery').check();\n  // await page.locator('#ice-mastery').check();\n\n  // TODO: Select 'Archmage' from the dropdown\n  // await page.locator('#rank-select').selectOption('Archmage');\n\n  // TODO: Read the current value of the select\n  // const value = await page.locator('#rank-select').inputValue();\n  // if (value === 'Archmage') console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use locator.check() to check a checkbox — it only checks if not already checked. Use locator.uncheck() to reverse it.",
+      "locator.selectOption('Archmage') selects the option whose value or text matches 'Archmage'.",
+      "locator.inputValue() returns the current value of an input or select element as a string. Compare it to verify the selection."
+    ],
+    "tags": [
+      "check",
+      "uncheck",
+      "selectOption",
+      "inputValue",
+      "forms",
+      "checkboxes",
+      "dropdowns"
+    ]
+  },
+  {
+    "id": "level-52",
+    "order": 52,
+    "category": "ui",
+    "title": "The Element Oracle",
+    "story": "The Crystal Archive stores secrets deep within each element — data attributes invisible to the eye, computed styles hidden in the cascade. Only locator.evaluate() can pierce the veil and retrieve the raw truth.",
+    "objective": "Use locator('#power-crystal').evaluate(el => el.dataset.power) to read the data-power attribute. Use locator('#spell-name').evaluate(el => el.textContent.trim()) to get its text. If power is '9000' and name includes 'Ancient', log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-52/",
+    "xpReward": 300,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  await page.goto('http://localhost:5000/pages/level-52/');\n\n  // TODO: Read data-power attribute from the crystal\n  // const power = await page.locator('#power-crystal').evaluate(el => el.dataset.power);\n\n  // TODO: Read text content from the spell name element\n  // const name = await page.locator('#spell-name').evaluate(el => el.textContent.trim());\n\n  // TODO: If power === '9000' && name.includes('Ancient'), console.log('LEVEL_PASSED')\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "locator.evaluate(el => ...) runs a function in the browser context with the matched DOM element as its argument.",
+      "Access data attributes via el.dataset.propertyName (camelCase) — so data-power becomes el.dataset.power.",
+      "Compare: if (power === '9000' && name.includes('Ancient')) console.log('LEVEL_PASSED');"
+    ],
+    "tags": [
+      "locator.evaluate",
+      "evaluate",
+      "dataset",
+      "data attributes",
+      "DOM",
+      "element"
+    ]
+  },
+  {
+    "id": "level-53",
+    "order": 53,
+    "category": "ui",
+    "title": "The State Warden",
+    "story": "The Locked Vault guards its secrets behind disabled gates, hidden runes, and sealed inscriptions. Not every truth needs an assertion — some elements reveal their state through direct boolean queries.",
+    "objective": "Check isEnabled() on #locked-gate (should be false), isHidden() on #secret-rune (should be true), isEditable() on #sealed-input (should be false). If all three match, log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-53/",
+    "xpReward": 250,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  await page.goto('http://localhost:5000/pages/level-53/');\n\n  // TODO: Check if the gate button is enabled (it should NOT be)\n  // const gateEnabled = await page.locator('#locked-gate').isEnabled();\n\n  // TODO: Check if the secret rune is hidden (it should BE hidden)\n  // const runeHidden = await page.locator('#secret-rune').isHidden();\n\n  // TODO: Check if the sealed input is editable (it should NOT be)\n  // const inputEditable = await page.locator('#sealed-input').isEditable();\n\n  // TODO: If !gateEnabled && runeHidden && !inputEditable => console.log('LEVEL_PASSED')\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "locator.isEnabled() returns true if the element is not disabled. A button with the disabled attribute returns false.",
+      "locator.isHidden() returns true if the element has display:none, visibility:hidden, or is otherwise invisible.",
+      "locator.isEditable() returns true if the element is an input/textarea that is not readonly and not disabled. A readonly input returns false."
+    ],
+    "tags": [
+      "isEnabled",
+      "isHidden",
+      "isEditable",
+      "isVisible",
+      "element state",
+      "state checks"
+    ]
+  },
+  {
+    "id": "level-54",
+    "order": 54,
+    "category": "ui",
+    "title": "The Locator Alchemist",
+    "story": "In the Spell Matrix, elements overlap and multiply. A button may be many things at once. The Locator Alchemist combines two queries into one unstoppable force with .and(), and casts a wide net with .or().",
+    "objective": "Use page.getByRole('button').and(page.getByText('Fire Strike')) to find the Fire Strike button and verify its text. Use page.locator('.spell').or(page.locator('.rune')) to find all 6 combined items. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-54/",
+    "xpReward": 375,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  await page.goto('http://localhost:5000/pages/level-54/');\n\n  // TODO: Combine locators with .and() — must be a button AND have text 'Fire Strike'\n  // const fireBtn = page.getByRole('button').and(page.getByText('Fire Strike'));\n  // const btnText = await fireBtn.textContent();\n\n  // TODO: Combine locators with .or() — either .spell OR .rune elements\n  // const allItems = page.locator('.spell').or(page.locator('.rune'));\n  // const count = await allItems.count();\n\n  // TODO: If btnText.trim() === 'Fire Strike' && count === 6, console.log('LEVEL_PASSED')\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "locator.and(otherLocator) narrows down results — the element must match BOTH locators. Like an intersection.",
+      "locator.or(otherLocator) broadens results — the element must match EITHER locator. Like a union.",
+      "Count with await allItems.count() — there are 3 .spell and 3 .rune elements, totalling 6."
+    ],
+    "tags": [
+      "locator.and",
+      "locator.or",
+      "combining locators",
+      "advanced selectors",
+      "intersection",
+      "union"
+    ]
+  },
+  {
+    "id": "level-55",
+    "order": 55,
+    "category": "ui",
+    "title": "The Focus Keeper",
+    "story": "The Arcane Portal Form can only be navigated by a true keyboard warrior. No mouse shall touch these fields. Focus must be given, then passed through Tab — and only the one who knows where focus lands shall unlock the portal.",
+    "objective": "Focus #realm-input with locator.focus(). Press Tab twice with page.keyboard.press('Tab'). Evaluate document.activeElement.id — if it equals 'power-input', log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-55/",
+    "xpReward": 400,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  await page.goto('http://localhost:5000/pages/level-55/');\n\n  // TODO: Focus the first input field\n  // await page.locator('#realm-input').focus();\n\n  // TODO: Press Tab to move to next field\n  // await page.keyboard.press('Tab');\n\n  // TODO: Press Tab again to reach the third field\n  // await page.keyboard.press('Tab');\n\n  // TODO: Check which element has focus\n  // const focusedId = await page.evaluate(() => document.activeElement.id);\n  // if (focusedId === 'power-input') console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "locator.focus() programmatically focuses an element — equivalent to clicking it without triggering a click event.",
+      "page.keyboard.press('Tab') moves focus to the next focusable element in DOM order.",
+      "page.evaluate(() => document.activeElement.id) returns the id of the currently focused element. Two Tabs from #realm-input lands on #power-input."
+    ],
+    "tags": [
+      "focus",
+      "locator.focus",
+      "keyboard",
+      "Tab",
+      "activeElement",
+      "accessibility",
+      "keyboard navigation"
+    ]
+  },
+  {
+    "id": "level-56",
+    "order": 56,
+    "category": "ui",
+    "title": "The Condition Oracle",
+    "story": "The Mana Crystal charges itself over time, ticking upward every 600ms. You cannot wait for a selector — there is no selector to wait for. Only a custom condition, born from your own predicate, can know when the mana is ready.",
+    "objective": "Use page.waitForFunction(() => parseInt(document.getElementById('mana-counter').textContent) >= 5). After it resolves, read the counter value. If it is 5 or more, log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-56/",
+    "xpReward": 450,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n\n  await page.goto('http://localhost:5000/pages/level-56/');\n\n  // TODO: Wait for the mana counter to reach 5 or more using a custom predicate\n  // await page.waitForFunction(\n  //   () => parseInt(document.getElementById('mana-counter').textContent) >= 5\n  // );\n\n  // TODO: Read the counter value after the condition is met\n  // const mana = await page.locator('#mana-counter').textContent();\n  // if (parseInt(mana) >= 5) console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "page.waitForFunction(fn) polls the provided function in the browser context until it returns a truthy value.",
+      "The function runs in the browser — use standard DOM APIs like document.getElementById() inside it.",
+      "After waitForFunction resolves, the condition is guaranteed to have been true. Read the counter with locator.textContent() and parse it with parseInt()."
+    ],
+    "tags": [
+      "waitForFunction",
+      "custom wait",
+      "predicate",
+      "condition",
+      "polling",
+      "async"
+    ]
+  },
+  {
+    "id": "level-57",
+    "order": 57,
+    "category": "api",
+    "title": "The API Summoner",
+    "story": "The true API warrior needs no browser — no viewport, no DOM, no clicks. Armed only with Playwright's APIRequestContext, they speak directly to the server in the language of HTTP: GET, POST, JSON.",
+    "objective": "Use chromium.request.newContext() to create an API context. GET /pages/level-57/grimoire.json. Verify response.ok() is true and body.spellCount === 5. Log 'LEVEL_PASSED'. Dispose the context.",
+    "targetUrl": "http://localhost:5000/pages/level-57/",
+    "xpReward": 500,
+    "starterCode": "const playwright = require('playwright');\n\n(async () => {\n  // No browser needed — just an API request context\n  const request = await playwright.request.newContext({\n    baseURL: 'http://localhost:5000',\n  });\n\n  // TODO: Make a GET request to /pages/level-57/grimoire.json\n  // const response = await request.get('/pages/level-57/grimoire.json');\n\n  // TODO: Parse the JSON body\n  // const body = await response.json();\n\n  // TODO: Check response.ok() and body.spellCount\n  // if (response.ok() && body.spellCount === 5) console.log('LEVEL_PASSED');\n\n  await request.dispose();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Use playwright.request.newContext() (not chromium.request) to create a standalone HTTP client — no browser required. Set baseURL to avoid repeating the host.",
+      "await request.get(path) makes an HTTP GET. The response object has .ok() (boolean), .status() (number), .json() (parsed body), .text() (raw string).",
+      "await response.json() parses the response body as JSON. Check body.spellCount === 5, then dispose: await request.dispose()."
+    ],
+    "tags": [
+      "APIRequestContext",
+      "request.get",
+      "request.post",
+      "HTTP",
+      "REST",
+      "no browser",
+      "API testing"
+    ]
+  },
+  {
+    "id": "level-58",
+    "order": 58,
+    "category": "api",
+    "title": "The Trace Keeper",
+    "story": "The Arcane Observatory captures every spell, every click, every network whisper. Playwright's trace recorder writes a full chronicle of the test — screenshots, DOM snapshots, and network logs in a single archive.",
+    "objective": "Start tracing with context.tracing.start({ screenshots: true, snapshots: true }). Navigate to the page and click the button. Stop tracing with context.tracing.stop({ path: '/tmp/trace-58.zip' }). Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-58/",
+    "xpReward": 450,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n  const context = await browser.newContext();\n\n  // TODO: Start tracing BEFORE any page actions\n  // await context.tracing.start({ screenshots: true, snapshots: true });\n\n  const page = await context.newPage();\n  await page.goto('http://localhost:5000/pages/level-58/');\n\n  // TODO: Perform an action (click the observation button)\n  // await page.locator('#record-btn').click();\n\n  // TODO: Stop tracing and save to /tmp/trace-58.zip\n  // await context.tracing.stop({ path: '/tmp/trace-58.zip' });\n\n  console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Call context.tracing.start() BEFORE creating pages or navigating — it must be active to capture early events.",
+      "{ screenshots: true, snapshots: true } captures visual screenshots and DOM snapshots at each action step.",
+      "context.tracing.stop({ path }) writes the trace zip file. Open it at trace.playwright.dev to replay your test."
+    ],
+    "tags": [
+      "tracing",
+      "context.tracing",
+      "trace recording",
+      "debugging",
+      "screenshots",
+      "snapshots"
+    ]
+  },
+  {
+    "id": "level-59",
+    "order": 59,
+    "category": "api",
+    "title": "The HAR Recorder",
+    "story": "The Network Nexus hums with requests and responses. An HAR archive captures the full conversation — every URL, status code, header, and body — for later inspection, replay, or mocking.",
+    "objective": "Create a context with recordHar: { path: '/tmp/network-59.har' }. Navigate to the level page (it makes fetch requests on load). Close the context to flush the HAR. Log 'LEVEL_PASSED'.",
+    "targetUrl": "http://localhost:5000/pages/level-59/",
+    "xpReward": 475,
+    "starterCode": "const { chromium } = require('playwright');\n\n(async () => {\n  const browser = await chromium.launch();\n\n  // TODO: Create context with HAR recording enabled\n  // const context = await browser.newContext({\n  //   recordHar: { path: '/tmp/network-59.har' }\n  // });\n  const context = await browser.newContext();\n\n  const page = await context.newPage();\n  await page.goto('http://localhost:5000/pages/level-59/');\n\n  // Wait for the page's fetch requests to complete\n  await page.waitForLoadState('networkidle');\n\n  // TODO: Close context to flush and write the HAR file\n  // await context.close();\n\n  console.log('LEVEL_PASSED');\n\n  await browser.close();\n})();",
+    "successCondition": {
+      "type": "stdout_contains",
+      "value": "LEVEL_PASSED"
+    },
+    "hints": [
+      "Pass recordHar: { path: '...' } when creating the browser context — HAR recording starts immediately for all pages in that context.",
+      "The HAR file is only written when the context is closed (await context.close()). Closing the browser without closing the context first may not flush it.",
+      "The HAR file is a JSON archive you can open in browser DevTools (Network tab → Import HAR) to replay and inspect all recorded requests."
+    ],
+    "tags": [
+      "recordHar",
+      "HAR",
+      "network recording",
+      "context",
+      "HTTP archive",
+      "network debugging"
+    ]
+  }
+]

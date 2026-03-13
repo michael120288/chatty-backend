@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Forest of Interactions — Level 2</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0d1b0d; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #4ecca3; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .scene {
+      max-width: 500px; margin: 0 auto; text-align: center;
+      background: #1a2e1a; border: 1px solid #2d5a27; border-radius: 12px; padding: 40px;
+    }
+    .chest { font-size: 80px; margin-bottom: 20px; }
+    button {
+      background: #4ecca3; color: #000; border: none; padding: 14px 28px;
+      font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer;
+      transition: transform 0.1s, background 0.2s;
+    }
+    button:hover { background: #3bbf94; transform: scale(1.02); }
+    button:active { transform: scale(0.98); }
+    #secret-message {
+      display: none; margin-top: 24px; padding: 16px;
+      background: #0f3322; border: 1px solid #4ecca3; border-radius: 8px;
+      color: #4ecca3; font-size: 18px; font-weight: bold;
+    }
+    #secret-message.visible { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .click-count { margin-top: 16px; color: #888; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Forest of Interactions</h1>
+  <p class="subtitle">Click to reveal what lies beneath</p>
+
+  <div class="scene">
+    <div class="chest" id="chest-icon">🗝️</div>
+    <button id="reveal-btn">Reveal Secret</button>
+    <div id="secret-message">The secret is: Playwright rocks! ✨</div>
+    <div class="click-count" id="click-count">Clicks: 0</div>
+  </div>
+
+  <script>
+    let clicks = 0;
+    const btn = document.getElementById('reveal-btn');
+    const msg = document.getElementById('secret-message');
+    const chest = document.getElementById('chest-icon');
+    const counter = document.getElementById('click-count');
+
+    btn.addEventListener('click', () => {
+      clicks++;
+      counter.textContent = 'Clicks: ' + clicks;
+      msg.classList.add('visible');
+      chest.textContent = '🔓';
+      btn.textContent = 'Secret Revealed!';
+      btn.style.background = '#e94560';
+    });
+  </script>
+</body>
+</html>

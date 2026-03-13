@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Twin APIs — Level 21</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #001a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #06b6d4; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .dashboard { max-width: 700px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .api-panel {
+      background: #0a1a14; border: 1px solid #1a4a3a; border-radius: 12px; padding: 24px;
+    }
+    .api-title { color: #06b6d4; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+    .api-endpoint { color: #555; font-size: 11px; font-family: monospace; margin-bottom: 16px; }
+    .api-data { min-height: 80px; }
+    .data-item {
+      background: #001a14; border: 1px solid #1a3a2a; border-radius: 6px;
+      padding: 10px 14px; margin-bottom: 8px; font-size: 14px;
+    }
+    .data-item-name { color: #eee; }
+    .data-item-sub { color: #888; font-size: 12px; margin-top: 2px; }
+    #heroes-loading, #quests-loading {
+      color: #555; font-style: italic; font-size: 13px; text-align: center; padding: 20px;
+    }
+    .status-row {
+      grid-column: 1 / -1; background: #0a1a14; border: 1px solid #1a4a3a;
+      border-radius: 8px; padding: 16px; display: flex; gap: 16px; align-items: center;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;
+    }
+    .status-ok { background: #0a2e14; color: #4ecca3; border: 1px solid #4ecca3; }
+    .status-err { background: #2e0a0a; color: #e94560; border: 1px solid #e94560; }
+    .status-load { background: #1a1a00; color: #ffd700; border: 1px solid #ffd700; }
+    #combined-result { font-size: 13px; color: #888; flex: 1; }
+  </style>
+</head>
+<body>
+  <h1>The Twin APIs</h1>
+  <p class="subtitle">Intercept both data streams — control what the dashboard shows</p>
+
+  <div class="dashboard">
+    <div class="api-panel">
+      <div class="api-title">⚔️ Heroes Registry</div>
+      <div class="api-endpoint">GET /api/heroes</div>
+      <div class="api-data" id="heroes-list">
+        <div id="heroes-loading">Loading heroes...</div>
+      </div>
+    </div>
+
+    <div class="api-panel">
+      <div class="api-title">📜 Quest Board</div>
+      <div class="api-endpoint">GET /api/quests</div>
+      <div class="api-data" id="quests-list">
+        <div id="quests-loading">Loading quests...</div>
+      </div>
+    </div>
+
+    <div class="status-row">
+      <span id="heroes-status" class="status-badge status-load">⏳ Heroes</span>
+      <span id="quests-status" class="status-badge status-load">⏳ Quests</span>
+      <div id="combined-result">Waiting for both APIs to respond...</div>
+    </div>
+  </div>
+
+  <script>
+    async function loadDashboard() {
+      try {
+        const heroesRes = await fetch('/api/heroes');
+        const heroesData = await heroesRes.json();
+        const heroesList = document.getElementById('heroes-list');
+        heroesList.innerHTML = '';
+        heroesData.heroes.forEach(h => {
+          heroesList.innerHTML += `<div class="data-item"><div class="data-item-name">${h.name}</div><div class="data-item-sub">${h.class} · Level ${h.level}</div></div>`;
+        });
+        document.getElementById('heroes-status').className = 'status-badge status-ok';
+        document.getElementById('heroes-status').textContent = '✓ Heroes';
+      } catch {
+        document.getElementById('heroes-loading').textContent = 'Failed to load heroes';
+        document.getElementById('heroes-status').className = 'status-badge status-err';
+        document.getElementById('heroes-status').textContent = '✗ Heroes';
+      }
+
+      try {
+        const questsRes = await fetch('/api/quests');
+        const questsData = await questsRes.json();
+        const questsList = document.getElementById('quests-list');
+        questsList.innerHTML = '';
+        questsData.quests.forEach(q => {
+          questsList.innerHTML += `<div class="data-item"><div class="data-item-name">${q.title}</div><div class="data-item-sub">${q.difficulty} · ${q.reward} XP</div></div>`;
+        });
+        document.getElementById('quests-status').className = 'status-badge status-ok';
+        document.getElementById('quests-status').textContent = '✓ Quests';
+      } catch {
+        document.getElementById('quests-loading').textContent = 'Failed to load quests';
+        document.getElementById('quests-status').className = 'status-badge status-err';
+        document.getElementById('quests-status').textContent = '✗ Quests';
+      }
+
+      const heroOk = document.getElementById('heroes-status').className.includes('status-ok');
+      const questOk = document.getElementById('quests-status').className.includes('status-ok');
+      if (heroOk && questOk) {
+        document.getElementById('combined-result').textContent = 'Both APIs responded successfully!';
+        document.getElementById('combined-result').style.color = '#4ecca3';
+      }
+    }
+
+    window.addEventListener('load', loadDashboard);
+  </script>
+</body>
+</html>

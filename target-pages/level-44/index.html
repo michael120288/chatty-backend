@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Sealed Vault — Level 44</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0a00; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #fb923c; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .vault { max-width: 480px; margin: 0 auto; }
+    .vault-door {
+      text-align: center; padding: 40px 24px; background: #120c00;
+      border: 2px solid #3a1f00; border-radius: 12px; margin-bottom: 20px;
+    }
+    .door-icon { font-size: 72px; margin-bottom: 16px; }
+    .door-title { font-size: 18px; color: #fb923c; margin-bottom: 8px; }
+    .door-desc { font-size: 14px; color: #666; margin-bottom: 24px; line-height: 1.6; }
+    #open-vault-btn {
+      padding: 12px 32px; background: #2d1400; border: 1px solid #fb923c;
+      border-radius: 8px; color: #fb923c; font-size: 15px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    #open-vault-btn:hover { background: #3d2400; }
+    #vault-contents { display: none; margin-top: 20px; }
+    .treasure-card {
+      background: #1a0e00; border: 1px solid #f59e0b; border-radius: 10px;
+      padding: 20px; text-align: center;
+    }
+    .treasure-icon { font-size: 48px; margin-bottom: 12px; }
+    .treasure-name { font-size: 18px; font-weight: bold; color: #fbbf24; }
+    .treasure-power { font-size: 14px; color: #888; margin-top: 6px; }
+    #access-denied { display: none; margin-top: 20px; padding: 16px; background: #1a0a0a; border: 1px solid #f87171; border-radius: 8px; color: #f87171; font-size: 14px; text-align: center; }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #0f0a00; border: 1px solid #3a1f00;
+      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #fb923c; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Sealed Vault</h1>
+  <p class="subtitle">The vault reads your request headers — carry the magic key to enter</p>
+
+  <div class="vault">
+    <div class="vault-door">
+      <div class="door-icon">🔒</div>
+      <div class="door-title">Header-Protected Vault</div>
+      <p class="door-desc">
+        This vault reads the <code>X-Magic-Key</code> header on every request.
+        Only those who carry the correct key may view its treasures.
+      </p>
+      <button id="open-vault-btn">🗝️ Open the Vault</button>
+    </div>
+
+    <div id="vault-contents">
+      <div class="treasure-card">
+        <div class="treasure-icon">💎</div>
+        <div class="treasure-name" id="treasure-name">—</div>
+        <div class="treasure-power" id="treasure-power">—</div>
+      </div>
+    </div>
+
+    <div id="access-denied">
+      🚫 Access Denied — the X-Magic-Key header was not present or incorrect
+    </div>
+
+    <div class="hint-box">
+      💡 Create a context with <code>context.setExtraHTTPHeaders(&#123;'X-Magic-Key': 'open-sesame'&#125;)</code>,
+      then intercept <code>**/vault-treasure.json</code> with <code>page.route()</code> to inspect
+      <code>request.headers()['x-magic-key']</code> and fulfill accordingly.
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('open-vault-btn').addEventListener('click', async () => {
+      try {
+        const res = await fetch('/pages/level-44/vault-treasure.json');
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('treasure-name').textContent = data.treasure;
+          document.getElementById('treasure-power').textContent = `Power Level: ${data.power}`;
+          document.getElementById('vault-contents').style.display = 'block';
+          document.getElementById('access-denied').style.display = 'none';
+        } else {
+          document.getElementById('access-denied').style.display = 'block';
+        }
+      } catch {
+        document.getElementById('access-denied').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

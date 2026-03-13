@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Mana Conduit — Level 46</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0014; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #c084fc; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .conduit-panel { max-width: 500px; margin: 0 auto; text-align: center; }
+    .conduit-container {
+      background: #0d0020; border: 1px solid #2d1a4a; border-radius: 12px; padding: 30px;
+    }
+    .conduit-title { color: #c084fc; font-size: 16px; margin-bottom: 24px; }
+    .slider-area { position: relative; margin: 0 auto 20px; width: 360px; }
+    .slider-track {
+      width: 100%; height: 20px; background: #1a0a2e; border-radius: 10px;
+      border: 1px solid #3a1a5a; position: relative; cursor: pointer;
+      user-select: none;
+    }
+    #slider-fill {
+      height: 100%; width: 0%; background: linear-gradient(90deg, #7c3aed, #c084fc);
+      border-radius: 10px; transition: none; pointer-events: none;
+    }
+    #slider-handle {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 28px; height: 28px; background: #c084fc; border-radius: 50%;
+      border: 2px solid #7c3aed; left: 0%; cursor: grab; box-shadow: 0 0 12px rgba(192, 132, 252, 0.5);
+    }
+    #slider-handle:active { cursor: grabbing; }
+    #mana-value { font-size: 48px; font-weight: bold; color: #c084fc; margin: 16px 0 8px; }
+    #mana-label { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+    #powered-msg {
+      display: none; margin-top: 20px; padding: 14px;
+      background: #1a0a2e; border: 2px solid #c084fc; border-radius: 10px;
+      color: #c084fc; font-size: 16px; font-weight: bold;
+    }
+    #powered-msg.visible { display: block; }
+    .hint-box {
+      max-width: 500px; margin: 20px auto 0; padding: 14px;
+      background: #0a0014; border: 1px solid #2d1a4a; border-radius: 8px;
+      font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #c084fc; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Mana Conduit</h1>
+  <p class="subtitle">This slider resists fill() — only raw mouse control will charge it</p>
+
+  <div class="conduit-panel">
+    <div class="conduit-container">
+      <div class="conduit-title">⚡ Charge the Mana Conduit</div>
+
+      <div class="slider-area">
+        <div class="slider-track" id="slider-track">
+          <div id="slider-fill"></div>
+          <div id="slider-handle"></div>
+        </div>
+      </div>
+
+      <div id="mana-value">0%</div>
+      <div id="mana-label">Mana Level</div>
+
+      <div id="powered-msg" class="visible" style="display:none" id="powered-msg">
+        ⚡ CONDUIT FULLY CHARGED — POWER UNLEASHED!
+      </div>
+    </div>
+
+    <div class="hint-box">
+      💡 Get the track's bounding box: <code>const box = await page.locator('#slider-track').boundingBox();</code><br/>
+      Then drag: <code>await page.mouse.move(box.x, box.y + box.height/2);</code><br/>
+      <code>await page.mouse.down();</code><br/>
+      <code>await page.mouse.move(box.x + box.width, box.y + box.height/2, &#123;steps:20&#125;);</code><br/>
+      <code>await page.mouse.up();</code><br/>
+      Verify <code>#mana-value</code> shows "100%" and <code>#powered-msg</code> is visible.
+    </div>
+  </div>
+
+  <script>
+    const track = document.getElementById('slider-track');
+    const fill = document.getElementById('slider-fill');
+    const handle = document.getElementById('slider-handle');
+    const valueDisplay = document.getElementById('mana-value');
+    const poweredMsg = document.getElementById('powered-msg');
+
+    let isDragging = false;
+
+    function setMana(percent) {
+      const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+      fill.style.width = clamped + '%';
+      handle.style.left = clamped + '%';
+      valueDisplay.textContent = clamped + '%';
+      if (clamped >= 100) {
+        poweredMsg.classList.add('visible');
+        poweredMsg.style.display = 'block';
+      }
+    }
+
+    function getPercent(clientX) {
+      const rect = track.getBoundingClientRect();
+      return ((clientX - rect.left) / rect.width) * 100;
+    }
+
+    handle.addEventListener('mousedown', (e) => { isDragging = true; e.preventDefault(); });
+    track.addEventListener('mousedown', (e) => { isDragging = true; setMana(getPercent(e.clientX)); });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) setMana(getPercent(e.clientX));
+    });
+
+    document.addEventListener('mouseup', () => { isDragging = false; });
+  </script>
+</body>
+</html>

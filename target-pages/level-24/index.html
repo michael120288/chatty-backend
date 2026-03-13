@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Grand Emporium — Level 24</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a00; color: #eee; margin: 0; padding: 0; }
+    .shop-header {
+      background: #12120a; border-bottom: 1px solid #2a2a00; padding: 16px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .shop-brand { font-size: 20px; font-weight: bold; color: #ffd700; }
+    .cart-badge {
+      background: #1a1500; border: 1px solid #3a3000; padding: 8px 16px;
+      border-radius: 20px; font-size: 14px; color: #ffd700;
+    }
+    .shop-body { display: flex; gap: 0; min-height: calc(100vh - 65px); }
+    .products { flex: 1; padding: 24px 32px; border-right: 1px solid #2a2a00; }
+    .products h2 { color: #ffd700; font-size: 16px; margin: 0 0 16px; }
+    .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .product-card {
+      background: #12120a; border: 1px solid #2a2a00; border-radius: 10px; padding: 16px;
+    }
+    .product-icon { font-size: 36px; margin-bottom: 8px; }
+    .product-name { font-size: 14px; font-weight: bold; color: #eee; }
+    .product-price { color: #ffd700; font-size: 13px; margin: 4px 0 12px; }
+    .add-btn {
+      width: 100%; background: #ffd700; color: #000; border: none; padding: 8px;
+      border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer;
+    }
+    .add-btn:hover { background: #ffcc00; }
+    .add-btn.added { background: #4ecca3; }
+    .cart-panel { width: 280px; padding: 24px; }
+    .cart-panel h2 { color: #ffd700; font-size: 16px; margin: 0 0 16px; }
+    #cart-items { min-height: 80px; margin-bottom: 16px; }
+    .cart-item {
+      background: #12120a; border: 1px solid #2a2a00; border-radius: 6px;
+      padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between;
+      align-items: center;
+    }
+    .cart-item-name { font-size: 13px; }
+    .cart-item-price { color: #ffd700; font-size: 13px; }
+    #cart-empty { color: #555; font-style: italic; font-size: 13px; text-align: center; padding: 20px; }
+    .coupon-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    #coupon-input {
+      flex: 1; padding: 8px 12px; background: #0a0a00; border: 1px solid #2a2a00;
+      border-radius: 6px; color: #eee; font-size: 13px;
+    }
+    #coupon-input:focus { outline: none; border-color: #ffd700; }
+    #apply-coupon {
+      background: #2a2a00; color: #ffd700; border: 1px solid #3a3a00;
+      padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px;
+    }
+    #apply-coupon:hover { background: #3a3a00; }
+    .totals { border-top: 1px solid #2a2a00; padding-top: 12px; }
+    .total-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+    .total-row.discount { color: #4ecca3; }
+    .total-row.grand { font-size: 16px; font-weight: bold; color: #ffd700; margin-top: 8px; }
+    #checkout-btn {
+      width: 100%; background: #ffd700; color: #000; border: none; padding: 12px;
+      font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 12px;
+    }
+    #checkout-btn:hover { background: #ffcc00; }
+    #checkout-success {
+      display: none; background: #0a2e14; border: 1px solid #4ecca3; border-radius: 8px;
+      padding: 14px; text-align: center; color: #4ecca3; font-weight: bold; margin-top: 12px;
+    }
+    #coupon-status { font-size: 11px; color: #555; margin-top: 4px; }
+    #discount-row { display: none; }
+  </style>
+</head>
+<body>
+  <div class="shop-header">
+    <div class="shop-brand">⚗️ Grand Emporium</div>
+    <div class="cart-badge">🛒 Cart: <span id="cart-count">0</span> items</div>
+  </div>
+
+  <div class="shop-body">
+    <div class="products">
+      <h2>Available Items</h2>
+      <div class="product-grid">
+        <div class="product-card" data-id="p1" data-name="Mana Potion" data-price="50">
+          <div class="product-icon">💧</div>
+          <div class="product-name">Mana Potion</div>
+          <div class="product-price">50 gold</div>
+          <button class="add-btn" id="add-p1">Add to Cart</button>
+        </div>
+        <div class="product-card" data-id="p2" data-name="Dragon Sword" data-price="300">
+          <div class="product-icon">⚔️</div>
+          <div class="product-name">Dragon Sword</div>
+          <div class="product-price">300 gold</div>
+          <button class="add-btn" id="add-p2">Add to Cart</button>
+        </div>
+        <div class="product-card" data-id="p3" data-name="Phoenix Feather" data-price="150">
+          <div class="product-icon">🪶</div>
+          <div class="product-name">Phoenix Feather</div>
+          <div class="product-price">150 gold</div>
+          <button class="add-btn" id="add-p3">Add to Cart</button>
+        </div>
+        <div class="product-card" data-id="p4" data-name="Arcane Tome" data-price="200">
+          <div class="product-icon">📖</div>
+          <div class="product-name">Arcane Tome</div>
+          <div class="product-price">200 gold</div>
+          <button class="add-btn" id="add-p4">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-panel">
+      <h2>Your Cart</h2>
+      <div id="cart-items"><div id="cart-empty">Cart is empty</div></div>
+
+      <div class="coupon-row">
+        <input type="text" id="coupon-input" placeholder="Coupon code..." />
+        <button id="apply-coupon">Apply</button>
+      </div>
+      <div id="coupon-status"></div>
+
+      <div class="totals">
+        <div class="total-row"><span>Subtotal</span><span id="subtotal">0 gold</span></div>
+        <div class="total-row discount" id="discount-row"><span>Discount</span><span id="discount-amount">-0 gold</span></div>
+        <div class="total-row grand"><span>Total</span><span id="grand-total">0 gold</span></div>
+      </div>
+
+      <button id="checkout-btn">Proceed to Checkout</button>
+      <div id="checkout-success">✅ Order placed successfully!</div>
+    </div>
+  </div>
+
+  <script>
+    let cart = [];
+    let discount = 0;
+
+    function updateCart() {
+      const cartItems = document.getElementById('cart-items');
+      const cartEmpty = document.getElementById('cart-empty');
+      cartItems.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<div id="cart-empty" style="color:#555;font-style:italic;font-size:13px;text-align:center;padding:20px">Cart is empty</div>';
+      } else {
+        cart.forEach(item => {
+          cartItems.innerHTML += `<div class="cart-item"><span class="cart-item-name">${item.name}</span><span class="cart-item-price">${item.price}g</span></div>`;
+        });
+      }
+
+      const subtotal = cart.reduce((sum, i) => sum + i.price, 0);
+      const total = Math.max(0, subtotal - discount);
+      document.getElementById('subtotal').textContent = subtotal + ' gold';
+      document.getElementById('grand-total').textContent = total + ' gold';
+      document.getElementById('cart-count').textContent = cart.length;
+    }
+
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.product-card');
+        cart.push({ name: card.dataset.name, price: parseInt(card.dataset.price) });
+        btn.textContent = '✓ Added';
+        btn.classList.add('added');
+        updateCart();
+      });
+    });
+
+    document.getElementById('apply-coupon').addEventListener('click', async () => {
+      const code = document.getElementById('coupon-input').value.trim();
+      const status = document.getElementById('coupon-status');
+      try {
+        const res = await fetch(`/api/coupon?code=${encodeURIComponent(code)}`);
+        const data = await res.json();
+        if (data.valid) {
+          discount = data.discount;
+          document.getElementById('discount-row').style.display = 'flex';
+          document.getElementById('discount-amount').textContent = '-' + discount + ' gold';
+          status.style.color = '#4ecca3';
+          status.textContent = '✓ Coupon applied: ' + data.message;
+          updateCart();
+        } else {
+          status.style.color = '#e94560';
+          status.textContent = '✗ Invalid coupon code';
+        }
+      } catch {
+        status.style.color = '#e94560';
+        status.textContent = '✗ Could not validate coupon';
+      }
+    });
+
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+      if (cart.length > 0) {
+        document.getElementById('checkout-success').style.display = 'block';
+      }
+    });
+
+    updateCart();
+  </script>
+</body>
+</html>

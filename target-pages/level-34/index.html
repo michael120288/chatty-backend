@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Location Oracle — Level 34</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0f14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #22d3ee; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .oracle-panel { max-width: 480px; margin: 0 auto; }
+    .globe-display {
+      text-align: center; padding: 40px 20px; background: #0d1a20;
+      border: 1px solid #0e4d6a; border-radius: 12px; margin-bottom: 20px;
+    }
+    .globe-icon { font-size: 72px; margin-bottom: 16px; }
+    .globe-title { font-size: 18px; color: #22d3ee; margin-bottom: 8px; }
+    .globe-desc { font-size: 14px; color: #666; margin-bottom: 24px; }
+    #locate-btn {
+      padding: 12px 32px; background: #0e4d6a; border: 1px solid #22d3ee;
+      border-radius: 8px; color: #22d3ee; font-size: 15px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    #locate-btn:hover { background: #1a6080; }
+    #locate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    #location-display { display: none; margin-top: 20px; }
+    .coord-card {
+      background: #0d1a20; border: 1px solid #22d3ee; border-radius: 10px; padding: 20px;
+    }
+    .coord-title { color: #22d3ee; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .coord-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .coord-label { color: #888; font-size: 14px; }
+    .coord-value { color: #eee; font-size: 14px; font-weight: bold; font-family: monospace; }
+    #lat-display, #lng-display { color: #4ecca3; }
+    .success-seal {
+      margin-top: 16px; padding: 12px; background: #0a2e14;
+      border: 1px solid #4ecca3; border-radius: 8px;
+      color: #4ecca3; font-size: 14px; font-weight: bold; text-align: center;
+    }
+    #error-msg {
+      display: none; margin-top: 20px; padding: 14px;
+      background: #1a0a0a; border: 1px solid #f87171;
+      border-radius: 8px; color: #f87171; font-size: 14px; text-align: center;
+    }
+    .hint-box {
+      margin-top: 20px; padding: 14px; background: #0d1a20; border: 1px solid #0e4d6a;
+      border-radius: 8px; font-size: 13px; color: #888; line-height: 1.6;
+    }
+    code { color: #22d3ee; font-family: monospace; background: #060f14; padding: 1px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>The Location Oracle</h1>
+  <p class="subtitle">The oracle reads the coordinates of those who seek her wisdom</p>
+
+  <div class="oracle-panel">
+    <div class="globe-display">
+      <div class="globe-icon">🌍</div>
+      <div class="globe-title">Geolocation Divination</div>
+      <p class="globe-desc">
+        The oracle requires your location to reveal the ancient coordinates.
+        Grant her permission and she shall speak.
+      </p>
+      <button id="locate-btn">📍 Reveal My Location</button>
+    </div>
+
+    <div id="location-display">
+      <div class="coord-card">
+        <div class="coord-title">🗺️ Oracle's Reading</div>
+        <div class="coord-row">
+          <span class="coord-label">Latitude</span>
+          <span class="coord-value" id="lat-display">—</span>
+        </div>
+        <div class="coord-row">
+          <span class="coord-label">Longitude</span>
+          <span class="coord-value" id="lng-display">—</span>
+        </div>
+        <div class="coord-row">
+          <span class="coord-label">Accuracy</span>
+          <span class="coord-value" id="accuracy-display">—</span>
+        </div>
+        <div class="success-seal">✅ Location revealed to the oracle!</div>
+      </div>
+    </div>
+
+    <div id="error-msg">
+      🚫 The oracle was denied — grant geolocation permission first!
+    </div>
+
+    <div class="hint-box">
+      💡 Create a context with <code>browser.newContext()</code>, then use
+      <code>context.grantPermissions(['geolocation'])</code> and
+      <code>context.setGeolocation(&#123; latitude: 51.5074, longitude: -0.1278 &#125;)</code>.
+      Click <code>#locate-btn</code> and verify <code>#lat-display</code> contains "51".
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('locate-btn').addEventListener('click', () => {
+      const btn = document.getElementById('locate-btn');
+      btn.disabled = true;
+      btn.textContent = '🔍 Divining...';
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          document.getElementById('lat-display').textContent = pos.coords.latitude.toFixed(4);
+          document.getElementById('lng-display').textContent = pos.coords.longitude.toFixed(4);
+          document.getElementById('accuracy-display').textContent =
+            pos.coords.accuracy ? pos.coords.accuracy.toFixed(1) + ' m' : 'Exact';
+          document.getElementById('location-display').style.display = 'block';
+          btn.textContent = '✅ Location Revealed';
+        },
+        (err) => {
+          document.getElementById('error-msg').style.display = 'block';
+          btn.textContent = '📍 Reveal My Location';
+          btn.disabled = false;
+        },
+        { enableHighAccuracy: true }
+      );
+    });
+  </script>
+</body>
+</html>

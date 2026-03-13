@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Accessible Seeker — Level 50</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #4ecca3; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .guild-hall { max-width: 540px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+    .badge-row { display: flex; align-items: center; gap: 16px; background: #0d0d20; border: 1px solid #1e3a2e; border-radius: 10px; padding: 20px; }
+    .badge-label { font-size: 13px; color: #888; margin-bottom: 4px; }
+    [data-testid="hero-badge"] { display: inline-block; padding: 6px 20px; background: #0a2e1a; border: 1px solid #4ecca3; border-radius: 20px; color: #4ecca3; font-weight: bold; font-size: 15px; }
+    .search-row { background: #0d0d20; border: 1px solid #1e3a2e; border-radius: 10px; padding: 20px; }
+    .search-row input { width: 100%; padding: 10px 14px; background: #050510; border: 1px solid #2a2050; border-radius: 8px; color: #eee; font-size: 14px; box-sizing: border-box; }
+    .weapon-row { background: #0d0d20; border: 1px solid #1e3a2e; border-radius: 10px; padding: 20px; display: flex; align-items: center; gap: 16px; }
+    .weapon-icon { font-size: 48px; line-height: 1; }
+    .weapon-name { font-size: 15px; font-weight: bold; color: #4ecca3; }
+    .hint-box { margin-top: 20px; padding: 14px; background: #0a0a18; border: 1px solid #1e3a2e; border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6; }
+    code { color: #4ecca3; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Guild Hall of Marks</h1>
+  <p class="subtitle">Elements bear sacred marks — test IDs, placeholders, and alt text</p>
+
+  <div class="guild-hall">
+    <div class="badge-row">
+      <div>
+        <div class="badge-label">Hero Rank</div>
+        <div data-testid="hero-badge">Champion</div>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <input type="text" placeholder="Search spells..." id="spell-search" />
+    </div>
+
+    <div class="weapon-row">
+      <div class="weapon-icon">
+        <img src="" alt="Arcane Staff" width="48" height="48" style="display:none" />
+        <span aria-label="Arcane Staff" role="img" title="Arcane Staff">🪄</span>
+      </div>
+      <div>
+        <div class="weapon-name">Arcane Staff</div>
+        <div style="font-size:13px;color:#888">Alt: "Arcane Staff"</div>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      💡 Use <code>page.getByTestId('hero-badge')</code> to find the badge.<br/>
+      Use <code>page.getByPlaceholder('Search spells...')</code> for the input.<br/>
+      Use <code>page.getByRole('img', &#123; name: 'Arcane Staff' &#125;)</code> or<br/>
+      <code>page.locator('[title="Arcane Staff"]')</code> for the icon.<br/>
+      Verify badge text is <code>'Champion'</code>, then log <code>LEVEL_PASSED</code>.
+    </div>
+  </div>
+</body>
+</html>

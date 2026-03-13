@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Shapeshifter's Trial — Level 49</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; }
+
+    /* ── Desktop nav ── */
+    .desktop-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px; background: #0d0d20; border-bottom: 1px solid #2a2050;
+    }
+    .nav-brand { font-size: 18px; font-weight: bold; color: #818cf8; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: #ccc; text-decoration: none; font-size: 14px; }
+    .nav-links a:hover { color: #818cf8; }
+    #hamburger { display: none; font-size: 24px; cursor: pointer; color: #818cf8; background: none; border: none; }
+
+    /* ── Mobile nav (hidden on desktop) ── */
+    #mobile-menu {
+      display: none; flex-direction: column; background: #0d0d20;
+      border-bottom: 1px solid #2a2050; padding: 10px 20px;
+    }
+    #mobile-menu a {
+      padding: 10px 0; color: #ccc; text-decoration: none; font-size: 14px;
+      border-bottom: 1px solid #1a1a30;
+    }
+    #mobile-menu a:last-child { border-bottom: none; }
+    #mobile-menu.open { display: flex; }
+
+    /* ── Hero section ── */
+    .hero { padding: 60px 32px; text-align: center; }
+    .hero-title { font-size: 36px; font-weight: bold; color: #818cf8; margin-bottom: 12px; }
+    .hero-sub { font-size: 16px; color: #888; margin-bottom: 30px; }
+    #layout-badge {
+      display: inline-block; padding: 6px 20px; border-radius: 20px;
+      font-size: 14px; font-weight: bold;
+    }
+    #layout-badge.desktop { background: #1a1a40; color: #818cf8; border: 1px solid #818cf8; }
+    #layout-badge.mobile { background: #1a0a40; color: #c084fc; border: 1px solid #c084fc; }
+
+    /* ── Feature grid (desktop) ── */
+    .feature-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      padding: 0 32px 40px; max-width: 900px; margin: 0 auto;
+    }
+    .feature-card {
+      background: #0d0d20; border: 1px solid #2a2050; border-radius: 10px; padding: 20px;
+    }
+    .feature-icon { font-size: 28px; margin-bottom: 10px; }
+    .feature-title { font-size: 14px; font-weight: bold; color: #818cf8; }
+
+    /* ── Mobile-only content ── */
+    #mobile-banner {
+      display: none; margin: 0 16px 24px; padding: 16px;
+      background: #1a0a30; border: 1px solid #c084fc; border-radius: 10px;
+      text-align: center; color: #c084fc; font-size: 14px;
+    }
+    #mobile-banner.visible { display: block; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .desktop-nav .nav-links { display: none; }
+      #hamburger { display: block; }
+      .hero { padding: 30px 16px; }
+      .hero-title { font-size: 24px; }
+      .feature-grid { grid-template-columns: 1fr; padding: 0 16px 24px; }
+      #mobile-banner { display: block; }
+    }
+
+    .hint-box {
+      margin: 0 32px 40px; padding: 14px; background: #0a0a18;
+      border: 1px solid #2a2050; border-radius: 8px; font-size: 13px;
+      color: #666; line-height: 1.6;
+    }
+    code { color: #818cf8; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <nav class="desktop-nav">
+    <div class="nav-brand">⚗️ Arcane Labs</div>
+    <div class="nav-links">
+      <a href="#">Spells</a>
+      <a href="#">Potions</a>
+      <a href="#">Artifacts</a>
+      <a href="#">About</a>
+    </div>
+    <button id="hamburger">☰</button>
+  </nav>
+
+  <div id="mobile-menu">
+    <a href="#">Spells</a>
+    <a href="#">Potions</a>
+    <a href="#">Artifacts</a>
+    <a href="#">About</a>
+  </div>
+
+  <div class="hero">
+    <div class="hero-title">Arcane Labs</div>
+    <div class="hero-sub">The premier destination for magical testing</div>
+    <div id="layout-badge" class="desktop">🖥️ Desktop Layout</div>
+  </div>
+
+  <div id="mobile-banner">
+    📱 You are viewing the Mobile Experience — optimised for touch!
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Spell Casting</div></div>
+    <div class="feature-card"><div class="feature-icon">🔮</div><div class="feature-title">Oracle Vision</div></div>
+    <div class="feature-card"><div class="feature-icon">🧪</div><div class="feature-title">Alchemy Lab</div></div>
+  </div>
+
+  <div class="hint-box">
+    💡 Use <code>const &#123; devices &#125; = require('playwright');</code> then<br/>
+    <code>browser.newContext(&#123; ...devices['iPhone 12'] &#125;)</code>.<br/>
+    On mobile, <code>#layout-badge</code> shows "Mobile Experience" text
+    and <code>#hamburger</code> is visible. Verify with <code>toBeVisible()</code>.
+  </div>
+
+  <script>
+    const isMobile = window.innerWidth <= 600;
+    const badge = document.getElementById('layout-badge');
+    if (isMobile) {
+      badge.textContent = '📱 Mobile Experience';
+      badge.className = 'mobile';
+    }
+
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

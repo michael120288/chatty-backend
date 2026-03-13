@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Arcane Gallery — Level 33</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #fbbf24; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .gallery { max-width: 540px; margin: 0 auto; }
+    .hero-card {
+      background: #12100a; border: 2px solid #f59e0b; border-radius: 12px;
+      padding: 24px; margin-bottom: 20px; position: relative;
+    }
+    .rarity-badge {
+      position: absolute; top: 14px; right: 14px;
+      background: #2d1f00; color: #f59e0b; padding: 3px 10px;
+      border-radius: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .hero-portrait { font-size: 52px; margin-bottom: 12px; }
+    .hero-name { font-size: 20px; font-weight: bold; color: #fbbf24; }
+    .hero-class { font-size: 13px; color: #888; margin-top: 4px; margin-bottom: 16px; }
+    .stat-row { display: flex; gap: 12px; margin-bottom: 12px; }
+    .stat-pill { padding: 4px 12px; border-radius: 10px; font-size: 12px; }
+    .stat-power { background: #2a1000; color: #fb923c; border: 1px solid #fb923c; }
+    .stat-speed { background: #001a20; color: #22d3ee; border: 1px solid #22d3ee; }
+    .stat-magic { background: #1a0028; color: #a78bfa; border: 1px solid #a78bfa; }
+    .power-bar-container { margin-bottom: 16px; }
+    .power-bar-label { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    #power-bar {
+      height: 10px; background: #1a1a00; border-radius: 5px; overflow: hidden;
+      border: 1px solid #f59e0b;
+    }
+    .power-fill { height: 100%; width: 87%; background: linear-gradient(90deg, #f59e0b, #fbbf24); border-radius: 5px; }
+    .card-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .btn-equip {
+      flex: 1; padding: 10px; background: #2d1f00; border: 1px solid #f59e0b;
+      border-radius: 8px; color: #fbbf24; font-size: 14px; font-weight: bold;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-equip:hover { background: #3d2f00; }
+    .btn-inspect {
+      padding: 10px 18px; background: #1a1a0a; border: 1px solid #555;
+      border-radius: 8px; color: #888; font-size: 14px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-inspect:hover { background: #2a2a1a; }
+    .hint-box {
+      padding: 14px; background: #0d0a00; border: 1px solid #3a2a00;
+      border-radius: 8px; font-size: 13px; color: #888; line-height: 1.6;
+    }
+    code { color: #fbbf24; font-family: monospace; background: #0a0500; padding: 1px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>The Arcane Gallery</h1>
+  <p class="subtitle">Inspect every property — CSS, attributes, and roles tell the full story</p>
+
+  <div class="gallery">
+    <div
+      id="hero-card"
+      class="hero-card"
+      data-rarity="legendary"
+      data-hero-id="thorin-goldmantle"
+    >
+      <div class="rarity-badge">⭐ Legendary</div>
+      <div class="hero-portrait">🧙‍♂️</div>
+      <div class="hero-name" id="hero-name">Thorin Goldmantle</div>
+      <div class="hero-class">Archmage · Order of the Golden Seal</div>
+
+      <div class="stat-row">
+        <span class="stat-pill stat-power">⚔️ Power 87</span>
+        <span class="stat-pill stat-speed">⚡ Speed 62</span>
+        <span class="stat-pill stat-magic">✨ Magic 99</span>
+      </div>
+
+      <div class="power-bar-container">
+        <div class="power-bar-label">Power Level</div>
+        <div id="power-bar" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100">
+          <div class="power-fill"></div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button
+          class="btn-equip"
+          id="equip-btn"
+          aria-label="Equip Thorin Goldmantle"
+        >⚔️ Equip Hero</button>
+        <button class="btn-inspect" id="inspect-btn">🔍 Inspect</button>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      💡 Use <code>const &#123; expect &#125; = require('@playwright/test')</code> for the matchers.
+      Check: <code>toHaveAttribute('data-rarity', 'legendary')</code> on <code>#hero-card</code>,
+      <code>toHaveCSS('border-style', 'solid')</code> on <code>#hero-card</code>,
+      and <code>toHaveRole('progressbar')</code> on <code>#power-bar</code>.
+    </div>
+  </div>
+</body>
+</html>

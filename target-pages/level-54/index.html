@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Locator Alchemist — Level 54</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #e879f9; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .matrix { max-width: 540px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+    .section-title { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .btn-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+    .spell-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid; font-size: 14px; font-weight: bold; cursor: pointer; }
+    .spell-btn.fire { background: #2e0a00; color: #fb923c; border-color: #fb923c; }
+    .spell-btn.ice  { background: #001a2e; color: #7dd3fc; border-color: #7dd3fc; }
+    .spell-btn.wind { background: #001a00; color: #4ecca3; border-color: #4ecca3; }
+    .items-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .spell { padding: 8px 16px; background: #1a0a2e; border: 1px solid #a855f7; border-radius: 20px; font-size: 13px; color: #e879f9; }
+    .rune  { padding: 8px 16px; background: #0a1a2e; border: 1px solid #3b82f6; border-radius: 20px; font-size: 13px; color: #93c5fd; }
+    .hint-box { padding: 14px; background: #0a0a18; border: 1px solid #2a0a40; border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6; }
+    code { color: #e879f9; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Spell Matrix</h1>
+  <p class="subtitle">Combine locators with .and() and .or() to find the right elements</p>
+
+  <div class="matrix">
+    <div>
+      <div class="section-title">Spell Buttons (all have role="button" + class="spell-btn")</div>
+      <div class="btn-grid">
+        <button class="spell-btn fire">Fire Strike</button>
+        <button class="spell-btn ice">Ice Bolt</button>
+        <button class="spell-btn wind">Wind Slash</button>
+        <button class="spell-btn fire">Fire Nova</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">Mixed Items (.spell and .rune — 3 of each = 6 total)</div>
+      <div class="items-row">
+        <div class="spell">Fireball</div>
+        <div class="rune">🔥 Fire Rune</div>
+        <div class="spell">Teleport</div>
+        <div class="rune">❄️ Ice Rune</div>
+        <div class="spell">Barrier</div>
+        <div class="rune">⚡ Thunder Rune</div>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      💡 <strong>locator.and():</strong><br/>
+      <code>page.getByRole('button').and(page.getByText('Fire Strike'))</code><br/>
+      → finds the one button that is both a button AND has text "Fire Strike".<br/><br/>
+      <strong>locator.or():</strong><br/>
+      <code>page.locator('.spell').or(page.locator('.rune'))</code><br/>
+      → finds all elements that are either .spell OR .rune. Count should be <code>6</code>.<br/>
+      Log <code>LEVEL_PASSED</code> when both checks pass.
+    </div>
+  </div>
+</body>
+</html>

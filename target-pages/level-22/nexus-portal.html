@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nexus Portal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(ellipse at center, #1a0800, #0a0500);
+      color: #eee; margin: 0; padding: 40px;
+      display: flex; align-items: center; justify-content: center; min-height: 100vh;
+    }
+    .portal-content { text-align: center; max-width: 400px; }
+    .portal-icon { font-size: 64px; margin-bottom: 20px; }
+    h2 { margin: 0 0 8px; }
+    #portal-access-msg { font-size: 20px; font-weight: bold; margin-top: 16px; padding: 16px 24px; border-radius: 8px; }
+    .granted { background: #0a2e14; border: 1px solid #4ecca3; color: #4ecca3; }
+    .denied { background: #2e0a0a; border: 1px solid #e94560; color: #e94560; }
+    .note { font-size: 12px; color: #555; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="portal-content">
+    <div class="portal-icon">🔥</div>
+    <h2>Nexus Portal</h2>
+    <p style="color:#888">Cookie check result:</p>
+    <div id="portal-access-msg" class="denied">Access Denied — Cookie Missing</div>
+    <p class="note">This page reads the shared browser context cookies.</p>
+  </div>
+
+  <script>
+    function getCookie(name) {
+      const val = `; ${document.cookie}`;
+      const parts = val.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+
+    const pass = getCookie('nexus-pass');
+    const msg = document.getElementById('portal-access-msg');
+    if (pass === 'open') {
+      msg.className = 'granted';
+      msg.textContent = 'Nexus Access Granted';
+    }
+  </script>
+</body>
+</html>

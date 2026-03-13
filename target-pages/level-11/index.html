@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Enchanted Inscription — Level 11</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a1f; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #c084fc; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .inscription-chamber { max-width: 500px; margin: 0 auto; text-align: center; }
+    .rune-circle {
+      width: 160px; height: 160px; border-radius: 50%;
+      border: 3px solid #c084fc; margin: 0 auto 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 60px; background: #12072e;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow { from { box-shadow: 0 0 10px #c084fc33; } to { box-shadow: 0 0 30px #c084fc88; } }
+    .input-panel { background: #12072e; border: 1px solid #3d2a6e; border-radius: 12px; padding: 28px; }
+    .input-label { color: #c084fc; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    #enchanted-input {
+      width: 100%; padding: 12px 16px; background: #0a001f; border: 2px solid #3d2a6e;
+      border-radius: 8px; color: #eee; font-size: 18px; text-align: center;
+      font-family: monospace; letter-spacing: 3px; box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+    #enchanted-input:focus { outline: none; border-color: #c084fc; }
+    .key-hint { color: #555; font-size: 12px; margin-top: 10px; }
+    #inscription-result {
+      margin-top: 24px; padding: 16px; border-radius: 8px; font-size: 18px;
+      font-weight: bold; min-height: 52px; transition: all 0.3s;
+    }
+    #inscription-result.success { background: #0a2e14; border: 1px solid #4ecca3; color: #4ecca3; }
+    #inscription-result.error { background: #2e0a0a; border: 1px solid #e94560; color: #e94560; }
+    #inscription-result.idle { background: #12072e; border: 1px solid #3d2a6e; color: #555; font-style: italic; font-size: 14px; }
+    #char-count { color: #555; font-size: 12px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>The Enchanted Inscription</h1>
+  <p class="subtitle">Wield the keyboard — inscribe the sacred word</p>
+
+  <div class="inscription-chamber">
+    <div class="rune-circle" id="rune-icon">✍️</div>
+
+    <div class="input-panel">
+      <div class="input-label">Inscribe the Sacred Word</div>
+      <input type="text" id="enchanted-input" autocomplete="off" spellcheck="false" placeholder="Type here..." />
+      <div class="key-hint">Press Enter to inscribe</div>
+      <div id="char-count">0 characters</div>
+    </div>
+
+    <div id="inscription-result" class="idle">Awaiting inscription...</div>
+  </div>
+
+  <script>
+    const input = document.getElementById('enchanted-input');
+    const result = document.getElementById('inscription-result');
+    const rune = document.getElementById('rune-icon');
+    const charCount = document.getElementById('char-count');
+
+    input.addEventListener('input', () => {
+      charCount.textContent = input.value.length + ' characters';
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = input.value.toUpperCase().trim();
+        if (val === 'PLAYWRIGHT') {
+          result.className = 'success';
+          result.textContent = 'Inscribed! The runes glow with power!';
+          rune.textContent = '⚡';
+        } else {
+          result.className = 'error';
+          result.textContent = 'Wrong word. The inscription fades...';
+          rune.textContent = '💀';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

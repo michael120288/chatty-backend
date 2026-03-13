@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Binding Ritual — Level 39</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0f14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #38bdf8; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .ritual-form { max-width: 480px; margin: 0 auto; background: #0d1520; border: 1px solid #1e3a52; border-radius: 12px; padding: 28px; }
+    .field-group { margin-bottom: 20px; }
+    label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    input[type="text"], input[type="email"] {
+      width: 100%; padding: 10px 14px; background: #06111a; border: 1px solid #1e3a52;
+      border-radius: 6px; color: #eee; font-size: 14px; box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus, input[type="email"]:focus { outline: none; border-color: #38bdf8; }
+    .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    input[type="checkbox"] { width: 16px; height: 16px; accent-color: #38bdf8; cursor: pointer; }
+    .checkbox-label { font-size: 14px; color: #ccc; }
+    .submit-btn {
+      width: 100%; padding: 12px; background: #0e4d6a; border: 1px solid #38bdf8;
+      border-radius: 8px; color: #38bdf8; font-size: 15px; font-weight: bold;
+      cursor: pointer; transition: background 0.2s; margin-top: 8px;
+    }
+    .submit-btn:hover:not(:disabled) { background: #1a6080; }
+    .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; border-color: #555; color: #555; background: #111; }
+    #success-msg { display: none; margin-top: 16px; padding: 14px; background: #0a2e14; border: 1px solid #4ecca3; border-radius: 8px; color: #4ecca3; font-weight: bold; text-align: center; }
+    .hint-box {
+      max-width: 480px; margin: 20px auto 0; padding: 14px;
+      background: #0a1520; border: 1px solid #1e3a52; border-radius: 8px;
+      font-size: 13px; color: #666; line-height: 1.6;
+    }
+    code { color: #38bdf8; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Binding Ritual</h1>
+  <p class="subtitle">Inspect the form's state — values, checks, and enabled conditions</p>
+
+  <div class="ritual-form">
+    <div class="field-group">
+      <label for="guild-name">Guild Name</label>
+      <input type="text" id="guild-name" value="Order of the Arcane" readonly />
+    </div>
+
+    <div class="field-group">
+      <label for="mage-title">Mage Title (required to unlock Submit)</label>
+      <input type="text" id="mage-title" placeholder="Enter your title..." />
+    </div>
+
+    <div class="field-group">
+      <label>Oath Agreements</label>
+      <div class="checkbox-row">
+        <input type="checkbox" id="oath-truth" checked />
+        <span class="checkbox-label">I swear by the Truth of the Arcane</span>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="oath-power" />
+        <span class="checkbox-label">I accept the burden of Power</span>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" disabled>Seal the Binding</button>
+    <div id="success-msg">⚡ The binding ritual is complete!</div>
+  </div>
+
+  <div class="hint-box">
+    💡 Verify: <code>toHaveValue('Order of the Arcane')</code> on <code>#guild-name</code>,
+    <code>toBeChecked()</code> on <code>#oath-truth</code>,
+    <code>toBeEnabled()</code> on <code>#submit-btn</code> after filling <code>#mage-title</code>.
+  </div>
+
+  <script>
+    const titleInput = document.getElementById('mage-title');
+    const submitBtn = document.getElementById('submit-btn');
+
+    titleInput.addEventListener('input', () => {
+      submitBtn.disabled = titleInput.value.trim() === '';
+    });
+
+    submitBtn.addEventListener('click', () => {
+      document.getElementById('success-msg').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

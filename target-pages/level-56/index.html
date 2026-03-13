@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Condition Oracle — Level 56</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a3e635; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .oracle { max-width: 440px; margin: 0 auto; text-align: center; }
+    .mana-orb { width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #1a3a00, #0a1400); border: 3px solid #a3e635; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: 0 0 20px rgba(163,230,53,0.2); }
+    #mana-counter { font-size: 56px; font-weight: bold; color: #a3e635; line-height: 1; }
+    .orb-label { font-size: 11px; color: #666; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+    .status-text { font-size: 14px; color: #888; margin-bottom: 16px; }
+    #reached-msg { display: none; padding: 14px 24px; background: #0a1a00; border: 1px solid #a3e635; border-radius: 10px; color: #a3e635; font-size: 15px; font-weight: bold; }
+    #reached-msg.visible { display: block; }
+    .hint-box { margin-top: 28px; padding: 14px; background: #0a0a18; border: 1px solid #1a2a00; border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6; }
+    code { color: #a3e635; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Mana Crystal</h1>
+  <p class="subtitle">Wait not for elements — wait for conditions of truth</p>
+
+  <div class="oracle">
+    <div class="mana-orb">
+      <div id="mana-counter">0</div>
+      <div class="orb-label">Mana</div>
+    </div>
+    <div class="status-text">Mana charges every 600ms...</div>
+    <div id="reached-msg">⚡ Mana threshold reached!</div>
+
+    <div class="hint-box">
+      💡 Use <code>page.waitForFunction()</code> with a custom condition:<br/>
+      <code>await page.waitForFunction(<br/>
+      &nbsp;&nbsp;() => parseInt(document.getElementById('mana-counter')<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;.textContent) >= 5<br/>
+      );</code><br/>
+      After it resolves, read the counter value. If ≥ 5, log <code>LEVEL_PASSED</code>.
+    </div>
+  </div>
+
+  <script>
+    let mana = 0;
+    const counter = document.getElementById('mana-counter');
+    const msg = document.getElementById('reached-msg');
+    const interval = setInterval(() => {
+      mana++;
+      counter.textContent = mana;
+      if (mana >= 5) {
+        msg.classList.add('visible');
+      }
+      if (mana >= 20) clearInterval(interval);
+    }, 600);
+  </script>
+</body>
+</html>

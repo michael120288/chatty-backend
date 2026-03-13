@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The State Warden — Level 53</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #94a3b8; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .vault { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    .vault-item { background: #0d0d20; border: 1px solid #1e2030; border-radius: 12px; padding: 24px; }
+    .item-label { font-size: 12px; color: #555; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .item-desc { font-size: 13px; color: #888; margin-bottom: 16px; }
+    #locked-gate { padding: 12px 24px; background: #1a1a2e; border: 1px solid #2a2050; color: #555; border-radius: 8px; font-size: 14px; cursor: not-allowed; width: 100%; }
+    #locked-gate:disabled { opacity: 0.5; }
+    #sealed-input { width: 100%; padding: 10px 14px; background: #050510; border: 1px solid #1a1a30; border-radius: 8px; color: #555; font-size: 14px; box-sizing: border-box; }
+    .hint-box { padding: 14px; background: #0a0a18; border: 1px solid #1e2030; border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6; }
+    code { color: #94a3b8; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>The Locked Vault</h1>
+  <p class="subtitle">Not all truths need assertions — read element states directly</p>
+
+  <div class="vault">
+    <div class="vault-item">
+      <div class="item-label">🔒 Disabled Element</div>
+      <div class="item-desc">This gate cannot be opened. Check with <code>isEnabled()</code>.</div>
+      <button id="locked-gate" disabled>🚪 Sealed Gate</button>
+    </div>
+
+    <div class="vault-item">
+      <div class="item-label">👁️ Hidden Element</div>
+      <div class="item-desc">A secret rune lies concealed. Check with <code>isHidden()</code>.</div>
+      <div id="secret-rune" style="display:none">⚡ Hidden Rune of Power</div>
+      <div style="font-size:13px;color:#555;font-style:italic">(element exists in DOM but is hidden)</div>
+    </div>
+
+    <div class="vault-item">
+      <div class="item-label">✏️ Read-only Element</div>
+      <div class="item-desc">This inscription cannot be changed. Check with <code>isEditable()</code>.</div>
+      <input id="sealed-input" type="text" value="Ancient Inscription — Read Only" readonly />
+    </div>
+
+    <div class="hint-box">
+      💡 <code>await page.locator('#locked-gate').isEnabled()</code> → <code>false</code><br/>
+      <code>await page.locator('#secret-rune').isHidden()</code> → <code>true</code><br/>
+      <code>await page.locator('#sealed-input').isEditable()</code> → <code>false</code><br/>
+      If all three match, log <code>LEVEL_PASSED</code>.
+    </div>
+  </div>
+</body>
+</html>

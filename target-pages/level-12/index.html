@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Oracle's Chamber — Level 12</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0a00; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #f59e0b; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .oracle-chamber { max-width: 500px; margin: 0 auto; text-align: center; }
+    .oracle-statue { font-size: 80px; margin-bottom: 24px; filter: drop-shadow(0 0 12px #f59e0b88); }
+    .buttons-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .oracle-btn {
+      padding: 14px 24px; border: none; border-radius: 8px; font-size: 15px;
+      font-weight: bold; cursor: pointer; transition: transform 0.1s, background 0.2s;
+    }
+    .oracle-btn:active { transform: scale(0.97); }
+    #confirm-btn { background: #f59e0b; color: #000; }
+    #confirm-btn:hover { background: #d97706; }
+    #alert-btn { background: #1a1a2e; color: #aaa; border: 1px solid #3a3a5e; }
+    #alert-btn:hover { background: #2a2a4e; }
+    #prompt-btn { background: #1a1a2e; color: #aaa; border: 1px solid #3a3a5e; }
+    #prompt-btn:hover { background: #2a2a4e; }
+    #oracle-result {
+      padding: 20px; border-radius: 10px; min-height: 60px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: bold; transition: all 0.3s;
+      background: #1a1200; border: 1px solid #3a2a00; color: #555; font-style: italic;
+    }
+    #oracle-result.accepted { background: #0a2e14; border-color: #4ecca3; color: #4ecca3; }
+    #oracle-result.rejected { background: #2e0a0a; border-color: #e94560; color: #e94560; }
+    #oracle-result.alerted { background: #0a1a2e; border-color: #4da6ff; color: #4da6ff; }
+    #oracle-result.prompted { background: #1a0a2e; border-color: #c084fc; color: #c084fc; }
+    .dialog-type { margin-top: 8px; font-size: 12px; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>The Oracle's Chamber</h1>
+  <p class="subtitle">Speak to the Oracle — handle what it returns</p>
+
+  <div class="oracle-chamber">
+    <div class="oracle-statue">🔮</div>
+
+    <div class="buttons-row">
+      <button class="oracle-btn" id="confirm-btn">⚔️ Challenge the Oracle (confirm)</button>
+      <button class="oracle-btn" id="alert-btn">📢 Hear the Oracle's Proclamation (alert)</button>
+      <button class="oracle-btn" id="prompt-btn">🗣️ Ask the Oracle a Question (prompt)</button>
+    </div>
+
+    <div id="oracle-result">Awaiting your approach...</div>
+    <div class="dialog-type" id="dialog-type"></div>
+  </div>
+
+  <script>
+    document.getElementById('confirm-btn').addEventListener('click', () => {
+      const accepted = confirm("Do you accept the Oracle's challenge?");
+      const result = document.getElementById('oracle-result');
+      if (accepted) {
+        result.className = 'accepted';
+        result.textContent = 'Challenge Accepted!';
+      } else {
+        result.className = 'rejected';
+        result.textContent = 'You fled from the Oracle.';
+      }
+      document.getElementById('dialog-type').textContent = 'confirm dialog handled';
+    });
+
+    document.getElementById('alert-btn').addEventListener('click', () => {
+      alert('The Oracle proclaims: All tests shall pass!');
+      const result = document.getElementById('oracle-result');
+      result.className = 'alerted';
+      result.textContent = 'Proclamation Received!';
+      document.getElementById('dialog-type').textContent = 'alert dialog handled';
+    });
+
+    document.getElementById('prompt-btn').addEventListener('click', () => {
+      const answer = prompt('Oracle: What is the name of the testing framework?');
+      const result = document.getElementById('oracle-result');
+      if (answer && answer.toLowerCase() === 'playwright') {
+        result.className = 'accepted';
+        result.textContent = 'The Oracle is pleased! Correct answer!';
+      } else {
+        result.className = 'prompted';
+        result.textContent = 'Oracle received: ' + (answer || '(nothing)');
+      }
+      document.getElementById('dialog-type').textContent = 'prompt dialog handled';
+    });
+  </script>
+</body>
+</html>
