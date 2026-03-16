@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Arcane Vault — Login</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-wrap { width: 100%; max-width: 420px; padding: 24px; }
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo-icon { font-size: 48px; display: block; margin-bottom: 8px; }
+    .logo h1 { color: #f59e0b; font-size: 22px; margin: 0 0 4px; }
+    .logo p { color: #888; font-size: 13px; margin: 0; }
+    .login-card { background: #0d0d2e; border: 1px solid #2e1a00; border-radius: 14px; padding: 32px; }
+    .login-card h2 { color: #f59e0b; margin: 0 0 6px; font-size: 17px; }
+    .login-card p { color: #888; font-size: 13px; margin: 0 0 24px; }
+    .field { margin-bottom: 18px; }
+    label { display: block; font-size: 12px; color: #aaa; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    input { width: 100%; padding: 11px 14px; background: #1a1a3e; border: 1px solid #2a2a5e; border-radius: 8px; color: #eee; font-size: 14px; box-sizing: border-box; outline: none; }
+    input:focus { border-color: #f59e0b; }
+    .hint { font-size: 11px; color: #555; margin-top: 4px; }
+    .login-btn { width: 100%; padding: 13px; background: #f59e0b; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 8px; }
+    .login-btn:hover { background: #fbbf24; }
+    #login-error { display: none; margin-top: 14px; padding: 10px 14px; background: #1a0a0a; border: 1px solid #ef4444; border-radius: 8px; color: #ef4444; font-size: 13px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="logo">
+      <span class="logo-icon">🏛️</span>
+      <h1>The Arcane Vault</h1>
+      <p>Authentication required to enter</p>
+    </div>
+
+    <div class="login-card" id="login-form">
+      <h2>🔐 Guild Authentication</h2>
+      <p>Enter your credentials to access the vault</p>
+
+      <div class="field">
+        <label for="login-username">Username</label>
+        <input type="text" id="login-username" placeholder="archmage" autocomplete="off" />
+        <div class="hint">Hint: try archmage</div>
+      </div>
+
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••••" />
+        <div class="hint">Hint: fireball123</div>
+      </div>
+
+      <button class="login-btn" id="login-btn" onclick="doLogin()">Enter the Vault →</button>
+      <div id="login-error">❌ Invalid credentials. Check username and password.</div>
+    </div>
+  </div>
+
+  <script>
+    function doLogin() {
+      var u = document.getElementById('login-username').value.trim();
+      var p = document.getElementById('login-password').value;
+      if (u === 'archmage' && p === 'fireball123') {
+        localStorage.setItem('vault-user', u);
+        window.location.href = 'dashboard.html';
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+    }
+    // If already logged in, go to dashboard
+    if (localStorage.getItem('vault-user')) {
+      window.location.replace('dashboard.html');
+    }
+  </script>
+</body>
+</html>

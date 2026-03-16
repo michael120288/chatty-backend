@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Quest Portal — Registration</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a78bfa; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .steps { display: flex; justify-content: center; gap: 0; margin-bottom: 40px; }
+    .step { padding: 8px 24px; font-size: 13px; border: 1px solid #2a2a5e; color: #888; }
+    .step.active { background: #a78bfa; color: #000; font-weight: bold; border-color: #a78bfa; }
+    .step:first-child { border-radius: 8px 0 0 8px; }
+    .step:last-child { border-radius: 0 8px 8px 0; }
+    .form-card { max-width: 520px; margin: 0 auto; background: #0d0d2e; border: 1px solid #2a1a5e; border-radius: 12px; padding: 32px; }
+    .form-card h2 { color: #a78bfa; margin: 0 0 8px; font-size: 18px; }
+    .form-card p { color: #888; font-size: 13px; margin: 0 0 28px; }
+    .field { margin-bottom: 20px; }
+    label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; }
+    input[type="text"], select { width: 100%; padding: 11px 14px; background: #1a1a3e; border: 1px solid #2a2a5e; border-radius: 8px; color: #eee; font-size: 14px; box-sizing: border-box; outline: none; }
+    input[type="text"]:focus, select:focus { border-color: #a78bfa; }
+    .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .radio-label { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: #1a1a3e; border: 1px solid #2a2a5e; border-radius: 8px; cursor: pointer; font-size: 13px; transition: border-color 0.2s; }
+    .radio-label:has(input:checked) { border-color: #a78bfa; color: #a78bfa; background: #1a1040; }
+    .submit-btn { width: 100%; padding: 13px; background: #a78bfa; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 8px; }
+    .submit-btn:hover { background: #c4b5fd; }
+    .error-msg { display: none; color: #ef4444; font-size: 13px; margin-top: 10px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>⚔️ The Quest Portal</h1>
+  <p class="subtitle">Register your hero and embark on an epic journey</p>
+
+  <div class="steps">
+    <div class="step active">1 · Register</div>
+    <div class="step">2 · Confirm</div>
+    <div class="step">3 · Adventure</div>
+  </div>
+
+  <div class="form-card">
+    <h2>Hero Registration</h2>
+    <p>Fill in your details to begin the quest</p>
+
+    <div class="field">
+      <label for="adventurer-name">Adventurer Name</label>
+      <input type="text" id="adventurer-name" placeholder="Enter your hero's name" />
+    </div>
+
+    <div class="field">
+      <label for="hero-class">Hero Class</label>
+      <select id="hero-class">
+        <option value="">— Select a class —</option>
+        <option value="Mage">Mage</option>
+        <option value="Warrior">Warrior</option>
+        <option value="Rogue">Rogue</option>
+        <option value="Ranger">Ranger</option>
+        <option value="Paladin">Paladin</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Difficulty</label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="difficulty" value="normal" /> Normal</label>
+        <label class="radio-label"><input type="radio" name="difficulty" value="hard" /> Hard</label>
+        <label class="radio-label"><input type="radio" name="difficulty" value="legendary" /> Legendary</label>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="register-btn" onclick="registerHero()">Begin Quest →</button>
+    <div class="error-msg" id="error-msg">Please fill in all fields before continuing.</div>
+  </div>
+
+  <script>
+    function registerHero() {
+      var name = document.getElementById('adventurer-name').value.trim();
+      var heroClass = document.getElementById('hero-class').value;
+      var diff = document.querySelector('input[name="difficulty"]:checked');
+      var err = document.getElementById('error-msg');
+      if (!name || !heroClass || !diff) {
+        err.style.display = 'block'; return;
+      }
+      err.style.display = 'none';
+      localStorage.setItem('quest-name', name);
+      localStorage.setItem('quest-class', heroClass);
+      localStorage.setItem('quest-difficulty', diff.value.charAt(0).toUpperCase() + diff.value.slice(1));
+      window.location.href = 'confirm.html';
+    }
+  </script>
+</body>
+</html>

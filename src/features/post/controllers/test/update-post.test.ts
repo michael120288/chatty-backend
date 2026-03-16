@@ -57,7 +57,7 @@ describe('Update', () => {
       updatedPost.imgId = '1234';
       updatedPost.imgVersion = '1234';
       updatedPost.post = updatedPostWithImage.post;
-      updatedPostWithImage.image = 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==';
+      updatedPostWithImage.image = 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==';
       const req: Request = postMockRequest(updatedPostWithImage, authUserPayload, { postId: `${postMockData._id}` }) as Request;
       const res: Response = postMockResponse();
       const postSpy = jest.spyOn(PostCache.prototype, 'updatePostInCache');
@@ -80,7 +80,7 @@ describe('Update', () => {
       updatedPost.imgId = '1234';
       updatedPost.imgVersion = '1234';
       updatedPost.post = updatedPostWithImage.post;
-      updatedPostWithImage.image = 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==';
+      updatedPostWithImage.image = 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==';
       const req: Request = postMockRequest(updatedPostWithImage, authUserPayload, { postId: `${postMockData._id}` }) as Request;
       const res: Response = postMockResponse();
       const postSpy = jest.spyOn(PostCache.prototype, 'updatePostInCache');

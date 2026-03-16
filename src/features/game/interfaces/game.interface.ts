@@ -6,11 +6,12 @@ export interface ISuccessCondition {
 export interface ILevel {
   id: string;
   order: number;
-  category: 'ui' | 'api';
+  category: 'ui' | 'api' | 'cypress-ui';
+  tool?: 'playwright' | 'cypress' | 'cypress-component';
   title: string;
   story: string;
   objective: string;
-  targetUrl: string;
+  targetUrl?: string;
   xpReward: number;
   starterCode: string;
   successCondition: ISuccessCondition;

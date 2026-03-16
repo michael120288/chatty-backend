@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Quest Portal — Adventure!</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a78bfa; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .steps { display: flex; justify-content: center; gap: 0; margin-bottom: 40px; }
+    .step { padding: 8px 24px; font-size: 13px; border: 1px solid #2a2a5e; color: #888; }
+    .step.active { background: #a78bfa; color: #000; font-weight: bold; border-color: #a78bfa; }
+    .step.done { background: #1a1040; color: #a78bfa; border-color: #a78bfa; }
+    .step:first-child { border-radius: 8px 0 0 8px; }
+    .step:last-child { border-radius: 0 8px 8px 0; }
+    .card { max-width: 520px; margin: 0 auto; background: #0d0d2e; border: 1px solid #2a1a5e; border-radius: 12px; padding: 32px; text-align: center; }
+    .hero-icon { font-size: 64px; margin-bottom: 16px; }
+    .hero-name { font-size: 22px; font-weight: bold; color: #a78bfa; margin-bottom: 8px; }
+    .quest-info { color: #888; font-size: 14px; margin-bottom: 32px; }
+    .quest-info span { color: #eee; }
+    .quest-text { background: #0a0a1a; border: 1px solid #2a2a5e; border-radius: 8px; padding: 16px; text-align: left; font-size: 13px; color: #aaa; line-height: 1.6; margin-bottom: 28px; }
+    .quest-text strong { color: #a78bfa; }
+    .claim-btn { width: 100%; padding: 13px; background: #f59e0b; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 15px; cursor: pointer; }
+    .claim-btn:hover { background: #fbbf24; }
+    #reward-section { display: none; margin-top: 24px; padding: 20px; background: #1a1500; border: 1px solid #f59e0b; border-radius: 10px; }
+    #reward-section h3 { color: #f59e0b; margin: 0 0 12px; }
+    .reward-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2a2000; font-size: 14px; }
+    .reward-item:last-child { border-bottom: none; }
+    .reward-label { color: #aaa; }
+    .reward-value { color: #f59e0b; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>⚔️ The Quest Portal</h1>
+  <p class="subtitle">Your adventure awaits, brave hero!</p>
+
+  <div class="steps">
+    <div class="step done">✓ Register</div>
+    <div class="step done">✓ Confirm</div>
+    <div class="step active">3 · Adventure</div>
+  </div>
+
+  <div class="card">
+    <div class="hero-icon">🧙</div>
+    <div class="hero-name" id="quest-hero">Unknown Hero</div>
+    <div class="quest-info" id="quest-info">Class: <span id="result-class">—</span> · Difficulty: <span id="result-difficulty">—</span></div>
+
+    <div class="quest-text">
+      <strong id="quest-hero-inline">Hero</strong> ventures into the <strong>Dungeon of Shadows</strong>.
+      The ancient dragon stirs as footsteps echo through the stone corridors.
+      With blade drawn and spells at the ready, the moment of glory approaches...
+    </div>
+
+    <button class="claim-btn" id="claim-reward-btn" onclick="claimReward()">⚡ Claim Your Reward</button>
+
+    <div id="reward-section">
+      <h3>🏆 Quest Complete!</h3>
+      <div class="reward-item">
+        <span class="reward-label">Experience Gained</span>
+        <span class="reward-value" id="xp-reward">500 XP</span>
+      </div>
+      <div class="reward-item">
+        <span class="reward-label">Gold Found</span>
+        <span class="reward-value">320 Gold</span>
+      </div>
+      <div class="reward-item">
+        <span class="reward-label">Rare Item</span>
+        <span class="reward-value">Dragon Scale Armor</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var name = localStorage.getItem('quest-name');
+    var cls = localStorage.getItem('quest-class');
+    var diff = localStorage.getItem('quest-difficulty');
+    if (!name) { window.location.href = 'index.html'; }
+    document.getElementById('quest-hero').textContent = name || 'Unknown Hero';
+    document.getElementById('quest-hero-inline').textContent = name || 'Hero';
+    document.getElementById('result-class').textContent = cls || '—';
+    document.getElementById('result-difficulty').textContent = diff || '—';
+    var xpMap = { Legendary: '1500 XP', Hard: '900 XP', Normal: '500 XP' };
+    document.getElementById('xp-reward').textContent = xpMap[diff] || '500 XP';
+
+    function claimReward() {
+      document.getElementById('claim-reward-btn').style.display = 'none';
+      document.getElementById('reward-section').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

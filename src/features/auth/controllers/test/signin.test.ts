@@ -9,11 +9,11 @@ import { userService } from '@service/db/user.service';
 import { mergedAuthAndUserData } from '@root/mocks/user.mock';
 
 const USERNAME = 'Manny';
-const PASSWORD = 'manny1';
+const PASSWORD = 'Manny@secure12';
 const WRONG_USERNAME = 'ma';
 const WRONG_PASSWORD = 'ma';
-const LONG_PASSWORD = 'mathematics1';
-const LONG_USERNAME = 'mathematics';
+const LONG_PASSWORD = 'a'.repeat(129);
+const LONG_USERNAME = 'a'.repeat(33);
 
 jest.useFakeTimers();
 jest.mock('@service/queues/base.queue');

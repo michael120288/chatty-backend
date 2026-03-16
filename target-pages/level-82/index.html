@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Crossroads Tavern</title>
+  <style>
+    body { background: #0d0d1e; color: #ccc; font-family: monospace; padding: 20px; margin: 0; }
+    h1 { color: #ffd700; margin-top: 0; }
+    h2 { color: #a78bfa; font-size: 16px; }
+
+    /* Random modal */
+    #random-modal {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      justify-content: center; align-items: center;
+      z-index: 100;
+    }
+    .modal-box {
+      background: #1a1a3e;
+      border: 2px solid #a78bfa;
+      border-radius: 10px;
+      padding: 24px 32px;
+      text-align: center;
+      max-width: 360px;
+    }
+    .modal-box h2 { color: #ffd700; margin-top: 0; }
+    .modal-box p { color: #aaa; margin-bottom: 16px; }
+    .btn { background: #4da6ff; color: #000; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-family: monospace; font-size: 13px; }
+    .btn.danger { background: #ef4444; color: #fff; }
+
+    /* Campaign banner */
+    #campaign-banner {
+      display: none;
+      background: #1a0a3e;
+      border: 1px solid #a78bfa;
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      color: #c4b5fd;
+      font-size: 13px;
+    }
+    #campaign-banner.campaign-a { border-color: #22c55e; background: #0a1e0a; color: #86efac; }
+    #campaign-banner.campaign-b { border-color: #ffd700; background: #1a1500; color: #fde68a; }
+
+    /* Returning user banner */
+    #returning-banner {
+      display: none;
+      background: #0a1628;
+      border: 1px solid #4da6ff;
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      color: #93c5fd;
+      font-size: 13px;
+    }
+
+    /* Main content */
+    .panel { background: #1a1a3e; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    #tavern-menu { display: none; margin-top: 12px; }
+    #tavern-menu ul { list-style: none; padding: 0; margin: 0; }
+    #tavern-menu li { padding: 6px 0; border-bottom: 1px solid #222; color: #ccc; }
+    #tavern-menu li:last-child { border-bottom: none; }
+    .menu-price { color: #ffd700; float: right; }
+
+    /* Notice board */
+    #notice { display: none; background: #0a1e14; border: 1px solid #22c55e; border-radius: 6px; padding: 12px; color: #86efac; font-size: 13px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- Random modal: shows ~50% of the time -->
+  <div id="random-modal">
+    <div class="modal-box">
+      <h2>Oracle's Message</h2>
+      <p>The Oracle has a vision for you, adventurer. Will you heed the call?</p>
+      <button id="close-modal" class="btn">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- Campaign banner: shown via ?campaign=A or ?campaign=B -->
+  <div id="campaign-banner"></div>
+
+  <!-- Returning user banner: shown if cookie returning-user=true exists -->
+  <div id="returning-banner">
+    Welcome back, returning adventurer! Your progress has been restored.
+  </div>
+
+  <h1>The Crossroads Tavern</h1>
+
+  <!-- Toggle section -->
+  <div class="panel">
+    <h2>Tonight's Menu</h2>
+    <button id="toggle-menu" class="btn">Show Menu</button>
+    <div id="tavern-menu">
+      <ul>
+        <li>Dragon Stew <span class="menu-price">5 gold</span></li>
+        <li>Elvish Wine <span class="menu-price">8 gold</span></li>
+        <li>Dwarf Bread <span class="menu-price">2 gold</span></li>
+        <li>Phoenix Ale <span class="menu-price">12 gold</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Notice board (appears after clicking toggle-menu twice) -->
+  <div id="notice">
+    Special announcement: A rare merchant has arrived at the south gate!
+  </div>
+
+  <!-- Quest board with data attribute -->
+  <div class="panel" id="quest-board" data-quests-loaded="false">
+    <h2>Quest Board</h2>
+    <div id="quest-list">Loading quests...</div>
+    <button id="load-quests" class="btn" style="margin-top:10px">Load Quests</button>
+  </div>
+
+  <script>
+    // Random modal: ~50% chance on page load
+    if (Math.random() > 0.5) {
+      document.getElementById('random-modal').style.display = 'flex';
+    }
+
+    // URL param: ?campaign=A or ?campaign=B
+    const params = new URLSearchParams(window.location.search);
+    const campaign = params.get('campaign');
+    if (campaign === 'A') {
+      const el = document.getElementById('campaign-banner');
+      el.style.display = 'block';
+      el.classList.add('campaign-a');
+      el.textContent = '⚡ Special Offer: Double XP this weekend! Use code STORM2X';
+      el.dataset.campaign = 'A';
+      el.dataset.code = 'STORM2X';
+    } else if (campaign === 'B') {
+      const el = document.getElementById('campaign-banner');
+      el.style.display = 'block';
+      el.classList.add('campaign-b');
+      el.textContent = '🗺️ New Quest Unlocked: The Lost Artifact is now available!';
+      el.dataset.campaign = 'B';
+      el.dataset.quest = 'lost-artifact';
+    }
+
+    // Cookie check: returning-user=true
+    if (document.cookie.split(';').some((c) => c.trim() === 'returning-user=true')) {
+      document.getElementById('returning-banner').style.display = 'block';
+    }
+
+    // Toggle menu button
+    let toggleCount = 0;
+    document.getElementById('toggle-menu').addEventListener('click', function () {
+      const menu = document.getElementById('tavern-menu');
+      const isVisible = menu.style.display !== 'none';
+      menu.style.display = isVisible ? 'none' : 'block';
+      this.textContent = isVisible ? 'Show Menu' : 'Hide Menu';
+      toggleCount++;
+      // Show notice after toggling twice
+      if (toggleCount >= 2) {
+        document.getElementById('notice').style.display = 'block';
+      }
+    });
+
+    // Close modal
+    document.getElementById('close-modal').addEventListener('click', function () {
+      document.getElementById('random-modal').style.display = 'none';
+    });
+
+    // Load quests button
+    document.getElementById('load-quests').addEventListener('click', function () {
+      const quests = ['Slay the Mountain Dragon', 'Retrieve the Lost Artifact', 'Escort the Merchant'];
+      const list = document.getElementById('quest-list');
+      list.innerHTML = quests.map((q) => `<div class="quest-item" style="padding:4px 0;border-bottom:1px solid #222;color:#c4b5fd">${q}</div>`).join('');
+      document.getElementById('quest-board').dataset.questsLoaded = 'true';
+      this.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

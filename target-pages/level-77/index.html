@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Hero Registry</title>
+  <style>
+    body { background: #0d0d1e; color: #ccc; font-family: monospace; padding: 20px; }
+    h1 { color: #ffd700; }
+    .character {
+      background: #1a1a3e;
+      border: 2px solid #4da6ff;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .name { color: #ffd700; font-size: 20px; font-weight: bold; }
+    .badge { background: #22c55e; color: #000; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+    a { color: #4da6ff; text-decoration: none; }
+    #stats {
+      color: rgb(255, 215, 0);
+      font-size: 16px;
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .stat { background: #0a1628; padding: 4px 10px; border-radius: 4px; }
+    img { border-radius: 50%; border: 2px solid #4da6ff; display: block; margin-top: 8px; }
+    .guild { margin-top: 20px; }
+    .guild-title { color: #a78bfa; font-size: 18px; margin-bottom: 8px; }
+    .members { display: flex; gap: 8px; flex-wrap: wrap; }
+    .member { background: #1a0a3e; border: 1px solid #a78bfa; padding: 4px 12px; border-radius: 12px; color: #c4b5fd; }
+  </style>
+</head>
+<body>
+  <h1>The Hero Registry</h1>
+
+  <!-- Main character card with data attributes -->
+  <div
+    id="hero"
+    class="character active"
+    data-type="warrior"
+    data-level="42"
+    data-guild="storm-riders"
+    title="Main Hero"
+    aria-label="hero character"
+    tabindex="0"
+  >
+    <span class="name">Aria Stormwind</span>
+    <span class="badge" data-rank="legend">Legend</span>
+    <p class="bio">Master of the blade and arcane arts.</p>
+    <div id="stats" style="color: rgb(255, 215, 0); font-size: 16px; display: flex; gap: 12px; margin-top: 12px;">
+      <span class="stat">STR: 18</span>
+      <span class="stat">INT: 16</span>
+      <span class="stat">AGI: 20</span>
+    </div>
+    <img id="avatar" src="/avatar.png" alt="Hero Avatar" width="80" height="80">
+  </div>
+
+  <!-- Link element -->
+  <a href="/quest" id="quest-link" target="_blank" rel="noopener" data-action="navigate">
+    Begin Quest →
+  </a>
+
+  <!-- Guild section -->
+  <div class="guild" id="guild-panel" data-faction="alliance">
+    <div class="guild-title">Storm Riders Guild</div>
+    <div class="members">
+      <span class="member">Aria</span>
+      <span class="member">Orion</span>
+      <span class="member">Lyra</span>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Merchant's Trail — Cart</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 0; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: #0d0d2e; border-bottom: 1px solid #1a2e1a; }
+    .topbar-title { color: #22c55e; font-size: 18px; font-weight: bold; }
+    .back-btn { padding: 9px 20px; background: transparent; border: 1px solid #2a2a5e; border-radius: 8px; color: #888; font-size: 14px; cursor: pointer; text-decoration: none; }
+    .back-btn:hover { border-color: #22c55e; color: #22c55e; }
+    .content { max-width: 640px; margin: 48px auto; padding: 0 24px; }
+    h2 { color: #22c55e; margin: 0 0 8px; }
+    .page-desc { color: #888; font-size: 14px; margin: 0 0 32px; }
+    #empty-cart { text-align: center; padding: 60px 0; color: #555; }
+    #empty-cart .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    #cart-items { list-style: none; padding: 0; margin: 0 0 24px; }
+    .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #0d0d2e; border: 1px solid #1a2e1a; border-radius: 10px; margin-bottom: 12px; }
+    .item-left { display: flex; align-items: center; gap: 14px; }
+    .item-icon { font-size: 28px; }
+    .item-name { font-size: 15px; font-weight: bold; }
+    .item-price-tag { font-size: 13px; color: #666; }
+    .item-right { display: flex; align-items: center; gap: 16px; }
+    .item-price { font-size: 16px; font-weight: bold; color: #22c55e; }
+    .remove-btn { padding: 6px 12px; background: transparent; border: 1px solid #ef4444; border-radius: 6px; color: #ef4444; font-size: 12px; cursor: pointer; }
+    .remove-btn:hover { background: #1a0a0a; }
+    .cart-footer { background: #0d0d2e; border: 1px solid #1a2e1a; border-radius: 10px; padding: 20px 24px; }
+    .total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .total-label { color: #888; font-size: 14px; }
+    #cart-total { font-size: 22px; font-weight: bold; color: #22c55e; }
+    .checkout-btn { width: 100%; padding: 13px; background: #22c55e; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 15px; cursor: pointer; }
+    .checkout-btn:hover { background: #4ade80; }
+    .checkout-btn:disabled { background: #166534; color: #4ade80; cursor: default; }
+    #order-form { display: none; margin-top: 24px; padding: 24px; background: #0a0a1a; border: 1px solid #2a2a5e; border-radius: 10px; }
+    #order-form h3 { color: #eee; margin: 0 0 16px; }
+    #order-form input { width: 100%; padding: 11px 14px; background: #1a1a3e; border: 1px solid #2a2a5e; border-radius: 8px; color: #eee; font-size: 14px; box-sizing: border-box; margin-bottom: 12px; outline: none; }
+    #order-form input:focus { border-color: #22c55e; }
+    #confirm-order-btn { width: 100%; padding: 12px; background: #22c55e; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 14px; cursor: pointer; }
+    #confirm-order-btn:hover { background: #4ade80; }
+    #order-confirmation { display: none; margin-top: 24px; padding: 24px; background: #0a1a0a; border: 1px solid #22c55e; border-radius: 10px; text-align: center; }
+    #order-confirmation .conf-icon { font-size: 40px; margin-bottom: 10px; }
+    #order-confirmation h3 { color: #22c55e; margin: 0 0 8px; }
+    #order-confirmation p { color: #888; font-size: 14px; margin: 0; }
+    #order-confirmation .buyer-name { color: #eee; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-title">🛒 Shopping Cart</div>
+    <a class="back-btn" href="index.html">← Back to Shop</a>
+  </div>
+
+  <div class="content">
+    <h2>Your Cart</h2>
+    <p class="page-desc">Review your items before checkout</p>
+
+    <div id="empty-cart">
+      <div class="empty-icon">🛒</div>
+      <div>Your cart is empty — <a href="index.html" style="color:#22c55e">go shopping</a></div>
+    </div>
+
+    <ul id="cart-items"></ul>
+
+    <div class="cart-footer" id="cart-footer" style="display:none">
+      <div class="total-row">
+        <span class="total-label">Total</span>
+        <span id="cart-total">0 gold</span>
+      </div>
+      <button class="checkout-btn" id="checkout-btn" onclick="showOrderForm()">Proceed to Checkout →</button>
+    </div>
+
+    <div id="order-form">
+      <h3>Complete Your Order</h3>
+      <input type="text" id="buyer-name" placeholder="Your adventurer name" />
+      <input type="text" id="delivery-guild" placeholder="Delivery guild (optional)" />
+      <button id="confirm-order-btn" onclick="confirmOrder()">✓ Confirm Order</button>
+    </div>
+
+    <div id="order-confirmation">
+      <div class="conf-icon">🎉</div>
+      <h3>Order Confirmed!</h3>
+      <p>Thank you, <span class="buyer-name" id="conf-buyer-name">Hero</span>! Your items are on their way.</p>
+    </div>
+  </div>
+
+  <script>
+    function getCart() {
+      try { return JSON.parse(localStorage.getItem('merchant-cart') || '[]'); } catch(e) { return []; }
+    }
+    function saveCart(cart) { localStorage.setItem('merchant-cart', JSON.stringify(cart)); }
+
+    var ICONS = { 'magic-sword': '⚔️', 'dragon-shield': '🛡️', 'fire-staff': '🔥', 'shadow-cloak': '🌑' };
+
+    function renderCart() {
+      var cart = getCart();
+      var listEl = document.getElementById('cart-items');
+      var emptyEl = document.getElementById('empty-cart');
+      var footerEl = document.getElementById('cart-footer');
+      listEl.innerHTML = '';
+      if (cart.length === 0) {
+        emptyEl.style.display = 'block'; footerEl.style.display = 'none'; return;
+      }
+      emptyEl.style.display = 'none'; footerEl.style.display = 'block';
+      var total = 0;
+      cart.forEach(function(item) {
+        total += item.price;
+        var li = document.createElement('li');
+        li.className = 'cart-item';
+        li.setAttribute('data-cart-item', item.id);
+        li.innerHTML =
+          '<div class="item-left">' +
+            '<div class="item-icon">' + (ICONS[item.id] || '📦') + '</div>' +
+            '<div><div class="item-name">' + item.name + '</div><div class="item-price-tag">' + item.price + ' gold</div></div>' +
+          '</div>' +
+          '<div class="item-right">' +
+            '<span class="item-price">' + item.price + ' gold</span>' +
+            '<button class="remove-btn" onclick="removeItem(\'' + item.id + '\')">Remove</button>' +
+          '</div>';
+        listEl.appendChild(li);
+      });
+      document.getElementById('cart-total').textContent = total + ' gold';
+    }
+
+    function removeItem(id) {
+      var cart = getCart().filter(function(i) { return i.id !== id; });
+      saveCart(cart);
+      renderCart();
+    }
+
+    function showOrderForm() {
+      document.getElementById('checkout-btn').disabled = true;
+      document.getElementById('order-form').style.display = 'block';
+    }
+
+    function confirmOrder() {
+      var name = document.getElementById('buyer-name').value.trim();
+      if (!name) { document.getElementById('buyer-name').focus(); return; }
+      document.getElementById('order-form').style.display = 'none';
+      document.getElementById('conf-buyer-name').textContent = name;
+      document.getElementById('order-confirmation').style.display = 'block';
+      localStorage.removeItem('merchant-cart');
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

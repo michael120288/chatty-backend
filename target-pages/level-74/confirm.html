@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Quest Portal — Confirm</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a78bfa; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .steps { display: flex; justify-content: center; gap: 0; margin-bottom: 40px; }
+    .step { padding: 8px 24px; font-size: 13px; border: 1px solid #2a2a5e; color: #888; }
+    .step.active { background: #a78bfa; color: #000; font-weight: bold; border-color: #a78bfa; }
+    .step.done { background: #1a1040; color: #a78bfa; border-color: #a78bfa; }
+    .step:first-child { border-radius: 8px 0 0 8px; }
+    .step:last-child { border-radius: 0 8px 8px 0; }
+    .card { max-width: 520px; margin: 0 auto; background: #0d0d2e; border: 1px solid #2a1a5e; border-radius: 12px; padding: 32px; }
+    .card h2 { color: #a78bfa; margin: 0 0 24px; font-size: 18px; }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #1a1a3e; }
+    .summary-row:last-of-type { border-bottom: none; }
+    .row-label { color: #888; font-size: 13px; }
+    .row-value { font-size: 15px; font-weight: bold; color: #eee; }
+    .diff-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+    .diff-legendary { background: #2d1b00; color: #f59e0b; border: 1px solid #f59e0b; }
+    .diff-hard { background: #1a0a0a; color: #ef4444; border: 1px solid #ef4444; }
+    .diff-normal { background: #0a1a0a; color: #22c55e; border: 1px solid #22c55e; }
+    .btn-row { display: flex; gap: 12px; margin-top: 28px; }
+    .back-btn { flex: 1; padding: 12px; background: transparent; border: 1px solid #2a2a5e; border-radius: 8px; color: #888; font-size: 14px; cursor: pointer; }
+    .back-btn:hover { border-color: #a78bfa; color: #a78bfa; }
+    .begin-btn { flex: 2; padding: 12px; background: #a78bfa; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 15px; cursor: pointer; }
+    .begin-btn:hover { background: #c4b5fd; }
+  </style>
+</head>
+<body>
+  <h1>⚔️ The Quest Portal</h1>
+  <p class="subtitle">Review your quest details before setting forth</p>
+
+  <div class="steps">
+    <div class="step done">✓ Register</div>
+    <div class="step active">2 · Confirm</div>
+    <div class="step">3 · Adventure</div>
+  </div>
+
+  <div class="card">
+    <h2>Quest Summary</h2>
+    <div class="summary-row">
+      <span class="row-label">Adventurer</span>
+      <span class="row-value" id="summary-name">—</span>
+    </div>
+    <div class="summary-row">
+      <span class="row-label">Class</span>
+      <span class="row-value" id="summary-class">—</span>
+    </div>
+    <div class="summary-row">
+      <span class="row-label">Difficulty</span>
+      <span class="row-value" id="summary-difficulty">—</span>
+    </div>
+    <div class="btn-row">
+      <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
+      <button class="begin-btn" id="begin-btn" onclick="window.location.href='result.html'">Begin Adventure →</button>
+    </div>
+  </div>
+
+  <script>
+    var name = localStorage.getItem('quest-name');
+    var cls = localStorage.getItem('quest-class');
+    var diff = localStorage.getItem('quest-difficulty');
+    if (!name) { window.location.href = 'index.html'; }
+    document.getElementById('summary-name').textContent = name || '—';
+    document.getElementById('summary-class').textContent = cls || '—';
+    var diffEl = document.getElementById('summary-difficulty');
+    diffEl.textContent = diff || '—';
+    if (diff) {
+      var cls2 = 'diff-' + diff.toLowerCase();
+      diffEl.innerHTML = '<span class="diff-badge ' + cls2 + '">' + diff + '</span>';
+    }
+  </script>
+</body>
+</html>

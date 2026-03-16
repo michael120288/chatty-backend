@@ -1,0 +1,13 @@
+{
+  "name": "test-quest-sandbox",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "playwright": "^1.49.0",
+    "cypress": "^13.17.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^5.0.0"
+  }
+}

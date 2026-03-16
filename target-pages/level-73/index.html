@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Awakening Chamber — Level 73</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #34d399; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .chamber { max-width: 580px; margin: 0 auto; background: #0d0d2e; border: 1px solid #0a2e1a; border-radius: 12px; padding: 32px; text-align: center; }
+    .chamber-title { color: #34d399; font-size: 16px; font-weight: bold; margin: 0 0 24px; }
+    .sleeping { font-size: 60px; margin-bottom: 16px; }
+    .awaken-btn { padding: 12px 28px; background: #0a2e1a; border: 1px solid #34d399; border-radius: 8px; color: '#34d399'; font-size: 14px; cursor: pointer; color: #34d399; }
+    .awaken-btn:hover { background: #0d3a20; }
+    #awakened-content { display: none; margin-top: 24px; background: #0a1a0a; border: 1px solid #34d399; border-radius: 10px; padding: 20px; }
+    .awakened-title { color: #34d399; font-size: 18px; font-weight: bold; margin-bottom: 8px; }
+    #power-level { font-size: 32px; font-weight: bold; color: #ffd700; }
+    .awakened-desc { color: #888; font-size: 13px; margin-top: 8px; }
+    #status-text { color: #555; font-size: 13px; margin-top: 16px; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>The Awakening Chamber</h1>
+  <p class="subtitle">Cypress automatically retries assertions — no need to manually wait</p>
+
+  <div class="chamber">
+    <div class="chamber-title">💤 The Ancient Guardian</div>
+    <div class="sleeping">😴</div>
+    <button class="awaken-btn" id="awaken-btn" onclick="awakenGuardian()">Awaken the Guardian</button>
+    <div id="status-text">Guardian is sleeping...</div>
+
+    <div id="awakened-content">
+      <div class="awakened-title">⚡ Guardian Awakened!</div>
+      <div id="power-level">OVER 9000</div>
+      <div class="awakened-desc">The ancient guardian has stirred from its eternal slumber</div>
+    </div>
+  </div>
+
+  <script>
+    function awakenGuardian() {
+      document.getElementById('awaken-btn').disabled = true;
+      document.getElementById('status-text').textContent = 'Awakening in progress...';
+      setTimeout(function() {
+        document.getElementById('awakened-content').style.display = 'block';
+        document.getElementById('status-text').textContent = 'Guardian is awake!';
+        document.querySelector('.sleeping').textContent = '⚡';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

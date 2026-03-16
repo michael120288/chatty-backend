@@ -20,7 +20,7 @@ class Config {
   public SENDGRID_API_KEY: string | undefined;
   public SENDGRID_SENDER: string | undefined;
   public EC2_URL: string | undefined;
-  public DOCKER_TIMEOUT: number = parseInt(process.env.DOCKER_TIMEOUT || '30000', 10);
+  public DOCKER_TIMEOUT: number = parseInt(process.env.DOCKER_TIMEOUT || '120000', 10);
   public MAX_CODE_LENGTH: number = parseInt(process.env.MAX_CODE_LENGTH || '50000', 10);
   public SANDBOX_IMAGE: string = process.env.SANDBOX_IMAGE || 'test-quest-sandbox:latest';
 

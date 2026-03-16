@@ -35,6 +35,9 @@ const config: Config.InitialOptions = {
     '@service/(.*)': ['<rootDir>/src/shared/services/$1'],
     '@socket/(.*)': ['<rootDir>/src/shared/sockets/$1'],
     '@worker/(.*)': ['<rootDir>/src/shared/workers/$1'],
+    '@game/(.*)': ['<rootDir>/src/features/game/$1'],
+    '@progress/(.*)': ['<rootDir>/src/features/progress/$1'],
+    '@flashcards/(.*)': ['<rootDir>/src/features/flashcards/$1'],
     '@root/(.*)': ['<rootDir>/src/$1'],
   }
 };

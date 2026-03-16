@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Oracle's Chain — Level 62</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a855f7; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .oracle-panel { max-width: 600px; margin: 0 auto; background: #0d0d2e; border: 1px solid #4a1a7a; border-radius: 12px; padding: 32px; }
+    .oracle-title { color: #a855f7; font-size: 18px; font-weight: bold; margin: 0 0 20px; }
+    .prophecy { background: #1a0a2e; border: 1px solid #4a1a7a; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .prophecy-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 6px; }
+    .prophecy-text { color: #d8b4fe; font-size: 15px; font-weight: bold; }
+    .stat-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .stat-box { flex: 1; background: #1a1a2e; border: 1px solid #2a2a5e; border-radius: 8px; padding: 12px; text-align: center; }
+    .stat-value { font-size: 24px; font-weight: bold; color: #a855f7; }
+    .stat-label { font-size: 11px; color: #666; margin-top: 4px; }
+    .action-btn { width: 100%; padding: 12px; background: #4a1a7a; border: none; border-radius: 8px; color: #eee; font-size: 14px; cursor: pointer; }
+    .action-btn:hover { background: #5a2a8a; }
+    #reveal-output { display: none; margin-top: 16px; background: #0a1a0a; border: 1px solid #22c55e; border-radius: 8px; padding: 12px; color: #22c55e; font-weight: bold; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>The Oracle's Chain</h1>
+  <p class="subtitle">Use .then(), .its(), .invoke(), and cy.wrap() to chain and transform</p>
+
+  <div class="oracle-panel" data-oracle-level="supreme" data-power="9000">
+    <div class="oracle-title">Supreme Oracle</div>
+    <div class="prophecy">
+      <div class="prophecy-label">Current Prophecy</div>
+      <div class="prophecy-text" id="prophecy-text">The dragon sleeps beneath the mountain</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-value" id="wisdom-val">42</div>
+        <div class="stat-label">Wisdom</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="power-val">9000</div>
+        <div class="stat-label">Power</div>
+      </div>
+    </div>
+    <button class="action-btn" id="invoke-btn" onclick="document.getElementById('reveal-output').style.display='block'">Invoke the Oracle</button>
+    <div id="reveal-output">⚡ The oracle has spoken!</div>
+  </div>
+</body>
+</html>

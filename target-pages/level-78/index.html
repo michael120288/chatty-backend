@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Character Workshop</title>
+  <style>
+    body { background: #0d0d1e; color: #ccc; font-family: monospace; padding: 20px; }
+    h1 { color: #ffd700; }
+    form { background: #1a1a3e; border: 1px solid #333; border-radius: 8px; padding: 20px; max-width: 480px; }
+    label { display: block; margin-bottom: 4px; color: #aaa; font-size: 13px; }
+    input[type="text"], textarea, select {
+      width: 100%;
+      background: #0d0d1e;
+      border: 1px solid #444;
+      color: #ccc;
+      padding: 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+    input[type="checkbox"], input[type="radio"] { margin-right: 8px; }
+    input:disabled { opacity: 0.4; cursor: not-allowed; }
+    .field-group { margin-bottom: 12px; }
+    .btn { background: #4da6ff; color: #000; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-family: monospace; margin-top: 8px; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    #bio { height: 80px; resize: vertical; }
+    h2 { color: #a78bfa; margin-top: 24px; }
+    .hint { color: #555; font-size: 12px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>The Character Workshop</h1>
+
+  <form id="character-form">
+    <!-- Text input with value -->
+    <label for="hero-name">Hero Name</label>
+    <input id="hero-name" type="text" value="Aria Stormwind" placeholder="Enter hero name">
+
+    <!-- Textarea with content -->
+    <label for="bio">Biography</label>
+    <textarea id="bio">Hero biography goes here</textarea>
+
+    <!-- Disabled input -->
+    <label for="hero-id">Hero ID (read-only)</label>
+    <input id="hero-id" type="text" value="HRO-42" disabled>
+
+    <!-- Select with a pre-selected option -->
+    <label for="class-select">Class</label>
+    <select id="class-select">
+      <option value="warrior">Warrior</option>
+      <option value="mage" selected>Mage</option>
+      <option value="rogue">Rogue</option>
+      <option value="ranger">Ranger</option>
+    </select>
+
+    <!-- Checkboxes -->
+    <div class="field-group">
+      <label><input id="archery-check" type="checkbox" checked> Archery Skill</label>
+      <label><input id="magic-check" type="checkbox"> Magic Skill</label>
+      <label><input id="stealth-check" type="checkbox" disabled> Stealth Skill (locked)</label>
+    </div>
+
+    <!-- Radio buttons -->
+    <div class="field-group">
+      <label><input name="difficulty" type="radio" value="easy"> Easy</label>
+      <label><input name="difficulty" type="radio" value="normal" checked> Normal</label>
+      <label><input name="difficulty" type="radio" value="hard"> Hard</label>
+    </div>
+
+    <!-- Active focusable input -->
+    <label for="search-input">Search Quests</label>
+    <input id="search-input" type="text" placeholder="Type here to search...">
+
+    <!-- Disabled button -->
+    <button class="btn" id="save-btn">Save Character</button>
+    <button class="btn" id="locked-btn" disabled>Locked Feature</button>
+  </form>
+
+  <script>
+    // Auto-focus the search input so have.focus works
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('search-input').focus();
+    });
+  </script>
+</body>
+</html>

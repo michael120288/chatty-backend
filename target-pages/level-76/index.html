@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Merchant's Trail — Shop</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 0; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: #0d0d2e; border-bottom: 1px solid #1a2e1a; }
+    .topbar-title { color: #22c55e; font-size: 18px; font-weight: bold; }
+    .cart-btn { display: flex; align-items: center; gap: 10px; padding: 9px 20px; background: #22c55e; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 14px; cursor: pointer; text-decoration: none; }
+    .cart-btn:hover { background: #4ade80; }
+    #cart-count { background: #000; color: #22c55e; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+    .content { max-width: 900px; margin: 48px auto; padding: 0 24px; }
+    h2 { color: #22c55e; margin: 0 0 8px; }
+    .page-desc { color: #888; font-size: 14px; margin: 0 0 32px; }
+    .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .item-card { background: #0d0d2e; border: 1px solid #1a2e1a; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; }
+    .item-icon { font-size: 40px; margin-bottom: 14px; }
+    .item-name { font-size: 17px; font-weight: bold; color: #eee; margin-bottom: 6px; }
+    .item-desc { font-size: 13px; color: #666; margin-bottom: 16px; flex: 1; }
+    .item-footer { display: flex; align-items: center; justify-content: space-between; }
+    .item-price { font-size: 18px; font-weight: bold; color: #22c55e; }
+    .item-price span { font-size: 12px; color: #666; font-weight: normal; }
+    .add-btn { padding: 9px 18px; background: #22c55e; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .add-btn:hover { background: #4ade80; }
+    .add-btn.added { background: #166534; color: #4ade80; cursor: default; }
+    .added-badge { display: none; font-size: 12px; color: #4ade80; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-title">🏪 The Merchant's Trail</div>
+    <a class="cart-btn" id="view-cart-btn" href="cart.html">
+      🛒 View Cart <span id="cart-count">0</span>
+    </a>
+  </div>
+
+  <div class="content">
+    <h2>Enchanted Marketplace</h2>
+    <p class="page-desc">Browse rare items and add them to your cart before heading to checkout</p>
+
+    <div class="shop-grid">
+      <div class="item-card" data-item="magic-sword">
+        <div class="item-icon">⚔️</div>
+        <div class="item-name">Magic Sword</div>
+        <div class="item-desc">A legendary blade imbued with arcane fire. +50 attack, glows in the dark.</div>
+        <div class="item-footer">
+          <div>
+            <div class="item-price">1200 <span>gold</span></div>
+          </div>
+          <button class="add-btn add-to-cart" data-id="magic-sword" data-name="Magic Sword" data-price="1200" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="item-card" data-item="dragon-shield">
+        <div class="item-icon">🛡️</div>
+        <div class="item-name">Dragon Shield</div>
+        <div class="item-desc">Forged from the scales of an ancient dragon. +80 defense, fire resistant.</div>
+        <div class="item-footer">
+          <div>
+            <div class="item-price">500 <span>gold</span></div>
+          </div>
+          <button class="add-btn add-to-cart" data-id="dragon-shield" data-name="Dragon Shield" data-price="500" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="item-card" data-item="fire-staff">
+        <div class="item-icon">🔥</div>
+        <div class="item-name">Fire Staff</div>
+        <div class="item-desc">Channels the power of the volcano. Cast Fireball 3× per day.</div>
+        <div class="item-footer">
+          <div>
+            <div class="item-price">850 <span>gold</span></div>
+          </div>
+          <button class="add-btn add-to-cart" data-id="fire-staff" data-name="Fire Staff" data-price="850" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="item-card" data-item="shadow-cloak">
+        <div class="item-icon">🌑</div>
+        <div class="item-name">Shadow Cloak</div>
+        <div class="item-desc">Woven from shadows. Grants invisibility for 30 seconds once per hour.</div>
+        <div class="item-footer">
+          <div>
+            <div class="item-price">650 <span>gold</span></div>
+          </div>
+          <button class="add-btn add-to-cart" data-id="shadow-cloak" data-name="Shadow Cloak" data-price="650" onclick="addToCart(this)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getCart() {
+      try { return JSON.parse(localStorage.getItem('merchant-cart') || '[]'); } catch(e) { return []; }
+    }
+    function saveCart(cart) {
+      localStorage.setItem('merchant-cart', JSON.stringify(cart));
+      document.getElementById('cart-count').textContent = cart.length;
+    }
+
+    function addToCart(btn) {
+      var cart = getCart();
+      var id = btn.dataset.id;
+      if (cart.find(function(i){ return i.id === id; })) return;
+      cart.push({ id: id, name: btn.dataset.name, price: parseInt(btn.dataset.price) });
+      saveCart(cart);
+      btn.textContent = '✓ Added';
+      btn.classList.add('added');
+      btn.disabled = true;
+    }
+
+    // Restore button states on load
+    var cart = getCart();
+    document.getElementById('cart-count').textContent = cart.length;
+    cart.forEach(function(item) {
+      var btn = document.querySelector('[data-id="' + item.id + '"]');
+      if (btn) { btn.textContent = '✓ Added'; btn.classList.add('added'); btn.disabled = true; }
+    });
+  </script>
+</body>
+</html>

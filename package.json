@@ -17,7 +17,8 @@
     "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "seeds:dev": "npx ts-node src/seeds.ts",
-    "seeds:prod": "npx ts-node ./build/src/seeds.js"
+    "seeds:prod": "npx ts-node ./build/src/seeds.js",
+    "seeds:flashcards:cypress-env": "npx ts-node -r tsconfig-paths/register src/seeds-flashcards-cypress-env.ts"
   },
   "keywords": [],
   "author": "",

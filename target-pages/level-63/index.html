@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Alias Forge — Level 63</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #f59e0b; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .forge { max-width: 680px; margin: 0 auto; }
+    .forge-section { background: #0d0d2e; border: 1px solid #2a1a00; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+    .section-title { color: #f59e0b; font-size: 15px; font-weight: bold; margin: 0 0 16px; }
+    .rune-list { list-style: none; padding: 0; margin: 0; }
+    .rune-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1a1a2e; }
+    .rune-item:last-child { border-bottom: none; }
+    .rune-icon { font-size: 20px; }
+    .rune-name { font-weight: bold; color: #ffd700; flex: 1; }
+    .rune-power { color: #f59e0b; font-size: 13px; }
+    .forge-form { display: flex; gap: 10px; }
+    .forge-input { flex: 1; padding: 10px 14px; background: #1a1a2e; border: 1px solid #2a2a5e; border-radius: 6px; color: #eee; font-size: 14px; }
+    .forge-btn { padding: 10px 20px; background: #f59e0b; border: none; border-radius: 6px; color: #000; font-weight: bold; cursor: pointer; }
+    .forge-btn:hover { background: #fbbf24; }
+    #forge-result { display: none; margin-top: 12px; padding: 10px 14px; background: #1a1500; border: 1px solid #f59e0b; border-radius: 6px; color: #ffd700; font-weight: bold; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .summary-box { background: #1a1a2e; border: 1px solid #2a2a5e; border-radius: 6px; padding: 12px; text-align: center; }
+    .summary-num { font-size: 22px; font-weight: bold; color: #f59e0b; }
+    .summary-lbl { font-size: 11px; color: #666; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>The Alias Forge</h1>
+  <p class="subtitle">Use .as() to create aliases and cy.get('@alias') to reuse them</p>
+
+  <div class="forge">
+    <div class="forge-section">
+      <div class="section-title">🔥 Sacred Runes</div>
+      <ul class="rune-list" id="rune-list">
+        <li class="rune-item"><span class="rune-icon">⚡</span><span class="rune-name">Thunder Rune</span><span class="rune-power">800 power</span></li>
+        <li class="rune-item"><span class="rune-icon">❄️</span><span class="rune-name">Frost Rune</span><span class="rune-power">650 power</span></li>
+        <li class="rune-item"><span class="rune-icon">🔥</span><span class="rune-name">Flame Rune</span><span class="rune-power">720 power</span></li>
+      </ul>
+    </div>
+    <div class="forge-section">
+      <div class="section-title">⚒️ Forge a New Rune</div>
+      <div class="forge-form">
+        <input class="forge-input" id="rune-name-input" type="text" placeholder="Enter rune name..." />
+        <button class="forge-btn" id="forge-btn" onclick="
+          var v = document.getElementById('rune-name-input').value;
+          if(v){ document.getElementById('forge-result').style.display='block'; document.getElementById('forge-result').textContent='✅ Forged: ' + v; }
+        ">Forge</button>
+      </div>
+      <div id="forge-result"></div>
+    </div>
+    <div class="forge-section">
+      <div class="section-title">📊 Forge Summary</div>
+      <div class="summary-grid">
+        <div class="summary-box"><div class="summary-num" id="total-runes">3</div><div class="summary-lbl">Total Runes</div></div>
+        <div class="summary-box"><div class="summary-num" id="total-power">2170</div><div class="summary-lbl">Total Power</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

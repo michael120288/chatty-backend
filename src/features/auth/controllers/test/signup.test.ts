@@ -64,15 +64,15 @@ describe('SIGNUP', () => {
     SignUp.prototype.create(req, res).catch((error: CustomError) => {
       console.log(error);
       expect(error.statusCode).toEqual(400);
-      expect(error.serializeError().message).toEqual('Invalid username');
+      expect(error.serializeError().message).toEqual('Username must be at least 4 characters');
       console.log(error.serializeError());
     });
   });
-  it('should throw an error if username is less than minimum length ', () => {
+  it('should throw an error if username is greater than maximum length ', () => {
     const req: Request = authMockRequest(
       {},
       {
-        username: 'namaname9',
+        username: 'a'.repeat(21),
         email: 'michael@gmail.com',
         password: 'qwerty',
         avatarColor: '#9c27b0',
@@ -84,7 +84,7 @@ describe('SIGNUP', () => {
     SignUp.prototype.create(req, res).catch((error: CustomError) => {
       console.log(error);
       expect(error.statusCode).toEqual(400);
-      expect(error.serializeError().message).toEqual('Invalid username');
+      expect(error.serializeError().message).toEqual('Username cannot exceed 20 characters');
       console.log(error.serializeError());
     });
   });
@@ -94,7 +94,7 @@ describe('SIGNUP', () => {
       {
         username: 'nameNe',
         email: 'not valid',
-        password: 'qwerty',
+        password: 'SecurePass1@',
         avatarColor: '#9c27b0',
         avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==',
       },
@@ -114,7 +114,7 @@ describe('SIGNUP', () => {
       {
         username: 'name',
         email: '',
-        password: 'qwerty',
+        password: 'SecurePass1@',
         avatarColor: '#9c27b0',
         avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==',
       },
@@ -168,7 +168,7 @@ describe('SIGNUP', () => {
     SignUp.prototype.create(req, res).catch((error: CustomError) => {
       console.log(error);
       expect(error.statusCode).toEqual(400);
-      expect(error.serializeError().message).toEqual('Invalid password');
+      expect(error.serializeError().message).toEqual('Password must be at least 12 characters long');
       console.log(error.serializeError());
     });
   });
@@ -178,7 +178,7 @@ describe('SIGNUP', () => {
       {
         username: 'name',
         email: 'michael@gmail.com',
-        password: 'qwertyqwerty',
+        password: 'a'.repeat(129),
         avatarColor: '#9c27b0',
         avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==',
       },
@@ -188,7 +188,7 @@ describe('SIGNUP', () => {
     SignUp.prototype.create(req, res).catch((error: CustomError) => {
       console.log(error);
       expect(error.statusCode).toEqual(400);
-      expect(error.serializeError().message).toEqual('Invalid password');
+      expect(error.serializeError().message).toEqual('Password cannot exceed 128 characters');
       console.log(error.serializeError());
     });
   });
@@ -198,7 +198,7 @@ describe('SIGNUP', () => {
       {
         username: 'michael',
         email: 'michael@gmail.com',
-        password: 'michael',
+        password: 'SecurePass1@',
         avatarColor: '#9c27b0',
         avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==',
       },
@@ -210,7 +210,7 @@ describe('SIGNUP', () => {
       .mockResolvedValue(authMock);
     SignUp.prototype.create(req, res).catch((error: CustomError) => {
       expect(error.statusCode).toEqual(400);
-      expect(error.serializeError().message).toEqual('Invalid credentials');
+      expect(error.serializeError().message).toEqual('User already exists. Username or email is already taken.');
     });
   });
   it('should set session data for valid credentials and send correct json response', async () => {
@@ -219,7 +219,7 @@ describe('SIGNUP', () => {
       {
         username: 'michael',
         email: 'michael@gmail.com',
-        password: 'michael',
+        password: 'SecurePass1@',
         avatarColor: '#9c27b0',
         avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==',
       },

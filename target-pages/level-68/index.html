@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Spell Logger — Level 68</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #8b5cf6; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .spy-lab { max-width: 580px; margin: 0 auto; background: #0d0d2e; border: 1px solid #1a0a3e; border-radius: 12px; padding: 32px; }
+    .lab-title { color: #8b5cf6; font-size: 16px; font-weight: bold; margin: 0 0 24px; }
+    .spell-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .spell-btn { flex: 1; padding: 12px; background: #1a0a3e; border: 1px solid #2a1a5e; border-radius: 8px; color: #ccc; font-size: 13px; cursor: pointer; }
+    .spell-btn:hover { background: #2a1a5e; color: #eee; }
+    .spell-log { background: #0a0a0a; border: 1px solid #1a1a2e; border-radius: 8px; padding: 12px; min-height: 100px; font-family: monospace; font-size: 12px; margin-top: 16px; }
+    .log-line { color: #8b5cf6; margin-bottom: 4px; }
+    .note { margin-top: 12px; font-size: 12px; color: #555; font-style: italic; }
+  </style>
+  <script>
+    window.spellCaster = {
+      castFireball: function() {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<div class="log-line">🔥 Fireball cast!</div>');
+        return 'fireball-cast';
+      },
+      castBlizzard: function() {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<div class="log-line">❄️ Blizzard cast!</div>');
+        return 'blizzard-cast';
+      },
+      castHeal: function() {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<div class="log-line">💚 Heal cast!</div>');
+        return 'heal-cast';
+      }
+    };
+  </script>
+</head>
+<body>
+  <h1>The Spell Logger</h1>
+  <p class="subtitle">Use cy.spy() to observe calls on window.spellCaster</p>
+
+  <div class="spy-lab">
+    <div class="lab-title">🔍 Spell Observatory</div>
+    <div class="spell-row">
+      <button class="spell-btn" id="btn-fireball" onclick="window.spellCaster.castFireball()">🔥 Fireball</button>
+      <button class="spell-btn" id="btn-blizzard" onclick="window.spellCaster.castBlizzard()">❄️ Blizzard</button>
+      <button class="spell-btn" id="btn-heal" onclick="window.spellCaster.castHeal()">💚 Heal</button>
+    </div>
+    <div class="spell-log" id="log">
+      <div style="color:#333">// Spell log will appear here</div>
+    </div>
+    <p class="note">Hint: cy.spy(win.spellCaster, 'castFireball') then assert .should('have.been.calledOnce')</p>
+  </div>
+</body>
+</html>

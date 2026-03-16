@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Guild Hall</title>
+  <style>
+    body { background: #0d0d1e; color: #ccc; font-family: monospace; padding: 20px; }
+    h1 { color: #ffd700; }
+    .hall { background: #1a1a3e; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .room { background: #0d0d2e; border: 1px solid #2a2a4e; border-radius: 6px; padding: 12px; margin-bottom: 8px; }
+    .notice { color: #aaa; margin: 0 0 8px; }
+    #member-list { list-style: none; padding: 0; margin: 0; }
+    #member-list li { padding: 4px 0; border-bottom: 1px solid #1a1a3e; color: #c4b5fd; }
+    .section-title { color: #4da6ff; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+    #visible-sign { color: #22c55e; padding: 8px; border: 1px solid #22c55e; border-radius: 4px; display: inline-block; }
+    .nested { margin-left: 16px; }
+    h2 { color: #a78bfa; margin-top: 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>The Guild Hall</h1>
+
+  <!-- Container with descendants -->
+  <div id="guild-hall" class="hall">
+    <div class="section-title">Main Hall</div>
+    <div class="room" id="main-hall">
+      <p class="notice">Welcome to the Storm Riders Guild</p>
+      <ul id="member-list">
+        <li class="member" data-role="leader">Aria Stormwind</li>
+        <li class="member" data-role="scout">Orion Darkblade</li>
+        <li class="member" data-role="healer">Lyra Moonwhisper</li>
+      </ul>
+    </div>
+
+    <!-- Nested structure for have.descendants -->
+    <div id="deep-vault" class="room">
+      <div class="nested">
+        <div class="nested">
+          <span id="deep-item" class="treasure">Ancient Scroll</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty container -->
+  <div id="empty-chest" class="hall" style="min-height: 40px;"></div>
+
+  <!-- DOM structure tests -->
+  <div id="quest-board" class="hall">
+    <div class="section-title">Quest Board</div>
+    <div class="quest-entry" data-quest="dragon-slayer">Slay the Mountain Dragon</div>
+    <div class="quest-entry" data-quest="artifact-hunt">Retrieve the Lost Artifact</div>
+    <div class="quest-entry" data-quest="escort">Escort the Merchant</div>
+  </div>
+
+  <!-- Visibility section -->
+  <h2>Visibility Tests</h2>
+
+  <!-- Visible element -->
+  <div id="visible-sign">Quest Board is OPEN</div>
+
+  <!-- Hidden with display:none -->
+  <div id="secret-room" style="display: none">Hidden Treasure Chamber</div>
+
+  <!-- Hidden with visibility:hidden (takes up space but not visible) -->
+  <div id="invisible-door" style="visibility: hidden">Invisible Passage — exists but unseen</div>
+
+  <!-- Element outside viewport (for be.hidden testing via CSS) -->
+  <div id="off-screen" style="position: absolute; left: -9999px; top: -9999px;">Off-screen content</div>
+
+  <!-- Visible but nested inside hidden parent -->
+  <div id="hidden-parent" style="display: none">
+    <span id="hidden-child">I am hidden because my parent is</span>
+  </div>
+</body>
+</html>

@@ -4,6 +4,12 @@ import databaseConnection from '@root/setupDatabase';
 import { config } from '@root/config';
 import Logger from 'bunyan';
 
+// Suppress DEP0060 (util._extend) emitted by socket.io transitive dependencies
+process.on('warning', (w) => {
+  if (w.name === 'DeprecationWarning' && (w as NodeJS.ErrnoException).code === 'DEP0060') return;
+  process.stderr.write((w.stack ?? String(w)) + '\n');
+});
+
 const log: Logger = config.createLogger('app');
 
 class Application {
@@ -24,11 +30,13 @@ class Application {
   private static handleExit(): void {
     process.on('uncaughtException', (error: Error) => {
       log.error(`There was an uncaught error: ${error}`);
+      if ((error as NodeJS.ErrnoException).code === 'ETIMEDOUT') return;
       Application.shutDownProperly(1);
     });
 
-    process.on('unhandleRejection', (reason: Error) => {
+    process.on('unhandledRejection', (reason: Error) => {
       log.error(`Unhandled rejection at promise: ${reason}`);
+      if ((reason as NodeJS.ErrnoException).code === 'ETIMEDOUT') return;
       Application.shutDownProperly(2);
     });
 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Time Weaver — Level 71</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #a78bfa; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .time-lab { max-width: 580px; margin: 0 auto; background: #0d0d2e; border: 1px solid #1a0a3e; border-radius: 12px; padding: 32px; text-align: center; }
+    .lab-title { color: #a78bfa; font-size: 16px; font-weight: bold; margin: 0 0 24px; }
+    .clock-display { font-size: 48px; font-weight: bold; color: #a78bfa; letter-spacing: 4px; margin-bottom: 8px; font-family: monospace; }
+    .clock-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 24px; }
+    .timer-section { background: #1a1a2e; border: 1px solid #2a2a5e; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .timer-title { font-size: 13px; color: #888; margin-bottom: 12px; }
+    .countdown { font-size: 32px; font-weight: bold; color: #f59e0b; font-family: monospace; }
+    .action-btn { padding: 10px 24px; background: #1a0a3e; border: 1px solid #a78bfa; border-radius: 8px; color: #a78bfa; font-size: 14px; cursor: pointer; margin: 0 6px; }
+    .action-btn:hover { background: #2a1a5e; }
+    #delayed-msg { display: none; margin-top: 16px; padding: 12px; background: #0a0a3e; border: 1px solid #a78bfa; border-radius: 8px; color: #a78bfa; font-weight: bold; }
+    .note { margin-top: 16px; font-size: 12px; color: #555; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>The Time Weaver</h1>
+  <p class="subtitle">Use cy.clock() and cy.tick() to control time</p>
+
+  <div class="time-lab">
+    <div class="lab-title">⏰ Temporal Control Chamber</div>
+    <div class="clock-display" id="clock-display">00:00:00</div>
+    <div class="clock-label">Current Time</div>
+
+    <div class="timer-section">
+      <div class="timer-title">Delayed Message (fires after 3 seconds)</div>
+      <button class="action-btn" id="start-timer-btn" onclick="
+        var btn = document.getElementById('start-timer-btn');
+        btn.disabled = true; btn.textContent = 'Waiting...';
+        setTimeout(function() {
+          document.getElementById('delayed-msg').style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Start Timer';
+        }, 3000);
+      ">Start Timer</button>
+      <div id="delayed-msg">⚡ The prophecy has been revealed by the Time Weaver!</div>
+    </div>
+
+    <p class="note">Use cy.clock() before visiting, then cy.tick(3000) to advance time and trigger the setTimeout</p>
+  </div>
+
+  <script>
+    function updateClock() {
+      var now = new Date();
+      var h = String(now.getHours()).padStart(2,'0');
+      var m = String(now.getMinutes()).padStart(2,'0');
+      var s = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('clock-display').textContent = h + ':' + m + ':' + s;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>

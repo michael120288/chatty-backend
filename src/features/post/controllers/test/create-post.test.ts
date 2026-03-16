@@ -46,7 +46,7 @@ describe('Create', () => {
       expect(PostCache.prototype.savePostToCache).toHaveBeenCalledWith({
         key: spy.mock.calls[0][0].key,
         currentUserId: `${req.currentUser?.userId}`,
-        uId: `${req.currentUser?.userId}`,
+        uId: `${req.currentUser?.uId}`,
         createdPost
       });
       expect(postQueue.addPostJob).toHaveBeenCalledWith('addPostToDB', { key: req.currentUser?.userId, value: createdPost });
@@ -70,7 +70,7 @@ describe('Create', () => {
     });
 
     it('should throw an upload error', () => {
-      newPost.image = 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==';
+      newPost.image = 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==';
       const req: Request = postMockRequest(newPost, authUserPayload) as Request;
       const res: Response = postMockResponse();
       jest
@@ -84,7 +84,7 @@ describe('Create', () => {
     });
 
     it('should send correct json response', async () => {
-      newPost.image = 'testing image';
+      newPost.image = 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==';
       const req: Request = postMockRequest(newPost, authUserPayload) as Request;
       const res: Response = postMockResponse();
       jest.spyOn(postServer.socketIOPostObject, 'emit');
@@ -98,13 +98,13 @@ describe('Create', () => {
       expect(PostCache.prototype.savePostToCache).toHaveBeenCalledWith({
         key: spy.mock.calls[0][0].key,
         currentUserId: `${req.currentUser?.userId}`,
-        uId: `${req.currentUser?.userId}`,
+        uId: `${req.currentUser?.uId}`,
         createdPost
       });
       expect(postQueue.addPostJob).toHaveBeenCalledWith('addPostToDB', { key: req.currentUser?.userId, value: createdPost });
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
-        message: 'Post created with image created successfully'
+        message: 'Post created with image successfully'
       });
     });
   });

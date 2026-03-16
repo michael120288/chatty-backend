@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Navigator's Keep — Level 72</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #38bdf8; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .keep { max-width: 600px; margin: 0 auto; background: #0d0d2e; border: 1px solid #0a2e3a; border-radius: 12px; padding: 32px; }
+    .keep-title { color: #38bdf8; font-size: 16px; font-weight: bold; margin: 0 0 20px; }
+    .nav-links { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .nav-link { padding: 10px 20px; background: #0a2e3a; border: 1px solid #38bdf8; border-radius: 8px; color: #38bdf8; text-decoration: none; font-size: 14px; transition: background 0.15s; }
+    .nav-link:hover { background: #1a3e4a; }
+    .location-display { background: #0a0a2e; border: 1px solid #1a1a3e; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .location-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-bottom: 6px; }
+    .location-path { font-family: monospace; color: #38bdf8; font-size: 14px; }
+    .reload-btn { width: 100%; padding: 12px; background: #0a2e3a; border: 1px solid #38bdf8; border-radius: 8px; color: #38bdf8; font-size: 14px; cursor: pointer; }
+    .reload-btn:hover { background: #1a3e4a; }
+    #reload-indicator { display: none; margin-top: 12px; padding: 10px; background: #0a1a2e; border: 1px solid #38bdf8; border-radius: 6px; color: #38bdf8; font-weight: bold; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>The Navigator's Keep</h1>
+  <p class="subtitle">Use cy.go() for browser history and cy.reload() to refresh</p>
+
+  <div class="keep">
+    <div class="keep-title">🧭 Navigation Control Room</div>
+    <div class="nav-links">
+      <a href="/pages/level-72/vault.html" class="nav-link" id="vault-link">Enter the Vault →</a>
+    </div>
+    <div class="location-display">
+      <div class="location-label">Current Location</div>
+      <div class="location-path" id="current-path">/pages/level-72/</div>
+    </div>
+    <button class="reload-btn" id="reload-btn" onclick="
+      document.getElementById('reload-indicator').style.display = 'block';
+      setTimeout(function() { location.reload(); }, 500);
+    ">🔄 Reload Page</button>
+    <div id="reload-indicator">♻️ Reloading...</div>
+  </div>
+
+  <script>
+    document.getElementById('current-path').textContent = window.location.pathname;
+  </script>
+</body>
+</html>

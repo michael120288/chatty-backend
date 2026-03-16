@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Scroll Repository</title>
+  <style>
+    body { background: #0d0d1e; color: #ccc; font-family: monospace; padding: 20px; }
+    h1 { color: #ffd700; }
+    .panel { background: #1a1a3e; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 16px; max-width: 520px; }
+    h2 { color: #a78bfa; margin-top: 0; font-size: 16px; }
+    label { display: block; margin-bottom: 6px; color: #aaa; font-size: 13px; }
+    input[type="file"] { color: #ccc; background: #0d0d1e; border: 1px dashed #444; border-radius: 4px; padding: 8px; width: 100%; box-sizing: border-box; cursor: pointer; }
+    .file-info { margin-top: 12px; background: #0d0d2e; border: 1px solid #2a2a5e; border-radius: 4px; padding: 10px; min-height: 40px; }
+    .file-info .row { display: flex; gap: 8px; margin-bottom: 4px; font-size: 13px; }
+    .file-info .key { color: #4da6ff; min-width: 80px; }
+    .file-info .val { color: #22c55e; }
+    #file-content { background: #0d0d1e; border: 1px solid #333; border-radius: 4px; padding: 8px; font-size: 12px; color: #ffd700; min-height: 40px; max-height: 120px; overflow-y: auto; white-space: pre-wrap; margin-top: 8px; }
+    .empty-msg { color: #444; font-size: 12px; font-style: italic; }
+    hr { border-color: #222; margin: 16px 0; }
+    #drop-zone {
+      border: 2px dashed #333;
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+      color: #555;
+      font-size: 13px;
+      transition: border-color 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    #drop-zone.drag-over { border-color: #4da6ff; color: #4da6ff; }
+    #drop-zone.has-file { border-color: #22c55e; color: #22c55e; }
+  </style>
+</head>
+<body>
+  <h1>The Scroll Repository</h1>
+
+  <div class="panel">
+    <h2>Upload a Scroll (File Input)</h2>
+    <label for="file-input">Choose a file:</label>
+    <input id="file-input" type="file" accept="*/*">
+    <div class="file-info" id="file-info">
+      <div class="empty-msg">No file selected</div>
+    </div>
+    <div id="file-content"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Multiple Scrolls</h2>
+    <label for="multi-input">Choose multiple files:</label>
+    <input id="multi-input" type="file" multiple>
+    <div id="multi-info" class="file-info">
+      <div class="empty-msg">No files selected</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Drop Zone</h2>
+    <div id="drop-zone">Drop a file here</div>
+  </div>
+
+  <script>
+    function renderFileInfo(file, container) {
+      container.innerHTML = `
+        <div class="row"><span class="key">name:</span><span class="val" id="file-name">${file.name}</span></div>
+        <div class="row"><span class="key">size:</span><span class="val" id="file-size">${file.size} bytes</span></div>
+        <div class="row"><span class="key">type:</span><span class="val" id="file-type">${file.type || 'unknown'}</span></div>
+        <div class="row"><span class="key">lastMod:</span><span class="val">${new Date(file.lastModified).toISOString().slice(0, 10)}</span></div>
+      `;
+    }
+
+    document.getElementById('file-input').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      renderFileInfo(file, document.getElementById('file-info'));
+
+      // Read text content if small enough
+      if (file.size < 10000 && (file.type.startsWith('text/') || file.name.endsWith('.json') || file.name.endsWith('.txt'))) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('file-content').textContent = e.target.result;
+        };
+        reader.readAsText(file);
+      } else {
+        document.getElementById('file-content').textContent = '';
+      }
+    });
+
+    document.getElementById('multi-input').addEventListener('change', function () {
+      const files = Array.from(this.files);
+      if (!files.length) return;
+      const info = document.getElementById('multi-info');
+      info.innerHTML = files.map((f, i) =>
+        `<div class="row"><span class="key">file ${i + 1}:</span><span class="val">${f.name} (${f.size}b)</span></div>`
+      ).join('');
+      info.dataset.count = files.length;
+    });
+
+    const dropZone = document.getElementById('drop-zone');
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        dropZone.textContent = `Dropped: ${file.name}`;
+        dropZone.classList.add('has-file');
+        dropZone.dataset.filename = file.name;
+      }
+    });
+  </script>
+</body>
+</html>

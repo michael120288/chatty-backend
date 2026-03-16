@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Arcane Vault — Dashboard</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 0; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: #0d0d2e; border-bottom: 1px solid #2e1a00; }
+    .topbar-title { color: #f59e0b; font-size: 18px; font-weight: bold; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    #welcome-msg { color: #888; font-size: 13px; }
+    #welcome-msg span { color: #f59e0b; font-weight: bold; }
+    .logout-btn { padding: 8px 16px; background: transparent; border: 1px solid #ef4444; border-radius: 6px; color: #ef4444; font-size: 13px; cursor: pointer; }
+    .logout-btn:hover { background: #1a0a0a; }
+    .content { max-width: 800px; margin: 48px auto; padding: 0 24px; }
+    #dashboard { background: transparent; }
+    #dashboard h2 { color: #f59e0b; font-size: 22px; margin: 0 0 8px; }
+    #dashboard p { color: #888; margin: 0 0 32px; }
+    .vault-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .vault-item { background: #0d0d2e; border: 1px solid #2e1a00; border-radius: 10px; padding: 24px; text-align: center; }
+    .vault-item .item-icon { font-size: 36px; margin-bottom: 12px; }
+    .vault-item .item-name { color: #eee; font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+    .vault-item .item-desc { color: #666; font-size: 12px; }
+    .stats-row { display: flex; gap: 16px; margin-top: 32px; }
+    .stat-card { flex: 1; background: #0d0d2e; border: 1px solid #1a1a3e; border-radius: 10px; padding: 20px; text-align: center; }
+    .stat-value { font-size: 28px; font-weight: bold; color: #f59e0b; }
+    .stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-title">🏛️ The Arcane Vault</div>
+    <div class="topbar-right">
+      <div id="welcome-msg">Welcome, <span id="username-display">—</span></div>
+      <button class="logout-btn" id="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div id="dashboard">
+      <h2>Vault Dashboard</h2>
+      <p>You have full access to the Arcane Vault's contents</p>
+
+      <div class="vault-grid">
+        <div class="vault-item">
+          <div class="item-icon">📜</div>
+          <div class="item-name">Ancient Scrolls</div>
+          <div class="item-desc">42 manuscripts recovered</div>
+        </div>
+        <div class="vault-item">
+          <div class="item-icon">💎</div>
+          <div class="item-name">Arcane Gems</div>
+          <div class="item-desc">7 power crystals stored</div>
+        </div>
+        <div class="vault-item">
+          <div class="item-icon">⚗️</div>
+          <div class="item-name">Potions</div>
+          <div class="item-desc">15 elixirs brewed</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value">1,337</div>
+          <div class="stat-label">Gold in Vault</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">98</div>
+          <div class="stat-label">Quests Logged</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">⭐ A+</div>
+          <div class="stat-label">Reputation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var user = localStorage.getItem('vault-user');
+    if (!user) { window.location.replace('login.html'); }
+    document.getElementById('username-display').textContent = user || '—';
+
+    function doLogout() {
+      localStorage.removeItem('vault-user');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

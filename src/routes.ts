@@ -24,7 +24,7 @@ const BASE_PATH = '/api/v1';
 export default (app: Application) => {
   const setupRoutes = (): void => {
     // Serve test-quest target pages (allow iframing)
-    const targetPagesPath = path.join(__dirname, '..', '..', 'target-pages');
+    const targetPagesPath = path.join(process.cwd(), 'target-pages');
     app.use('/pages', (_req: Request, res: Response, next: NextFunction) => {
       res.setHeader('X-Frame-Options', 'ALLOWALL');
       next();

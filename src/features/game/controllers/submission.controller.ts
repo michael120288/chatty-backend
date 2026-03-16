@@ -37,14 +37,19 @@ export class SubmissionController {
       return;
     }
 
-    const dockerResult = await dockerService.runCode(code);
+    const dockerResult =
+      level.tool === 'cypress-component'
+        ? await dockerService.runCypressComponentCode(code)
+        : level.tool === 'cypress'
+          ? await dockerService.runCypressCode(code)
+          : await dockerService.runCode(code);
 
     if (dockerResult.timedOut) {
       const result: ISubmissionResult = {
         levelId,
         passed: false,
         stdout: dockerResult.stdout,
-        stderr: dockerResult.stderr,
+        stderr: this.cleanStderr(dockerResult.stderr),
         xpAwarded: 0,
         exitCode: 1,
         message: 'Execution timed out after 30 seconds.',
@@ -59,7 +64,7 @@ export class SubmissionController {
       levelId,
       passed,
       stdout: dockerResult.stdout,
-      stderr: dockerResult.stderr,
+      stderr: this.cleanStderr(dockerResult.stderr),
       xpAwarded: passed ? level.xpReward : 0,
       exitCode: dockerResult.exitCode,
       message: passed
@@ -68,6 +73,18 @@ export class SubmissionController {
     };
 
     res.status(StatusCodes.OK).json(result);
+  }
+
+  private cleanStderr(stderr: string): string {
+    return stderr
+      .split('\n')
+      .filter((line) => {
+        if (line.startsWith('DevTools listening on ws://')) return false;
+        if (line.includes('tput: No value for $TERM')) return false;
+        return true;
+      })
+      .join('\n')
+      .trim();
   }
 
   private evaluateSuccess(level: ILevel, stdout: string, exitCode: number): boolean {

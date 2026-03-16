@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Magic Spellbook</title>
+  <style>
+    body { background: #0d0d1e; color: #ccc; font-family: monospace; padding: 20px; }
+    h1 { color: #ffd700; }
+    .panel { background: #1a1a3e; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .btn { background: #4da6ff; color: #000; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-family: monospace; margin-right: 8px; margin-bottom: 8px; }
+    .btn.cast { background: #a78bfa; }
+    .btn.save { background: #22c55e; }
+    .btn.load { background: #ffd700; }
+    #log { background: #0d0d1e; border: 1px solid #444; border-radius: 4px; padding: 10px; min-height: 60px; color: #22c55e; font-size: 12px; }
+    h2 { color: #a78bfa; margin-top: 0; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>The Magic Spellbook</h1>
+
+  <div class="panel">
+    <h2>Spell Actions</h2>
+    <button id="cast-btn" class="btn cast">Cast Fireball</button>
+    <button id="save-btn" class="btn save">Save Progress</button>
+    <button id="load-btn" class="btn load">Load Progress</button>
+    <button id="notify-btn" class="btn">Notify Party</button>
+    <button id="error-btn" class="btn">Trigger Error</button>
+  </div>
+
+  <div class="panel">
+    <h2>Event Log</h2>
+    <div id="log">Awaiting actions...</div>
+  </div>
+
+  <script>
+    const log = document.getElementById('log');
+
+    function appendLog(msg) {
+      log.textContent += '\n' + msg;
+    }
+
+    // Window-level functions that can be stubbed/spied on
+    window.saveProgress = function (data) {
+      appendLog('Saved: ' + JSON.stringify(data));
+      return { success: true, savedAt: Date.now() };
+    };
+
+    window.loadProgress = function () {
+      appendLog('Loaded progress');
+      return { xp: 1500, level: 42, hero: 'Aria' };
+    };
+
+    window.castSpell = function (spellName) {
+      appendLog('Casting: ' + spellName);
+      return spellName + ' cast successfully!';
+    };
+
+    window.sendNotification = function (recipient, message) {
+      appendLog('Notifying ' + recipient + ': ' + message);
+    };
+
+    window.riskyOperation = function () {
+      throw new Error('Spell backfired!');
+    };
+
+    // Button wiring
+    document.getElementById('cast-btn').addEventListener('click', function () {
+      window.castSpell('Fireball');
+    });
+
+    document.getElementById('save-btn').addEventListener('click', function () {
+      window.saveProgress({ xp: 100, hero: 'Aria' });
+    });
+
+    document.getElementById('load-btn').addEventListener('click', function () {
+      window.loadProgress();
+    });
+
+    document.getElementById('notify-btn').addEventListener('click', function () {
+      window.sendNotification('Orion', 'Meet at the crossroads!');
+      window.sendNotification('Lyra', 'Bring potions!');
+    });
+
+    document.getElementById('error-btn').addEventListener('click', function () {
+      try {
+        window.riskyOperation();
+      } catch (e) {
+        appendLog('Error caught: ' + e.message);
+      }
+    });
+  </script>
+</body>
+</html>

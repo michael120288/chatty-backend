@@ -36,7 +36,7 @@ describe('Add', () => {
 
   describe('profileImage', () => {
     it('should call image upload method', async () => {
-      const req: Request = imagesMockRequest({}, { image: 'testing' }, authUserPayload) as Request;
+      const req: Request = imagesMockRequest({}, { image: 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
       const res: Response = imagesMockResponse();
       jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({ version: '1234', public_id: '123456' }));
 
@@ -49,13 +49,13 @@ describe('Add', () => {
     });
 
     it('should call updateSingleUserItemInCache method', async () => {
-      const req: Request = imagesMockRequest({}, { image: 'testing' }, authUserPayload) as Request;
+      const req: Request = imagesMockRequest({}, { image: 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
       const res: Response = imagesMockResponse();
       jest.spyOn(UserCache.prototype, 'updateSingleUserItemInCache').mockResolvedValue(existingUser);
       jest.spyOn(imageServer.socketIOImageObject, 'emit');
       jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({ version: '1234', public_id: '123456' }));
 
-      const url = 'https://res.cloudinary.com/dyamr9ym3/image/upload/v1234/123456';
+      const url = 'https://res.cloudinary.com/dhcw9nswr/image/upload/v1234/123456';
 
       await Add.prototype.profileImage(req, res);
       expect(UserCache.prototype.updateSingleUserItemInCache).toHaveBeenCalledWith(`${req.currentUser?.userId}`, 'profilePicture', url);
@@ -67,7 +67,7 @@ describe('Add', () => {
     });
 
     it('should call addImageJob method', async () => {
-      const req: Request = imagesMockRequest({}, { image: 'testing' }, authUserPayload) as Request;
+      const req: Request = imagesMockRequest({}, { image: 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
       const res: Response = imagesMockResponse();
       jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({ version: '1234', public_id: '123456' }));
       jest.spyOn(imageQueue, 'addImageJob');
@@ -75,7 +75,7 @@ describe('Add', () => {
       await Add.prototype.profileImage(req, res);
       expect(imageQueue.addImageJob).toHaveBeenCalledWith('addUserProfileImageToDB', {
         key: `${req.currentUser?.userId}`,
-        value: 'https://res.cloudinary.com/dyamr9ym3/image/upload/v1234/123456',
+        value: 'https://res.cloudinary.com/dhcw9nswr/image/upload/v1234/123456',
         imgId: '123456',
         imgVersion: '1234'
       });
@@ -88,7 +88,7 @@ describe('Add', () => {
 
   describe('backgroundImage', () => {
     it('should upload new image', async () => {
-      const req: Request = imagesMockRequest({}, { image: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
+      const req: Request = imagesMockRequest({}, { image: 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
       const res: Response = imagesMockResponse();
       jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({ version: '2467', public_id: '987654' }));
 
@@ -103,7 +103,7 @@ describe('Add', () => {
     it('should not upload existing image', async () => {
       const req: Request = imagesMockRequest(
         {},
-        { image: 'https://res.cloudinary.com/dyamr9ym3/image/upload/v1234/123456' },
+        { image: 'https://res.cloudinary.com/dhcw9nswr/image/upload/v1234/123456' },
         authUserPayload
       ) as Request;
       const res: Response = imagesMockResponse();
@@ -118,7 +118,7 @@ describe('Add', () => {
     });
 
     it('should return bad request error', async () => {
-      const req: Request = imagesMockRequest({}, { image: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
+      const req: Request = imagesMockRequest({}, { image: 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
       const res: Response = imagesMockResponse();
       jest
         .spyOn(cloudinaryUploads, 'uploads')
@@ -131,7 +131,7 @@ describe('Add', () => {
     });
 
     it('should call updateSingleUserItemInCache method', async () => {
-      const req: Request = imagesMockRequest({}, { image: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
+      const req: Request = imagesMockRequest({}, { image: 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
       const res: Response = imagesMockResponse();
       jest.spyOn(UserCache.prototype, 'updateSingleUserItemInCache').mockResolvedValue(existingUser);
       jest.spyOn(imageServer.socketIOImageObject, 'emit');
@@ -152,7 +152,7 @@ describe('Add', () => {
     });
 
     it('should call addImageJob method', async () => {
-      const req: Request = imagesMockRequest({}, { image: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
+      const req: Request = imagesMockRequest({}, { image: 'data:image/jpeg;base64,SGVsbG8sIFdvcmxkIQ==' }, authUserPayload) as Request;
       const res: Response = imagesMockResponse();
       jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({ version: '1234', public_id: '123456' }));
       jest.spyOn(imageQueue, 'addImageJob');

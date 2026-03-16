@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Hero Registry — Level 69</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #10b981; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .registry { max-width: 680px; margin: 0 auto; }
+    .registry-header { background: #0d0d2e; border: 1px solid #0d2e1a; border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+    .registry-title { color: #10b981; font-size: 16px; font-weight: bold; }
+    .load-btn { padding: 8px 20px; background: #10b981; border: none; border-radius: 6px; color: #000; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .load-btn:hover { background: #059669; }
+    .hero-table { width: 100%; background: #0d0d2e; border: 1px solid #0d2e1a; border-radius: 12px; overflow: hidden; }
+    .hero-table th { background: #0a1a0a; color: #10b981; padding: 12px 16px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
+    .hero-table td { padding: 12px 16px; border-top: 1px solid #0d2e1a; font-size: 13px; color: #ccc; }
+    .hero-row:hover td { background: #0a1a10; }
+    .empty-state { text-align: center; padding: 40px; color: #555; }
+    .class-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+    .class-warrior { background: #1a0a00; color: #f97316; border: 1px solid #f97316; }
+    .class-mage { background: #0a0a2e; color: #8b5cf6; border: 1px solid #8b5cf6; }
+    .class-archer { background: #0a1a0a; color: #10b981; border: 1px solid #10b981; }
+  </style>
+</head>
+<body>
+  <h1>The Hero Registry</h1>
+  <p class="subtitle">Use cy.fixture() with cy.intercept() to mock the hero data</p>
+
+  <div class="registry">
+    <div class="registry-header">
+      <div class="registry-title">📋 Registered Heroes</div>
+      <button class="load-btn" id="load-heroes-btn" onclick="loadHeroes()">Load Heroes</button>
+    </div>
+    <table class="hero-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Level</th>
+          <th>Guild</th>
+        </tr>
+      </thead>
+      <tbody id="heroes-tbody">
+        <tr><td colspan="4" class="empty-state">Click "Load Heroes" to fetch the registry</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function loadHeroes() {
+      fetch('/api/heroes')
+        .then(r => r.json())
+        .then(data => {
+          const tbody = document.getElementById('heroes-tbody');
+          if (!data.heroes || data.heroes.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No heroes found</td></tr>';
+            return;
+          }
+          tbody.innerHTML = data.heroes.map(h => `
+            <tr class="hero-row">
+              <td>${h.name}</td>
+              <td><span class="class-badge class-${h.class.toLowerCase()}">${h.class}</span></td>
+              <td>${h.level}</td>
+              <td>${h.guild}</td>
+            </tr>
+          `).join('');
+        })
+        .catch(() => {
+          document.getElementById('heroes-tbody').innerHTML = '<tr><td colspan="4" class="empty-state" style="color:#ef4444">Failed to load heroes</td></tr>';
+        });
+    }
+  </script>
+</body>
+</html>

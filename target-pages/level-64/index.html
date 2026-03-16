@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Adventurer's Guild — Level 64</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
+    h1 { color: #22c55e; text-align: center; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    .guild-form { max-width: 560px; margin: 0 auto; background: #0d0d2e; border: 1px solid #0d2e1a; border-radius: 12px; padding: 32px; }
+    .form-title { color: #22c55e; font-size: 16px; font-weight: bold; margin: 0 0 24px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 6px; }
+    .field-row { display: flex; gap: 12px; }
+    .checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+    .checkbox-item label { margin: 0; font-size: 13px; text-transform: none; letter-spacing: 0; color: #ccc; cursor: pointer; }
+    select { width: 100%; padding: 10px 14px; background: #1a1a2e; border: 1px solid #2a2a5e; border-radius: 6px; color: #eee; font-size: 14px; }
+    .submit-btn { width: 100%; padding: 12px; background: #22c55e; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 8px; }
+    .submit-btn:hover { background: #16a34a; }
+    #enroll-result { display: none; margin-top: 16px; padding: 12px; background: #0a1a0a; border: 1px solid #22c55e; border-radius: 8px; color: #22c55e; font-weight: bold; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>The Adventurer's Guild</h1>
+  <p class="subtitle">Use .check(), .uncheck(), and .select() to enroll a hero</p>
+
+  <div class="guild-form">
+    <div class="form-title">⚔️ Hero Enrollment Form</div>
+
+    <div class="form-group">
+      <label>Hero Class</label>
+      <select id="hero-class">
+        <option value="">Select a class...</option>
+        <option value="warrior">Warrior</option>
+        <option value="mage">Mage</option>
+        <option value="archer">Archer</option>
+        <option value="rogue">Rogue</option>
+        <option value="paladin">Paladin</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Skills</label>
+      <div class="checkbox-group">
+        <div class="checkbox-item">
+          <input type="checkbox" id="skill-combat" name="skill" value="combat" />
+          <label for="skill-combat">Combat Training</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="skill-magic" name="skill" value="magic" />
+          <label for="skill-magic">Magic Mastery</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="skill-stealth" name="skill" value="stealth" checked />
+          <label for="skill-stealth">Stealth Arts</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="skill-alchemy" name="skill" value="alchemy" />
+          <label for="skill-alchemy">Alchemy</label>
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="enroll-btn" onclick="document.getElementById('enroll-result').style.display='block'">Enroll Hero</button>
+    <div id="enroll-result">✅ Hero enrolled in the Guild!</div>
+  </div>
+</body>
+</html>

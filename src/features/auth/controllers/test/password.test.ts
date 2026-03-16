@@ -9,7 +9,7 @@ import { authService } from '@service/db/auth.service';
 const WRONG_EMAIL = 'test@email.com';
 const CORRECT_EMAIL = 'manny@me.com';
 const INVALID_EMAIL = 'test';
-const CORRECT_PASSWORD = 'manny';
+const CORRECT_PASSWORD = 'Secure1@Pass!';
 
 jest.mock('@service/queues/base.queue');
 jest.mock('@service/queues/email.queue');
@@ -125,7 +125,7 @@ describe('Password', () => {
       jest.spyOn(authService, 'getAuthUserByPasswordToken').mockResolvedValue(null as any);
       Password.prototype.update(req, res).catch((error: CustomError) => {
         expect(error.statusCode).toEqual(400);
-        expect(error.serializeError().message).toEqual('Reset token has expired');
+        expect(error.serializeError().message).toEqual('Reset token has expired.');
       });
     });
 
@@ -140,7 +140,7 @@ describe('Password', () => {
       expect(emailQueue.addEmailJob).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
-        message: 'Password reset email sent.'
+        message: 'Password successfully updated.'
       });
     });
   });

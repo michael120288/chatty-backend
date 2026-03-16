@@ -8,46 +8,78 @@ import { IDockerRunResult } from '@game/interfaces/game.interface';
 
 export class DockerService {
   async runCode(code: string): Promise<IDockerRunResult> {
-    const tmpDir = os.tmpdir();
-    const submissionId = uuidv4();
-    const tmpFile = path.join(tmpDir, `submission-${submissionId}.js`);
-
-    // Rewrite localhost:5000 to host.docker.internal:5000 so the sandbox
-    // container can connect back to the backend serving target pages.
     const rewritten = code
       .replace(/localhost:4000/g, 'host.docker.internal:5000')
       .replace(/localhost/g, 'host.docker.internal');
 
-    // Export the async IIFE so runner.js can await it and properly catch errors.
     const exportable = rewritten.replace(/\(async\s*\(\)\s*=>\s*\{/, 'module.exports = (async () => {');
 
+    const tmpFile = await this.writeTemp(exportable, '.js');
     try {
-      await fs.writeFile(tmpFile, exportable, 'utf-8');
-      const result = await this.execDocker(tmpFile);
-      return result;
+      return await this.execDocker(tmpFile, '/sandbox/submission.js', [], true);
     } finally {
-      try {
-        await fs.unlink(tmpFile);
-      } catch {
-        // ignore cleanup errors
-      }
+      await fs.unlink(tmpFile).catch(() => {});
     }
   }
 
-  private execDocker(tmpFile: string): Promise<IDockerRunResult> {
+  async runCypressComponentCode(code: string): Promise<IDockerRunResult> {
+    const tmpFile = await this.writeTemp(code, '.cy.jsx');
+    try {
+      return await this.execDocker(
+        tmpFile,
+        '/sandbox/cypress/component/submission.cy.jsx',
+        ['bash', '-c', 'Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp & sleep 2 && DISPLAY=:99 /app/node_modules/.bin/cypress run --component --spec cypress/component/submission.cy.jsx'],
+        false
+      );
+    } finally {
+      await fs.unlink(tmpFile).catch(() => {});
+    }
+  }
+
+  async runCypressCode(code: string): Promise<IDockerRunResult> {
+    const rewritten = code
+      .replace(/localhost:4000/g, 'host.docker.internal:5000')
+      .replace(/localhost/g, 'host.docker.internal');
+
+    const tmpFile = await this.writeTemp(rewritten, '.cy.js');
+    try {
+      return await this.execDocker(
+        tmpFile,
+        '/sandbox/cypress/e2e/submission.cy.js',
+        ['bash', '-c', 'Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp & sleep 2 && DISPLAY=:99 /app/node_modules/.bin/cypress run --spec cypress/e2e/submission.cy.js'],
+        false
+      );
+    } finally {
+      await fs.unlink(tmpFile).catch(() => {});
+    }
+  }
+
+  private async writeTemp(content: string, ext: string): Promise<string> {
+    const tmpFile = path.join(os.tmpdir(), `submission-${uuidv4()}${ext}`);
+    await fs.writeFile(tmpFile, content, 'utf-8');
+    return tmpFile;
+  }
+
+  private execDocker(
+    tmpFile: string,
+    mountTarget: string,
+    cmd: string[],
+    readOnly: boolean
+  ): Promise<IDockerRunResult> {
     return new Promise((resolve) => {
       const args = [
         'run',
         '--rm',
-        '--network', 'host',
+        '--add-host', 'host.docker.internal:host-gateway',
         '--memory', '512m',
         '--cpus', '1.0',
         '--security-opt', 'no-new-privileges',
-        '--read-only',
         '--tmpfs', '/tmp',
+        ...(readOnly ? ['--read-only'] : []),
         '-e', 'NODE_PATH=/app/node_modules',
-        '-v', `${tmpFile}:/sandbox/submission.js:ro`,
+        '-v', `${tmpFile}:${mountTarget}:ro`,
         config.SANDBOX_IMAGE,
+        ...cmd,
       ];
 
       const docker = spawn('docker', args, { timeout: config.DOCKER_TIMEOUT + 5000 });
@@ -61,32 +93,17 @@ export class DockerService {
         docker.kill('SIGKILL');
       }, config.DOCKER_TIMEOUT);
 
-      docker.stdout.on('data', (data: Buffer) => {
-        stdout += data.toString();
-      });
-
-      docker.stderr.on('data', (data: Buffer) => {
-        stderr += data.toString();
-      });
+      docker.stdout.on('data', (data: Buffer) => { stdout += data.toString(); });
+      docker.stderr.on('data', (data: Buffer) => { stderr += data.toString(); });
 
       docker.on('close', (exitCode: number | null) => {
         clearTimeout(killTimer);
-        resolve({
-          stdout: stdout.trim(),
-          stderr: stderr.trim(),
-          exitCode: exitCode ?? 1,
-          timedOut,
-        });
+        resolve({ stdout: stdout.trim(), stderr: stderr.trim(), exitCode: exitCode ?? 1, timedOut });
       });
 
       docker.on('error', (err: Error) => {
         clearTimeout(killTimer);
-        resolve({
-          stdout: stdout.trim(),
-          stderr: `Docker execution error: ${err.message}`,
-          exitCode: 1,
-          timedOut: false,
-        });
+        resolve({ stdout: stdout.trim(), stderr: `Docker execution error: ${err.message}`, exitCode: 1, timedOut: false });
       });
     });
   }
