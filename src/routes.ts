@@ -26,7 +26,8 @@ export default (app: Application) => {
     // Serve test-quest target pages (allow iframing)
     const targetPagesPath = path.join(process.cwd(), 'target-pages');
     app.use('/pages', (_req: Request, res: Response, next: NextFunction) => {
-      res.setHeader('X-Frame-Options', 'ALLOWALL');
+      res.setHeader('Content-Security-Policy', "frame-ancestors 'self' http://localhost:3000 http://localhost:5173");
+      res.removeHeader('X-Frame-Options');
       next();
     }, express.static(targetPagesPath));
 
