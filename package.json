@@ -18,7 +18,8 @@
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "seeds:dev": "npx ts-node src/seeds.ts",
     "seeds:prod": "npx ts-node ./build/src/seeds.js",
-    "seeds:flashcards:cypress-env": "npx ts-node -r tsconfig-paths/register src/seeds-flashcards-cypress-env.ts"
+    "seeds:flashcards:cypress-env": "npx ts-node -r tsconfig-paths/register src/seeds-flashcards-cypress-env.ts",
+    "seeds:flashcards:jest": "npx ts-node -r tsconfig-paths/register src/seeds-flashcards-jest.ts"
   },
   "keywords": [],
   "author": "",

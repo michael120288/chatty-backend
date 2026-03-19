@@ -6,8 +6,8 @@ export interface ISuccessCondition {
 export interface ILevel {
   id: string;
   order: number;
-  category: 'ui' | 'api' | 'cypress-ui';
-  tool?: 'playwright' | 'cypress' | 'cypress-component';
+  category: 'ui' | 'api' | 'cypress-ui' | 'jest';
+  tool?: 'playwright' | 'cypress' | 'cypress-component' | 'jest';
   title: string;
   story: string;
   objective: string;

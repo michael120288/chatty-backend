@@ -22,6 +22,20 @@ export class DockerService {
     }
   }
 
+  async runJestCode(code: string): Promise<IDockerRunResult> {
+    const tmpFile = await this.writeTemp(code, '.test.js');
+    try {
+      return await this.execDocker(
+        tmpFile,
+        '/sandbox/submission.test.js',
+        ['bash', '-c', 'echo \'{"testEnvironment":"node"}\' > /sandbox/jest.config.json && node /app/node_modules/.bin/jest /sandbox/submission.test.js --no-coverage --forceExit 2>&1'],
+        false
+      );
+    } finally {
+      await fs.unlink(tmpFile).catch(() => {});
+    }
+  }
+
   async runCypressComponentCode(code: string): Promise<IDockerRunResult> {
     const tmpFile = await this.writeTemp(code, '.cy.jsx');
     try {
