@@ -1,0 +1,6 @@
+{
+  "name": "Shadow Manifest",
+  "entities": ["Void Wraith", "Dark Specter", "Nightmare Fiend"],
+  "danger": "extreme",
+  "warning": "This manifest summons darkness — block this request!"
+}

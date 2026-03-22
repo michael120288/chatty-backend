@@ -13,6 +13,7 @@ import { serverAdapter } from '@service/queues/base.queue';
 import { healthRoutes } from '@user/routes/healthRoutes';
 import { userRoutes } from '@user/routes/userRoutes';
 import { gameRoutes } from '@game/routes/gameRoutes';
+import { mockApiRoutes } from '@game/routes/mockApiRoutes';
 import { progressRoutes } from '@progress/routes/progressRoutes';
 import { Application } from 'express';
 import express from 'express';
@@ -25,6 +26,9 @@ export default (app: Application) => {
   const setupRoutes = (): void => {
     // Serve test-quest target pages (allow iframing)
     const targetPagesPath = path.join(process.cwd(), 'target-pages');
+    // Mock API routes for target pages (no auth — called from iframes)
+    app.use('/api', mockApiRoutes.routes());
+
     app.use('/pages', (_req: Request, res: Response, next: NextFunction) => {
       res.setHeader('Content-Security-Policy', "frame-ancestors 'self' http://localhost:3000 http://localhost:5173");
       res.removeHeader('X-Frame-Options');

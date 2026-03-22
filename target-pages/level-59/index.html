@@ -49,7 +49,7 @@
     const results = [];
     Promise.all(
       endpoints.map(url =>
-        fetch('http://localhost:4000' + url)
+        fetch('http://localhost:5000' + url)
           .then(r => ({ url, status: r.status, ok: r.ok }))
           .catch(() => ({ url, status: 0, ok: false }))
       )

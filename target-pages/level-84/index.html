@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The WebSocket Watcher</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0d0d1a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif;
+           display: flex; flex-direction: column; align-items: center;
+           justify-content: center; min-height: 100vh; gap: 20px; }
+    h1 { color: #ffd700; font-size: 1.8rem; }
+    p  { color: #aaa; font-size: 0.9rem; max-width: 460px; text-align: center; }
+    .panel {
+      background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 10px;
+      padding: 20px; min-width: 380px;
+    }
+    .panel-title { color: #a855f7; font-size: 0.85rem; text-transform: uppercase;
+                   letter-spacing: 1px; margin-bottom: 12px; }
+    #ws-status { font-size: 1rem; margin-bottom: 10px; }
+    #ws-log { background: #0a0a14; border-radius: 6px; padding: 10px;
+              font-family: monospace; font-size: 0.8rem; min-height: 80px;
+              max-height: 140px; overflow-y: auto; color: #4ade80; }
+    button {
+      padding: 10px 24px; border: none; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+    }
+    #connect-btn  { background: #ffd700; color: #0d0d1a; margin-right: 8px; }
+    #connect-btn:hover { background: #ffcc00; }
+    #send-btn     { background: #a855f7; color: #fff; margin-right: 8px; }
+    #send-btn:hover { background: #9333ea; }
+    #close-btn    { background: #e94560; color: #fff; }
+    #close-btn:hover { background: #c0392b; }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  </style>
+</head>
+<body>
+  <h1>🔌 The WebSocket Watcher</h1>
+  <p>Monitor WebSocket connections using Playwright's <code>page.on('websocket')</code> event.</p>
+
+  <div class="panel">
+    <div class="panel-title">Connection Status</div>
+    <div id="ws-status">⚪ Disconnected</div>
+    <div id="ws-log">(log will appear here)</div>
+  </div>
+
+  <div class="btn-row">
+    <button id="connect-btn" onclick="connectWS()">⚡ Connect WebSocket</button>
+    <button id="send-btn"    onclick="sendMsg()"   disabled>📤 Send Message</button>
+    <button id="close-btn"   onclick="closeWS()"   disabled>✕ Close</button>
+  </div>
+
+  <script>
+    let ws = null;
+    const log = document.getElementById('ws-log');
+    const status = document.getElementById('ws-status');
+
+    function addLog(msg) {
+      const line = document.createElement('div');
+      line.textContent = new Date().toISOString().slice(11,23) + ' ' + msg;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function connectWS() {
+      // Use echo.websocket.org or a local echo — fall back to a self-connecting WS
+      // We use wss://echo.websocket.events for a public echo server
+      // But since we may be offline in tests, also try a local approach
+      const url = 'wss://echo.websocket.events';
+      try {
+        ws = new WebSocket(url);
+      } catch(e) {
+        addLog('ERROR: ' + e.message);
+        return;
+      }
+
+      ws.onopen = () => {
+        status.textContent = '🟢 Connected to ' + url;
+        document.getElementById('send-btn').disabled = false;
+        document.getElementById('close-btn').disabled = false;
+        addLog('OPEN: connected');
+      };
+      ws.onmessage = (e) => {
+        addLog('RECV: ' + e.data);
+      };
+      ws.onerror = (e) => {
+        addLog('ERROR: connection failed');
+        status.textContent = '🔴 Error';
+      };
+      ws.onclose = (e) => {
+        status.textContent = '⚪ Closed (code ' + e.code + ')';
+        document.getElementById('send-btn').disabled = true;
+        document.getElementById('close-btn').disabled = true;
+        addLog('CLOSE: code=' + e.code);
+      };
+    }
+
+    function sendMsg() {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        const msg = 'arcane-ping-' + Date.now();
+        ws.send(msg);
+        addLog('SENT: ' + msg);
+      }
+    }
+
+    function closeWS() {
+      if (ws) { ws.close(1000, 'User closed'); }
+    }
+  </script>
+</body>
+</html>

@@ -17,6 +17,7 @@ export interface ILevel {
   successCondition: ISuccessCondition;
   hints: string[];
   tags: string[];
+  explanation?: string;
 }
 
 export interface ISubmissionRequest {
