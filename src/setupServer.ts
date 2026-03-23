@@ -14,6 +14,7 @@ import apiStats from 'swagger-stats';
 import 'express-async-errors';
 import { config } from '@root/config';
 import applicationRoutes from '@root/routes';
+import { setupSwagger } from '@root/swagger';
 import { CustomError, IErrorResponse } from '@global/helpers/error-handler';
 import { SocketIOPostHandler } from '@socket/post';
 import { SocketIOFollowerHandler } from '@socket/follower';
@@ -56,7 +57,7 @@ export class ChattyServer {
     app.use(helmet());
     app.use(
       cors({
-        origin: [config.CLIENT_URL!, 'http://localhost:5173'],
+        origin: [config.CLIENT_URL!, 'http://localhost:5173', 'http://localhost:5000'],
         credentials: true,
         optionsSuccessStatus: 200,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -72,6 +73,7 @@ export class ChattyServer {
 
   private routesMiddleware(app: Application): void {
     applicationRoutes(app);
+    setupSwagger(app);
   }
 
   private apiMonitoring(app: Application): void {

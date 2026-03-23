@@ -11,7 +11,7 @@ export function uploads(
   invalidate?: boolean
 ): Promise<UploadApiResponse | UploadApiErrorResponse | undefined> {
   return new Promise((resolve) => {
-    // Validate data URL format before attempting upload
+    // Validate input: must be a data URL or an http(s) URL
     if (file.startsWith('data:')) {
       const dataUrlPattern = /^data:image\/(png|jpeg|jpg|gif|webp|heic|heif);base64,/;
       if (!dataUrlPattern.test(file)) {
@@ -22,6 +22,13 @@ export function uploads(
         } as UploadApiErrorResponse);
         return;
       }
+    } else if (!file.startsWith('http://') && !file.startsWith('https://')) {
+      log.error('Invalid file input: not a data URL or http(s) URL. Received:', file.substring(0, 100));
+      resolve({
+        message: 'Invalid image: must be a base64 data URL or an http(s) URL',
+        http_code: 400
+      } as UploadApiErrorResponse);
+      return;
     }
 
     cloudinary.v2.uploader.upload(
@@ -36,8 +43,9 @@ export function uploads(
           log.error('Cloudinary upload error:', error);
           log.error('Failed file info (first 100 chars):', file.substring(0, 100));
           resolve(error);
+          return;
         }
-        log.info('Cloudinary upload success:', result);
+        log.info('Cloudinary upload success:', result?.public_id);
         resolve(result);
       }
     );
