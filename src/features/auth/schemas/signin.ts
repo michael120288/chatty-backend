@@ -7,7 +7,7 @@ const loginSchema: ObjectSchema = Joi.object().keys({
     'string.max': 'Invalid username',
     'string.empty': 'Username is a required field',
   }),
-  password: Joi.string().required().min(12).max(128).messages({
+  password: Joi.string().required().min(8).max(128).messages({
     'string.base': 'Password must be of type string',
     'string.min': 'Invalid password',
     'string.max': 'Invalid password',
