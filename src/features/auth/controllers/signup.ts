@@ -78,11 +78,13 @@ export class SignUp {
 
     log.info(`User created successfully: ${username} (${email})`);
 
+    const { password: _pw, ...safeUser } = userDataForCache as typeof userDataForCache & { password?: string };
+
     res
       .status(HTTP_STATUS.CREATED)
       .json({
         message: 'User created successfully',
-        user: userDataForCache,
+        user: safeUser,
         token: userJwt,
       });
   }

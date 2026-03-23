@@ -50,9 +50,11 @@ export class SignIn {
       createdAt: existingUser!.createdAt
     } as IUserDocument;
 
+    const { password: _pw, ...safeUser } = userDocument as typeof userDocument & { password?: string };
+
     res.status(HTTP_STATUS.OK).json({
       message: 'User login successfully',
-      user: userDocument,
+      user: safeUser,
       token: userJwt,
     });
   }
