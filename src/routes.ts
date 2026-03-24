@@ -30,7 +30,8 @@ export default (app: Application) => {
     app.use('/api', mockApiRoutes.routes());
 
     app.use('/pages', (_req: Request, res: Response, next: NextFunction) => {
-      res.setHeader('Content-Security-Policy', "frame-ancestors 'self' http://localhost:3000 http://localhost:5173");
+      const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+      res.setHeader('Content-Security-Policy', `frame-ancestors 'self' ${clientUrl}`);
       res.removeHeader('X-Frame-Options');
       next();
     }, express.static(targetPagesPath));

@@ -23,7 +23,7 @@ import { SocketIONotificationHandler } from '@socket/notification';
 import { SocketIOImageHandler } from '@socket/image';
 import { SocketIOChatHandler } from '@socket/chat';
 
-const SERVER_PORT = 5000;
+const SERVER_PORT = parseInt(process.env.PORT || '5000', 10);
 const log: Logger = config.createLogger('server');
 
 export class ChattyServer {
@@ -55,9 +55,14 @@ export class ChattyServer {
     );
     app.use(hpp());
     app.use(helmet());
+    const allowedOrigins =
+      config.NODE_ENV === 'production'
+        ? [config.CLIENT_URL!]
+        : [config.CLIENT_URL!, 'http://localhost:3000', 'http://localhost:5173', 'http://localhost:5000'];
+
     app.use(
       cors({
-        origin: [config.CLIENT_URL!, 'http://localhost:5173', 'http://localhost:5000'],
+        origin: allowedOrigins,
         credentials: true,
         optionsSuccessStatus: 200,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -67,8 +72,22 @@ export class ChattyServer {
 
   private standardMiddleware(app: Application): void {
     app.use(compression());
-    app.use(json({ limit: '50mb' }));
-    app.use(urlencoded({ extended: true, limit: '50mb' }));
+    app.use(json({ limit: '1mb' }));
+    app.use(urlencoded({ extended: true, limit: '1mb' }));
+    // Image upload routes need a larger limit for base64 payloads
+    app.use(
+      [
+        '/api/v1/signup',
+        '/api/v1/images/profile',
+        '/api/v1/images/background',
+        '/api/v1/post/image/post',
+        '/api/v1/post/image/:postId',
+        '/api/v1/post/video/post',
+        '/api/v1/post/video/:postId',
+        '/api/v1/cards/with-image'
+      ],
+      json({ limit: '50mb' })
+    );
   }
 
   private routesMiddleware(app: Application): void {

@@ -5,6 +5,23 @@ import { SignUp } from '@auth/controllers/signup';
 import { sso } from '@auth/controllers/sso';
 import { sessionToken } from '@auth/controllers/session-token';
 import express, { Router } from 'express';
+import rateLimit from 'express-rate-limit';
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many attempts, please try again after 15 minutes.' }
+});
+
+const signupLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many accounts created from this IP, please try again after an hour.' }
+});
 
 class AuthRoutes {
   private signUp: SignUp;
@@ -22,8 +39,8 @@ class AuthRoutes {
   public routes(): Router {
     const router: Router = express.Router();
 
-    router.post('/signup', this.signUp.create.bind(this.signUp));
-    router.post('/signin', this.signIn.read.bind(this.signIn));
+    router.post('/signup', signupLimiter, this.signUp.create.bind(this.signUp));
+    router.post('/signin', authLimiter, this.signIn.read.bind(this.signIn));
     router.post('/forgot-password', this.password.create.bind(this.password));
     router.post('/reset-password/:token', this.password.update.bind(this.password));
     router.get('/signout', this.signOut.update.bind(this.signOut));

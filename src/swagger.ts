@@ -12,7 +12,10 @@ const def: swaggerJsdoc.Options['definition'] = {
       '**Test Quest** — level-based coding game (auth, levels, code submission, XP progress).\n\n' +
       '**Chatty** — social platform (posts, chat, reactions, followers, notifications, flashcards).'
   },
-  servers: [{ url: 'http://localhost:5000', description: 'Local dev server' }],
+  servers: [
+    { url: 'https://codeandtest.com', description: 'Production server' },
+    { url: 'http://localhost:5000', description: 'Local dev server' }
+  ],
   components: {
     securitySchemes: {
       cookieAuth: { type: 'apiKey', in: 'cookie', name: 'session', description: 'Session cookie set after sign-in' }
