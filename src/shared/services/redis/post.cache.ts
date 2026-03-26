@@ -85,7 +85,8 @@ export class PostCache extends BaseCache {
       }
       const count: number = parseInt(postCount[0], 10) + 1;
       multi.HSET(`user:${currentUserId}`, 'postsCount', count);
-      multi.exec();
+      await multi.exec();
+      await this.client.expire(`posts:${key}`, 86400);
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
