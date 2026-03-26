@@ -16,6 +16,7 @@ import { config } from '@root/config';
 import applicationRoutes from '@root/routes';
 import { setupSwagger } from '@root/swagger';
 import { CustomError, IErrorResponse } from '@global/helpers/error-handler';
+import { authMiddleware } from '@global/helpers/auth-middleware';
 import { SocketIOPostHandler } from '@socket/post';
 import { SocketIOFollowerHandler } from '@socket/follower';
 import { SocketIOUserHandler } from '@socket/user';
@@ -96,6 +97,7 @@ export class ChattyServer {
   }
 
   private apiMonitoring(app: Application): void {
+    app.use('/api-monitoring', authMiddleware.verifyUser);
     app.use(
       apiStats.getMiddleware({
         uriPath: '/api-monitoring'
@@ -108,12 +110,16 @@ export class ChattyServer {
       res.status(HTTP_STATUS.NOT_FOUND).json({ message: `${req.originalUrl} not found` });
     });
     //@ts-ignore
-    app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
+    app.use((error: IErrorResponse, _req: Request, res: Response, _next: NextFunction) => {
       log.error(error);
       if (error instanceof CustomError) {
         return res.status(error.statusCode).json(error.serializeError());
       }
-      next();
+      return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+        status: 'error',
+        statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR
+      });
     });
   }
 

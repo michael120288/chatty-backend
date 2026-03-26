@@ -3,7 +3,6 @@ import { SignIn } from '@auth/controllers/signin';
 import { SignOut } from '@auth/controllers/signout';
 import { SignUp } from '@auth/controllers/signup';
 import { sso } from '@auth/controllers/sso';
-import { sessionToken } from '@auth/controllers/session-token';
 import express, { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 
@@ -41,11 +40,10 @@ class AuthRoutes {
 
     router.post('/signup', signupLimiter, this.signUp.create.bind(this.signUp));
     router.post('/signin', authLimiter, this.signIn.read.bind(this.signIn));
-    router.post('/forgot-password', this.password.create.bind(this.password));
-    router.post('/reset-password/:token', this.password.update.bind(this.password));
+    router.post('/forgot-password', authLimiter, this.password.create.bind(this.password));
+    router.post('/reset-password/:token', authLimiter, this.password.update.bind(this.password));
     router.get('/signout', this.signOut.update.bind(this.signOut));
     router.post('/sso', sso.login.bind(sso));
-    router.get('/session-token', sessionToken.read.bind(sessionToken));
 
     return router;
   }

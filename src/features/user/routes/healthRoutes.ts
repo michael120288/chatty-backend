@@ -38,8 +38,13 @@ class HealthRoutes {
     const router: Router = express.Router();
     router.get('/fibo/:num', async (req: Request, res: Response) => {
       const { num } = req.params;
+      const n = parseInt(num, 10);
+      if (isNaN(n) || n > 40) {
+        res.status(HTTP_STATUS.BAD_REQUEST).send('Number must be 40 or less');
+        return;
+      }
       const start: number = performance.now();
-      const result: number = this.fibo(parseInt(num, 10));
+      const result: number = this.fibo(n);
       const end: number = performance.now();
       const response = await axios({
         method: 'get',
@@ -55,11 +60,12 @@ class HealthRoutes {
   }
 
   private fibo(data: number): number {
-    if(data < 2) {
-      return 1;
-    } else {
-      return this.fibo(data - 2) + this.fibo(data - 1);
+    if (data < 2) return 1;
+    let a = 1, b = 1;
+    for (let i = 2; i < data; i++) {
+      [a, b] = [b, a + b];
     }
+    return b;
   }
 }
 

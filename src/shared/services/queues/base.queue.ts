@@ -60,6 +60,12 @@ export abstract class BaseQueue {
     this.queue.on('global:stalled', (jobId: string) => {
       this.log.info(`Job ${jobId} is stalled`);
     });
+    this.queue.on('error', (error: Error) => {
+      this.log.error(error);
+    });
+    this.queue.on('global:failed', (jobId: string, error: Error) => {
+      this.log.error(`Job ${jobId} failed`, error);
+    });
   }
   protected addJob(name: string, data: IBaseJobData): void {
     this.queue.add(name, data, {

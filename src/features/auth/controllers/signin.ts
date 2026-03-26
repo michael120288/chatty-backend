@@ -37,6 +37,7 @@ export class SignIn {
         avatarColor: existingUser.avatarColor,
       },
       config.JWT_TOKEN!,
+      { expiresIn: '24h' },
     );
 
     req.session = { jwt: userJwt };
