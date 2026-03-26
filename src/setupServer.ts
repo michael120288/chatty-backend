@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import compression from 'compression';
 import cookieSession from 'cookie-session';
+import morgan from 'morgan';
 import HTTP_STATUS from 'http-status-codes';
 import { Server } from 'socket.io';
 import { createClient } from 'redis';
@@ -75,6 +76,14 @@ export class ChattyServer {
     app.use(compression());
     app.use(json({ limit: '1mb' }));
     app.use(urlencoded({ extended: true, limit: '1mb' }));
+
+    const httpLog = config.createLogger('http');
+    app.use(
+      morgan(':method :url :status :res[content-length]b :response-time ms', {
+        stream: { write: (msg: string) => httpLog.info(msg.trim()) },
+        skip: (req: Request) => req.url === '/health'
+      })
+    );
     // Image upload routes need a larger limit for base64 payloads
     app.use(
       [
