@@ -102,9 +102,14 @@ export class UserCache extends BaseCache {
         await this.client.connect();
       }
 
-      const response: IUserDocument = (await this.client.HGETALL(
-        `users:${userId}`,
-      )) as unknown as IUserDocument;
+      const raw = await this.client.HGETALL(`users:${userId}`);
+
+      // Key not found — fall through to DB lookup
+      if (!raw || Object.keys(raw).length === 0) {
+        return null;
+      }
+
+      const response = raw as unknown as IUserDocument;
 
       response.createdAt = new Date(Helpers.parseJson(`${response.createdAt}`));
       response.postsCount = Helpers.parseJson(`${response.postsCount}`);
