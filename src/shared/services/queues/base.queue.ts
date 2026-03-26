@@ -39,7 +39,21 @@ export abstract class BaseQueue {
   log: Logger;
 
   constructor(queueName: string) {
-    this.queue = new Queue(queueName, `${config.REDIS_HOST}`);
+    const redisUrl = `${config.REDIS_HOST}`;
+    const isTls = redisUrl.startsWith('rediss://');
+    this.queue = new Queue(queueName, {
+      redis: redisUrl,
+      ...(isTls && {
+        createClient: () => {
+          const IORedis = require('ioredis');
+          return new IORedis(redisUrl, {
+            tls: { rejectUnauthorized: false },
+            maxRetriesPerRequest: null,
+            enableReadyCheck: false
+          });
+        }
+      })
+    } as Queue.QueueOptions);
     bullAdapters.push(new BullAdapter(this.queue));
     bullAdapters = [...new Set(bullAdapters)];
     if (!boardInitialized) {
