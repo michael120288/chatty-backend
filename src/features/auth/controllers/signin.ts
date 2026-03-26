@@ -9,6 +9,9 @@ import { loginSchema } from '@auth/schemas/signin';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { userService } from '@service/db/user.service';
+import { UserCache } from '@service/redis/user.cache';
+
+const userCache: UserCache = new UserCache();
 
 export class SignIn {
   @joiValidation(loginSchema)
@@ -50,6 +53,11 @@ export class SignIn {
       uId: existingUser!.uId,
       createdAt: existingUser!.createdAt
     } as IUserDocument;
+
+    // Refresh Redis cache on login so page-refresh works even after cache expiry
+    userCache.saveUserToCache(`${user._id}`, `${existingUser.uId}`, userDocument).catch((err) => {
+      console.warn('Cache refresh on login failed:', err?.message);
+    });
 
     const { password: _pw, ...safeUser } = userDocument as typeof userDocument & { password?: string };
 
