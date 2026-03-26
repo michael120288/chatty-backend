@@ -133,5 +133,10 @@
       "@game/*": ["src/features/game/*"],
       "@progress/*": ["src/features/progress/*"]
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
 }
