@@ -31,7 +31,7 @@ class FlashcardService {
   }
 
   public async deleteCard(cardId: string, userId: string): Promise<void> {
-    const deleteCard: Query<any, IFlashcardDocument> = FlashcardModel.deleteOne({ _id: cardId });
+    const deleteCard: Query<any, IFlashcardDocument> = FlashcardModel.deleteOne({ _id: cardId, userId });
     const decrementCardCount: UpdateQuery<IUserDocument> = UserModel.updateOne({ _id: userId }, { $inc: { cardsCount: -1 } });
     await Promise.all([deleteCard, decrementCardCount]);
   }

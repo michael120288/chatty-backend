@@ -45,7 +45,11 @@ export class GetCards {
     const skip: number = (parseInt(page) - 1) * PAGE_SIZE;
     const limit: number = PAGE_SIZE * parseInt(page);
 
-    const cards: IFlashcardDocument[] = await flashcardService.getCards({ userId }, skip, limit, { createdAt: -1 });
+    const query: Record<string, unknown> = { userId };
+    if (userId !== req.currentUser!.userId.toString()) {
+      query['privacy'] = 'public';
+    }
+    const cards: IFlashcardDocument[] = await flashcardService.getCards(query as any, skip, limit, { createdAt: -1 });
 
     res.status(HTTP_STATUS.OK).json({ message: `User cards`, cards });
   }

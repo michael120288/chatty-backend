@@ -32,6 +32,7 @@ type IBaseJobData =
 
 let bullAdapters: BullAdapter[] = [];
 export let serverAdapter: ExpressAdapter;
+let boardInitialized = false;
 
 export abstract class BaseQueue {
   queue: Queue.Queue;
@@ -41,13 +42,12 @@ export abstract class BaseQueue {
     this.queue = new Queue(queueName, `${config.REDIS_HOST}`);
     bullAdapters.push(new BullAdapter(this.queue));
     bullAdapters = [...new Set(bullAdapters)];
-    serverAdapter = new ExpressAdapter();
-    serverAdapter.setBasePath('/queues');
-
-    createBullBoard({
-      queues: bullAdapters,
-      serverAdapter,
-    });
+    if (!boardInitialized) {
+      serverAdapter = new ExpressAdapter();
+      serverAdapter.setBasePath('/queues');
+      createBullBoard({ queues: bullAdapters, serverAdapter });
+      boardInitialized = true;
+    }
 
     this.log = config.createLogger(`${queueName}Queue`);
 

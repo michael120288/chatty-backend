@@ -99,6 +99,10 @@ export class CardBookmark {
    */
   public async getBookmarkedCards(req: Request, res: Response): Promise<void> {
     const { userId } = req.params;
+    if (userId !== req.currentUser!.userId) {
+      res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden' });
+      return;
+    }
     const { page = '1' } = req.query;
     const PAGE_SIZE = 10;
     const skip = (parseInt(page as string) - 1) * PAGE_SIZE;

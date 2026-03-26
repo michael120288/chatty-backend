@@ -87,9 +87,8 @@ export class UserCache extends BaseCache {
         score: parseInt(userUId, 10),
         value: `${key}`,
       });
-      for(const [itemKey,itemValues]of Object.entries(dataToSave)){
-        await this.client.HSET(`users:${key}`, `${itemKey}`, `${itemValues}`);
-      }
+      await this.client.HSET(`users:${key}`, dataToSave);
+      await this.client.expire(`users:${key}`, 86400);
 
     } catch (error) {
       log.error(error);

@@ -112,6 +112,10 @@ export class CardProgress {
   // Get all progress for a user
   public async getUserProgress(req: Request, res: Response): Promise<void> {
     const { userId } = req.params;
+    if (userId !== req.currentUser!.userId) {
+      res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden' });
+      return;
+    }
 
     const progressList = await CardProgressModel.find({ userId })
       .populate('cardId')
