@@ -27,7 +27,6 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 *.lcov
-/Users/michael120288/WebstormProjects/fullStack/theProject/test-quest/backend/package-lock.json
 # nyc test coverage
 .nyc_output
 
@@ -146,3 +145,9 @@ build
 
 # SvelteKit build / generate output
 .svelte-kit
+
+# Claude Code
+.claude-flow/
+.claude/
+.mcp.json
+CLAUDE.md
