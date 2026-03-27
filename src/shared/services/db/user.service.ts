@@ -113,9 +113,13 @@ class UserService {
     return totalCount;
   }
 
-  public async searchUsers(regex: RegExp): Promise<ISearchUser[]> {
+  public async searchUsers(regex: RegExp, excludeUserId?: string): Promise<ISearchUser[]> {
+    const matchStage: Record<string, unknown> = { username: regex };
+    if (excludeUserId) {
+      matchStage['_id'] = { $ne: new mongoose.Types.ObjectId(excludeUserId) };
+    }
     const users = await AuthModel.aggregate([
-      { $match: { username: regex } },
+      { $match: matchStage },
       { $lookup: { from: 'User', localField: '_id', foreignField: 'authId', as: 'user' } },
       { $unwind: '$user' },
       {
