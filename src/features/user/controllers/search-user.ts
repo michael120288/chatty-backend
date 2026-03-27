@@ -12,7 +12,7 @@ export class Search {
   public async user(req: Request, res: Response): Promise<void> {
     log.info({ query: req.params.query }, 'User search initiated');
     const regex = new RegExp(Helpers.escapeRegex(req.params.query), 'i');
-    const users: ISearchUser[] = await userService.searchUsers(regex);
+    const users: ISearchUser[] = await userService.searchUsers(regex, req.currentUser!.userId);
     log.info({ resultCount: users.length }, 'User search completed');
     res.status(HTTP_STATUS.OK).json({ message: 'Search results', search: users });
   }
