@@ -42,7 +42,7 @@ class AuthRoutes {
     router.post('/signin', authLimiter, this.signIn.read.bind(this.signIn));
     router.post('/forgot-password', authLimiter, this.password.create.bind(this.password));
     router.post('/reset-password/:token', authLimiter, this.password.update.bind(this.password));
-    router.get('/signout', this.signOut.update.bind(this.signOut));
+    router.post('/signout', this.signOut.update.bind(this.signOut));
     router.post('/sso', sso.login.bind(sso));
 
     return router;
