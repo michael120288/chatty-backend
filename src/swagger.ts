@@ -13,7 +13,7 @@ const def: swaggerJsdoc.Options['definition'] = {
       '**Chatty** — social platform (posts, chat, reactions, followers, notifications, flashcards).'
   },
   servers: [
-    { url: 'https://codeandtest.com', description: 'Production server' },
+    { url: 'https://chatty-backend-aqme.onrender.com', description: 'Production server' },
     { url: 'http://localhost:5000', description: 'Local dev server' }
   ],
   components: {
