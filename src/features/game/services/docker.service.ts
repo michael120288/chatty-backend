@@ -117,7 +117,11 @@ export class DockerService {
 
       docker.on('error', (err: Error) => {
         clearTimeout(killTimer);
-        resolve({ stdout: stdout.trim(), stderr: `Docker execution error: ${err.message}`, exitCode: 1, timedOut: false });
+        const isDockerMissing = (err as NodeJS.ErrnoException).code === 'ENOENT';
+        const stderr = isDockerMissing
+          ? 'Code execution is not available on this server. The sandbox requires Docker.'
+          : `Execution error: ${err.message}`;
+        resolve({ stdout: stdout.trim(), stderr, exitCode: 1, timedOut: false });
       });
     });
   }
