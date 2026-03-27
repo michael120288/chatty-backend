@@ -115,7 +115,7 @@ const def: swaggerJsdoc.Options['definition'] = {
       }
     },
     '/api/v1/signout': {
-      get: {
+      post: {
         tags: ['Test Quest / Auth'], summary: 'Sign out — clears the session cookie',
         security: [{ cookieAuth: [] }],
         responses: { 200: { description: 'Signed out' } }
