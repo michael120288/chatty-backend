@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatty-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env.production
+    volumes:
+      # Mount Docker socket so the backend can spawn sandbox containers
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: chatty-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
