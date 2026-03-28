@@ -26,8 +26,7 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/build ./build
 
 # Copy any static assets needed at runtime
-COPY src/mail-templates ./src/mail-templates 2>/dev/null || true
-COPY target-pages ./target-pages 2>/dev/null || true
+COPY target-pages ./target-pages
 
 EXPOSE 5000
 
