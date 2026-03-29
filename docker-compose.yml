@@ -14,6 +14,8 @@ services:
     volumes:
       # Mount Docker socket so the backend can spawn sandbox containers
       - /var/run/docker.sock:/var/run/docker.sock
+      # Share host /tmp so sandbox volume mounts resolve on the host filesystem
+      - /tmp:/tmp
     depends_on:
       - redis
 
