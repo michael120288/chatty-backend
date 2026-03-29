@@ -19,8 +19,8 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Install PM2 globally
-RUN npm install -g pm2
+# Install Docker CLI and PM2
+RUN apk add --no-cache docker-cli && npm install -g pm2
 
 COPY package*.json ./
 RUN npm ci --omit=dev
