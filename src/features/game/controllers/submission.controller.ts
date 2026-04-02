@@ -4,6 +4,7 @@ import levelsData from '@root/data/levels.json';
 import { ILevel, ISubmissionRequest, ISubmissionResult } from '@game/interfaces/game.interface';
 import { validationService } from '@game/services/validation.service';
 import { dockerService } from '@game/services/docker.service';
+import { config } from '@root/config';
 
 const levels: ILevel[] = levelsData as ILevel[];
 
@@ -11,8 +12,8 @@ export class SubmissionController {
   async submit(req: Request, res: Response): Promise<void> {
     const { levelId, code } = req.body as ISubmissionRequest;
 
-    if (!levelId || !code) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: 'levelId and code are required.' });
+    if (!levelId || !code || typeof levelId !== 'string' || typeof code !== 'string') {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: 'levelId and code are required and must be strings.' });
       return;
     }
 
@@ -54,7 +55,7 @@ export class SubmissionController {
         stderr: this.cleanStderr(dockerResult.stderr),
         xpAwarded: 0,
         exitCode: 1,
-        message: 'Execution timed out after 30 seconds.',
+        message: `Execution timed out after ${config.DOCKER_TIMEOUT / 1000} seconds.`,
       };
       res.status(StatusCodes.OK).json(result);
       return;
