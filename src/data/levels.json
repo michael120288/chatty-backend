@@ -9256,7 +9256,7 @@
       "type": "stdout_contains",
       "value": "LEVEL_PASSED"
     },
-    "starterCode": "const { chromium } = require('playwright');\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-01/');\n  // TODO: check html.length > 100\n  // If successful: console.log('LEVEL_PASSED')\n  await browser.close();\n})();",
+    "starterCode": "const { chromium } = require('playwright');\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-01/');\n  // TODO: use page.content() to get the HTML string\n  // Check that it includes the text 'Library of Elements'\n  // If successful: console.log('LEVEL_PASSED')\n  await browser.close();\n})();",
     "hints": [
       "A blank page has very short HTML — typically < 200 chars",
       "Real pages are usually > 500 chars",
@@ -9314,7 +9314,7 @@
       "type": "stdout_contains",
       "value": "LEVEL_PASSED"
     },
-    "starterCode": "const { chromium } = require('playwright');\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-01/');\n  // TODO: call page.pdf() and check buffer.length > 0\n  // If successful: console.log('LEVEL_PASSED')\n  await browser.close();\n})();",
+    "starterCode": "const { chromium } = require('playwright');\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-01/');\n  // TODO: call page.pdf() to get a Buffer\n  // Check that Buffer.isBuffer(buffer) is true AND buffer.slice(0, 4).toString() === '%PDF'\n  // If successful: console.log('LEVEL_PASSED')\n  await browser.close();\n})();",
     "hints": [
       "page.pdf() only works in headless Chromium — not Firefox or WebKit",
       "It returns a Buffer containing the PDF data",
@@ -9599,7 +9599,7 @@
     "category": "ui",
     "tool": "playwright",
     "title": "The State Inspector",
-    "targetUrl": "http://localhost:5000/pages/level-01/",
+    "targetUrl": "http://localhost:5000/pages/level-53/",
     "story": "The State Inspector checks whether elements are hidden, disabled, or editable — without making assertions that fail tests.",
     "objective": "Use locator.isHidden() to check if an element is not visible.",
     "xpReward": 150,
@@ -9608,7 +9608,7 @@
       "type": "stdout_contains",
       "value": "LEVEL_PASSED"
     },
-    "starterCode": "const { chromium } = require('playwright');\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-01/');\n  // TODO: use page.locator('body').isHidden() and assert it is false\n  // If successful: console.log('LEVEL_PASSED')\n  await browser.close();\n})();",
+    "starterCode": "const { chromium } = require('playwright');\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  await page.goto('http://localhost:5000/pages/level-53/');\n  // TODO: use page.locator('#secret-rune').isHidden() and assert it is true\n  // If successful: console.log('LEVEL_PASSED')\n  await browser.close();\n})();",
     "hints": [
       "locator.isHidden() returns true if the element is hidden or not in the DOM",
       "isHidden() is the opposite of isVisible()",
@@ -12834,9 +12834,10 @@
     "xpReward": 175,
     "difficulty": "medium",
     "successCondition": {
-      "type": "no_error"
+      "type": "stdout_contains",
+      "value": "All specs passed!"
     },
-    "starterCode": "describe('The Realm Hierarchy', () => {\n  it('finds the active subject in fire kingdom using .find()', () => {\n    cy.visit('/pages/level-60/');\n    // TODO: Assert '#fire-kingdom' contains the expected text.\n  });\n});",
+    "starterCode": "describe('The Realm Hierarchy', () => {\n  it('finds the active subject in fire kingdom using .find()', () => {\n    cy.visit('/pages/level-60/');\n    cy.get('#fire-kingdom').find('.subject.active').should('have.text', '???');\n  });\n});",
     "hints": [
       "Use cy.get('#fire-kingdom') to select the target element, then chain .should() to assert its state.",
       ".should('have.text', 'Fire Knight') retries automatically until it passes or times out.",
