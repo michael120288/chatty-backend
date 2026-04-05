@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   backend:
     build:
@@ -19,11 +17,10 @@ services:
     depends_on:
       - redis
     logging:
-      driver: awslogs
+      driver: json-file
       options:
-        awslogs-group: /chatty/backend
-        awslogs-region: eu-west-1
-        awslogs-stream: backend
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     image: redis:7-alpine
@@ -34,11 +31,10 @@ services:
     volumes:
       - redis-data:/data
     logging:
-      driver: awslogs
+      driver: json-file
       options:
-        awslogs-group: /chatty/redis
-        awslogs-region: eu-west-1
-        awslogs-stream: redis
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   redis-data:
