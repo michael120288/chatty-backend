@@ -92,6 +92,26 @@ export class CommentCache extends BaseCache {
     }
   }
 
+  public async updateCommentInCache(postId: string, commentId: string, updatedComment: string): Promise<void> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const comments: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
+      for (let i = 0; i < comments.length; i++) {
+        const comment: ICommentDocument = Helpers.parseJson(comments[i]) as ICommentDocument;
+        if (`${comment._id}` === commentId) {
+          await this.client.LSET(`comments:${postId}`, i, updatedComment);
+          break;
+        }
+      }
+      log.debug({ postId, commentId }, 'Comment updated in cache');
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
   public async deleteCommentFromCache(postId: string, commentId: string): Promise<void> {
     try {
       if(!this.client.isOpen) {

@@ -18,6 +18,12 @@ services:
       - /tmp:/tmp
     depends_on:
       - redis
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /chatty/backend
+        awslogs-region: eu-west-1
+        awslogs-stream: backend
 
   redis:
     image: redis:7-alpine
@@ -27,6 +33,12 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /chatty/redis
+        awslogs-region: eu-west-1
+        awslogs-stream: redis
 
 volumes:
   redis-data:

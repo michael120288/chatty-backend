@@ -2,6 +2,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Application } from 'express';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const def: swaggerJsdoc.Options['definition'] = {
   openapi: '3.0.0',
   info: {
@@ -13,8 +15,9 @@ const def: swaggerJsdoc.Options['definition'] = {
       '**Chatty** — social platform (posts, chat, reactions, followers, notifications, flashcards).'
   },
   servers: [
-    { url: 'https://chatty-backend-aqme.onrender.com', description: 'Production server' },
-    { url: 'http://localhost:5000', description: 'Local dev server' }
+    isProd
+      ? { url: 'https://api.codeandtest.com', description: 'Production server' }
+      : { url: 'http://localhost:5000', description: 'Local dev server' }
   ],
   components: {
     securitySchemes: {
@@ -64,11 +67,8 @@ const def: swaggerJsdoc.Options['definition'] = {
     }
   },
   tags: [
-    // Test Quest
-    { name: 'Test Quest / Auth',     description: 'Sign up, sign in, sign out, SSO, password reset' },
-    { name: 'Test Quest / Levels',   description: 'Browse the 1,180 coding challenge levels' },
-    { name: 'Test Quest / Submit',   description: 'Run user code in the sandbox and get pass/fail' },
-    { name: 'Test Quest / Progress', description: 'Read and write user XP and completed level IDs' },
+    // Shared
+    { name: 'Auth', description: 'Shared authentication for both Chatty and Test Quest — sign up, sign in, sign out, SSO, password reset' },
     // Chatty
     { name: 'Chatty / Users',         description: 'Profiles, search, suggestions, settings' },
     { name: 'Chatty / Posts',         description: 'Create, read, update and delete social feed posts' },
@@ -78,7 +78,10 @@ const def: swaggerJsdoc.Options['definition'] = {
     { name: 'Chatty / Chat',          description: 'Direct messages and conversation threads' },
     { name: 'Chatty / Notifications', description: 'Read and dismiss activity notifications' },
     { name: 'Chatty / Images',        description: 'Profile and background image upload/delete' },
-    { name: 'Chatty / Flashcards',    description: 'Flashcard CRUD, bookmarks, reactions, comments and spaced-repetition progress' }
+    // Test Quest
+    { name: 'Test Quest / Levels',   description: 'Browse the 1,180 coding challenge levels' },
+    { name: 'Test Quest / Submit',   description: 'Run user code in the sandbox and get pass/fail' },
+    { name: 'Test Quest / Progress', description: 'Read and write user XP and completed level IDs' }
   ],
   paths: {
 
@@ -87,7 +90,7 @@ const def: swaggerJsdoc.Options['definition'] = {
     // ══════════════════════════════════════════════════════════════════
     '/api/v1/signup': {
       post: {
-        tags: ['Test Quest / Auth'], summary: 'Register a new account',
+        tags: ['Auth'], summary: 'Register a new account',
         requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['username','email','password','avatarColor','avatarImage'], properties: {
           username: { type: 'string', minLength: 4, maxLength: 20, example: 'Michael120288' },
           email: { type: 'string', format: 'email', example: 'user@example.com' },
@@ -103,7 +106,7 @@ const def: swaggerJsdoc.Options['definition'] = {
     },
     '/api/v1/signin': {
       post: {
-        tags: ['Test Quest / Auth'], summary: 'Sign in with username and password',
+        tags: ['Auth'], summary: 'Sign in with username and password',
         requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['username','password'], properties: {
           username: { type: 'string', example: 'michael120288' },
           password: { type: 'string', example: 'test1234' }
@@ -116,14 +119,14 @@ const def: swaggerJsdoc.Options['definition'] = {
     },
     '/api/v1/signout': {
       post: {
-        tags: ['Test Quest / Auth'], summary: 'Sign out — clears the session cookie',
+        tags: ['Auth'], summary: 'Sign out — clears the session cookie',
         security: [{ cookieAuth: [] }],
         responses: { 200: { description: 'Signed out' } }
       }
     },
     '/api/v1/currentuser': {
       get: {
-        tags: ['Test Quest / Auth'], summary: 'Get the currently authenticated user from the session',
+        tags: ['Auth'], summary: 'Get the currently authenticated user from the session',
         security: [{ cookieAuth: [] }],
         responses: {
           200: { description: 'Current user object', content: { 'application/json': { schema: { $ref: '#/components/schemas/UserResponse' } } } },
@@ -133,14 +136,14 @@ const def: swaggerJsdoc.Options['definition'] = {
     },
     '/api/v1/session-token': {
       get: {
-        tags: ['Test Quest / Auth'], summary: 'Exchange session cookie for a fresh JWT token',
+        tags: ['Auth'], summary: 'Exchange session cookie for a fresh JWT token',
         security: [{ cookieAuth: [] }],
         responses: { 200: { description: 'Returns a new token string' } }
       }
     },
     '/api/v1/sso': {
       post: {
-        tags: ['Test Quest / Auth'], summary: 'Single Sign-On — authenticate via an external SSO token',
+        tags: ['Auth'], summary: 'Single Sign-On — authenticate via an external SSO token',
         requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['token'], properties: { token: { type: 'string', description: 'JWT token issued by an external SSO provider (e.g. Google, GitHub OAuth). Obtain this from your SSO provider after a successful login flow, then pass the raw token string here.', example: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...' } } } } } },
         responses: {
           200: { description: 'SSO login successful' },
@@ -150,14 +153,14 @@ const def: swaggerJsdoc.Options['definition'] = {
     },
     '/api/v1/forgot-password': {
       post: {
-        tags: ['Test Quest / Auth'], summary: 'Request a password-reset email',
+        tags: ['Auth'], summary: 'Request a password-reset email',
         requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['email'], properties: { email: { type: 'string', format: 'email' } } } } } },
         responses: { 200: { description: 'Reset email sent' }, 400: { description: 'Email not found' } }
       }
     },
     '/api/v1/reset-password/{token}': {
       post: {
-        tags: ['Test Quest / Auth'], summary: 'Set a new password using the emailed token',
+        tags: ['Auth'], summary: 'Set a new password using the emailed token',
         parameters: [{ name: 'token', in: 'path', required: true, schema: { type: 'string' }, description: 'The password-reset token sent to your email by POST /api/v1/forgot-password. Copy it from the link in the email (the part after /reset-password/).' }],
         requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['password','confirmPassword'], properties: { password: { type: 'string', minLength: 12, example: 'NewSecure@Pass1!' }, confirmPassword: { type: 'string', example: 'NewSecure@Pass1!' } } } } } },
         responses: { 200: { description: 'Password updated' }, 400: { description: 'Token invalid or expired' } }
@@ -277,11 +280,23 @@ const def: swaggerJsdoc.Options['definition'] = {
         security: [{ cookieAuth: [] }],
         requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { quote: { type: 'string' }, work: { type: 'string' }, school: { type: 'string' }, location: { type: 'string' } } } } } },
         responses: { 200: { description: 'Profile updated' } }
+      },
+      patch: {
+        tags: ['Chatty / Users'], summary: 'Partially update basic profile info (send only the fields you want to change)',
+        security: [{ cookieAuth: [] }],
+        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { quote: { type: 'string' }, work: { type: 'string' }, school: { type: 'string' }, location: { type: 'string' } } } } } },
+        responses: { 200: { description: 'Profile updated' } }
       }
     },
     '/api/v1/user/profile/social-links': {
       put: {
         tags: ['Chatty / Users'], summary: 'Update social media links',
+        security: [{ cookieAuth: [] }],
+        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { facebook: { type: 'string' }, instagram: { type: 'string' }, twitter: { type: 'string' }, youtube: { type: 'string' } } } } } },
+        responses: { 200: { description: 'Social links updated' } }
+      },
+      patch: {
+        tags: ['Chatty / Users'], summary: 'Partially update social media links (send only the fields you want to change)',
         security: [{ cookieAuth: [] }],
         requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { facebook: { type: 'string' }, instagram: { type: 'string' }, twitter: { type: 'string' }, youtube: { type: 'string' } } } } } },
         responses: { 200: { description: 'Social links updated' } }
@@ -363,6 +378,13 @@ const def: swaggerJsdoc.Options['definition'] = {
         requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { post: { type: 'string' }, privacy: { type: 'string' } } } } } },
         responses: { 200: { description: 'Post updated' } }
       },
+      patch: {
+        tags: ['Chatty / Posts'], summary: 'Partially update a text post (send only the fields you want to change)',
+        security: [{ cookieAuth: [] }],
+        parameters: [{ name: 'postId', in: 'path', required: true, schema: { type: 'string' }, description: 'MongoDB ObjectId of the post', example: '507f1f77bcf86cd799439011' }],
+        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { post: { type: 'string' }, privacy: { type: 'string' } } } } } },
+        responses: { 200: { description: 'Post updated' } }
+      },
       delete: {
         tags: ['Chatty / Posts'], summary: 'Delete a post',
         security: [{ cookieAuth: [] }],
@@ -428,6 +450,16 @@ const def: swaggerJsdoc.Options['definition'] = {
       }
     },
     '/api/v1/post/comment/{postId}/{commentId}': {
+      patch: {
+        tags: ['Chatty / Comments'], summary: 'Update a comment',
+        security: [{ cookieAuth: [] }],
+        parameters: [
+          { name: 'postId', in: 'path', required: true, schema: { type: 'string' }, description: 'MongoDB ObjectId of the post', example: '507f1f77bcf86cd799439011' },
+          { name: 'commentId', in: 'path', required: true, schema: { type: 'string' }, description: 'MongoDB ObjectId of the comment', example: '507f191e810c19729de860ea' }
+        ],
+        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['comment'], properties: { comment: { type: 'string', example: 'Updated comment text' } } } } } },
+        responses: { 200: { description: 'Comment updated successfully' } }
+      },
       delete: {
         tags: ['Chatty / Comments'], summary: 'Delete a comment',
         security: [{ cookieAuth: [] }],
@@ -637,6 +669,12 @@ const def: swaggerJsdoc.Options['definition'] = {
         security: [{ cookieAuth: [] }],
         parameters: [{ name: 'notificationId', in: 'path', required: true, schema: { type: 'string' }, description: 'MongoDB ObjectId of the notification. Get this from the _id field in GET /api/v1/notifications.', example: '507f1f77bcf86cd799439011' }],
         responses: { 200: { description: 'Notification marked as read' } }
+      },
+      patch: {
+        tags: ['Chatty / Notifications'], summary: 'Mark a notification as read (partial update)',
+        security: [{ cookieAuth: [] }],
+        parameters: [{ name: 'notificationId', in: 'path', required: true, schema: { type: 'string' }, description: 'MongoDB ObjectId of the notification. Get this from the _id field in GET /api/v1/notifications.', example: '507f1f77bcf86cd799439011' }],
+        responses: { 200: { description: 'Notification marked as read' } }
       }
     },
 
@@ -683,143 +721,6 @@ const def: swaggerJsdoc.Options['definition'] = {
         responses: { 200: { description: 'Background image deleted' } }
       }
     },
-
-    // ══════════════════════════════════════════════════════════════════
-    //  CHATTY / FLASHCARDS
-    // ══════════════════════════════════════════════════════════════════
-    '/api/v1/cards/all/{page}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get all flashcards (paginated)', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'page', in: 'path', required: true, schema: { type: 'integer' }, example: 1 }],
-        responses: { 200: { description: 'Flashcards list' } } }
-    },
-    '/api/v1/cards/category/{category}/{page}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get flashcards filtered by category', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'category', in: 'path', required: true, schema: { type: 'string' } }, { name: 'page', in: 'path', required: true, schema: { type: 'integer' } }],
-        responses: { 200: { description: 'Flashcards by category' } } }
-    },
-    '/api/v1/cards/user/{userId}/{page}': {
-      get: { tags: ['Chatty / Flashcards'], summary: "Get flashcards created by a specific user", security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'userId', in: 'path', required: true, schema: { type: 'string' } }, { name: 'page', in: 'path', required: true, schema: { type: 'integer' } }],
-        responses: { 200: { description: 'User flashcards' } } }
-    },
-    '/api/v1/cards/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get a single flashcard by ID', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Flashcard detail', content: { 'application/json': { schema: { $ref: '#/components/schemas/Flashcard' } } } } } },
-      put: { tags: ['Chatty / Flashcards'], summary: 'Update a flashcard (must be the author)', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { question: { type: 'string' }, answer: { type: 'string' }, category: { type: 'string' } } } } } },
-        responses: { 200: { description: 'Flashcard updated' } } },
-      delete: { tags: ['Chatty / Flashcards'], summary: 'Delete a flashcard', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Flashcard deleted' } } }
-    },
-    '/api/v1/cards': {
-      post: { tags: ['Chatty / Flashcards'], summary: 'Create a new flashcard', security: [{ cookieAuth: [] }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['question','answer'], properties: { question: { type: 'string' }, answer: { type: 'string' }, category: { type: 'string' } } } } } },
-        responses: { 201: { description: 'Flashcard created' } } }
-    },
-    '/api/v1/cards/with-image': {
-      post: { tags: ['Chatty / Flashcards'], summary: 'Create a flashcard with an image', security: [{ cookieAuth: [] }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['question','answer','image'], properties: { question: { type: 'string' }, answer: { type: 'string' }, category: { type: 'string' }, image: { type: 'string', description: 'Base64-encoded image as a data URL. Format: data:image/png;base64,<base64string>. To generate one: go to https://www.base64-image.de/, upload any image, then copy the full "data:image/..." string. Supported types: png, jpeg, jpg, gif, webp.', example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==' } } } } } },
-        responses: { 201: { description: 'Flashcard with image created' } } }
-    },
-    '/api/v1/cards/progress/{cardId}': {
-      post: { tags: ['Chatty / Flashcards'], summary: 'Record a practice result for spaced repetition', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', properties: { quality: { type: 'integer', minimum: 0, maximum: 5, description: 'How well you recalled the card (SM-2 scale): 0 = complete blackout, 1 = wrong but familiar, 2 = wrong but easy to recall, 3 = correct with difficulty, 4 = correct with hesitation, 5 = perfect recall. Scores ≥ 3 count as a pass.', example: 4 } } } } } },
-        responses: { 200: { description: 'Progress recorded' } } },
-      delete: { tags: ['Chatty / Flashcards'], summary: 'Reset practice progress for a card', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Progress reset' } } }
-    },
-    '/api/v1/cards/progress/user/{userId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: "Get a user's overall practice progress", security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'userId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'User progress stats' } } }
-    },
-    '/api/v1/cards/progress/card/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get practice progress for a specific card', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Card progress' } } }
-    },
-    '/api/v1/cards/practice/due': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get cards due for spaced-repetition review today', security: [{ cookieAuth: [] }],
-        responses: { 200: { description: 'Due cards' } } }
-    },
-    '/api/v1/cards/practice/stats': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get practice statistics for the current user', security: [{ cookieAuth: [] }],
-        responses: { 200: { description: 'Practice stats' } } }
-    },
-    '/api/v1/cards/bookmark/{cardId}': {
-      post: { tags: ['Chatty / Flashcards'], summary: 'Bookmark a flashcard', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Card bookmarked' } } }
-    },
-    '/api/v1/cards/bookmarks/{userId}/{page}': {
-      get: { tags: ['Chatty / Flashcards'], summary: "Get a user's bookmarked flashcards", security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'userId', in: 'path', required: true, schema: { type: 'string' } }, { name: 'page', in: 'path', required: true, schema: { type: 'integer' } }],
-        responses: { 200: { description: 'Bookmarked cards' } } }
-    },
-    '/api/v1/cards/bookmark/check/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Check if the current user has bookmarked a card', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: '{ isBookmarked: boolean }' } } }
-    },
-    '/api/v1/cards/bookmark/count/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get total bookmark count for a card', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: '{ count: number }' } } }
-    },
-    '/api/v1/cards/reaction': {
-      post: { tags: ['Chatty / Flashcards'], summary: 'Add or change a reaction on a flashcard', security: [{ cookieAuth: [] }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['cardId','type'], properties: { cardId: { type: 'string' }, type: { type: 'string', enum: ['like','love','haha','wow','sad','angry'] }, previousReaction: { type: 'string' } } } } } },
-        responses: { 200: { description: 'Reaction saved' } } }
-    },
-    '/api/v1/cards/reactions/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get all reactions for a flashcard', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Reactions list' } } }
-    },
-    '/api/v1/cards/reaction/single/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: "Get the current user's reaction on a card", security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Single reaction' } } }
-    },
-    '/api/v1/cards/reaction/types/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get reaction type counts for a flashcard', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Reaction counts by type' } } }
-    },
-    '/api/v1/cards/reaction/{cardId}/{reactionType}': {
-      delete: { tags: ['Chatty / Flashcards'], summary: 'Remove a reaction from a flashcard', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }, { name: 'reactionType', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Reaction removed' } } }
-    },
-    '/api/v1/cards/comment': {
-      post: { tags: ['Chatty / Flashcards'], summary: 'Add a comment to a flashcard', security: [{ cookieAuth: [] }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['cardId','comment'], properties: { cardId: { type: 'string' }, comment: { type: 'string' } } } } } },
-        responses: { 201: { description: 'Comment added' } } }
-    },
-    '/api/v1/cards/comments/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get all comments for a flashcard', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Comments list' } } }
-    },
-    '/api/v1/cards/comment/names/{cardId}': {
-      get: { tags: ['Chatty / Flashcards'], summary: 'Get commenter usernames for a flashcard (cached)', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'cardId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Commenter usernames' } } }
-    },
-    '/api/v1/cards/comment/{commentId}': {
-      put: { tags: ['Chatty / Flashcards'], summary: 'Update a flashcard comment', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'commentId', in: 'path', required: true, schema: { type: 'string' } }],
-        requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['comment'], properties: { comment: { type: 'string' } } } } } },
-        responses: { 200: { description: 'Comment updated' } } },
-      delete: { tags: ['Chatty / Flashcards'], summary: 'Delete a flashcard comment', security: [{ cookieAuth: [] }],
-        parameters: [{ name: 'commentId', in: 'path', required: true, schema: { type: 'string' } }],
-        responses: { 200: { description: 'Comment deleted' } } }
-    }
   }
 };
 

@@ -11,6 +11,12 @@ class CommentWorker {
     job.progress(100);
   }
 
+  async updateCommentInDB(job: Job): Promise<void> {
+    const { commentId, comment } = job.data;
+    await commentService.updateCommentInDB(commentId, comment);
+    job.progress(100);
+  }
+
   async deleteCommentFromDB(job: Job): Promise<void> {
     const { postId, commentId } = job.data;
     await commentService.deleteCommentFromDB(postId, commentId);
