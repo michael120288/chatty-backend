@@ -17,7 +17,16 @@ export class AuthMiddleware {
       ) as AuthPayload;
       req.currentUser = payload;
     } catch (error) {
-      throw new NotAuthorizedError('Token is invalid.');
+      if (error instanceof JWT.TokenExpiredError) {
+        throw new NotAuthorizedError('Token has expired. Please login again.');
+      }
+      if (error instanceof JWT.JsonWebTokenError) {
+        throw new NotAuthorizedError('Token signature is invalid. Please login again.');
+      }
+      if (error instanceof JWT.NotBeforeError) {
+        throw new NotAuthorizedError('Token is not yet valid. Please login again.');
+      }
+      throw new NotAuthorizedError('Token is invalid. Please login again.');
     }
     next();
   }
