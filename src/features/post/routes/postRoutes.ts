@@ -4,6 +4,7 @@ import { Create } from '@post/controllers/create-post';
 import { Get } from '@post/controllers/get-posts';
 import { Delete } from '@post/controllers/delete-post';
 import { Update } from '@post/controllers/update-post';
+import { validateObjectId } from '@global/helpers/object-id-validation';
 
 class PostRoutes {
   private router: Router;
@@ -48,22 +49,32 @@ class PostRoutes {
     this.router.put(
       '/post/:postId',
       authMiddleware.checkAuthentication,
+      validateObjectId('postId'),
+      Update.prototype.posts,
+    );
+    this.router.patch(
+      '/post/:postId',
+      authMiddleware.checkAuthentication,
+      validateObjectId('postId'),
       Update.prototype.posts,
     );
     this.router.put(
       '/post/image/:postId',
       authMiddleware.checkAuthentication,
+      validateObjectId('postId'),
       Update.prototype.postWithImage,
     );
     this.router.put(
       '/post/video/:postId',
       authMiddleware.checkAuthentication,
+      validateObjectId('postId'),
       Update.prototype.postWithVideo,
     );
 
     this.router.delete(
       '/post/:postId',
       authMiddleware.checkAuthentication,
+      validateObjectId('postId'),
       Delete.prototype.post,
     );
 

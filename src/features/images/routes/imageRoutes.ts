@@ -3,6 +3,7 @@ import { authMiddleware } from '@global/helpers/auth-middleware';
 import { Add } from '@image/controllers/add-image';
 import { Delete } from '@image/controllers/delete-image';
 import { Get } from '@image/controllers/get-images';
+import { validateObjectId } from '@global/helpers/object-id-validation';
 
 class ImageRoutes {
   private router: Router;
@@ -14,6 +15,7 @@ class ImageRoutes {
     this.router.get(
       '/images/:userId',
       authMiddleware.checkAuthentication,
+      validateObjectId('userId'),
       Get.prototype.images
     );
     this.router.post(
@@ -29,11 +31,13 @@ class ImageRoutes {
     this.router.delete(
       '/images/:imageId',
       authMiddleware.checkAuthentication,
+      validateObjectId('imageId'),
       Delete.prototype.image
     );
     this.router.delete(
       '/images/background/:bgImageId',
       authMiddleware.checkAuthentication,
+      validateObjectId('bgImageId'),
       Delete.prototype.backgroundImage
     );
 

@@ -51,7 +51,7 @@ export default (app: Application) => {
     app.use(BASE_PATH, authMiddleware.verifyUser, notificationRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, imageRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, chatRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, flashcardRoutes.routes());
+    // app.use(BASE_PATH, authMiddleware.verifyUser, flashcardRoutes.routes()); // disabled — flashcards WIP
     app.use(BASE_PATH, authMiddleware.verifyUser, userRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, gameRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, progressRoutes.routes());

@@ -3,6 +3,7 @@ import { authMiddleware } from '@global/helpers/auth-middleware';
 import { Update } from '@notification/controllers/update-notification';
 import { Delete } from '@notification/controllers/delete-notification';
 import { Get } from '@notification/controllers/get-notifications';
+import { validateObjectId } from '@global/helpers/object-id-validation';
 
 class NotificationRoutes {
   private router: Router;
@@ -13,7 +14,8 @@ class NotificationRoutes {
 
   public routes(): Router {
     this.router.delete('/notifications',authMiddleware.checkAuthentication, Delete.prototype.notification)
-    this.router.put('/notification/:notificationId',authMiddleware.checkAuthentication, Update.prototype.notification)
+    this.router.put('/notification/:notificationId', authMiddleware.checkAuthentication, validateObjectId('notificationId'), Update.prototype.notification)
+    this.router.patch('/notification/:notificationId', authMiddleware.checkAuthentication, validateObjectId('notificationId'), Update.prototype.notification)
     this.router.get('/notifications', authMiddleware.checkAuthentication, Get.prototype.notifications);
 
     return this.router;
