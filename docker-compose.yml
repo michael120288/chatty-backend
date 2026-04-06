@@ -17,10 +17,11 @@ services:
     depends_on:
       - redis
     logging:
-      driver: json-file
+      driver: awslogs
       options:
-        max-size: "10m"
-        max-file: "3"
+        awslogs-group: /chatty/backend
+        awslogs-region: eu-west-1
+        awslogs-stream: backend
 
   redis:
     image: redis:7-alpine
@@ -31,10 +32,11 @@ services:
     volumes:
       - redis-data:/data
     logging:
-      driver: json-file
+      driver: awslogs
       options:
-        max-size: "10m"
-        max-file: "3"
+        awslogs-group: /chatty/redis
+        awslogs-region: eu-west-1
+        awslogs-stream: redis
 
 volumes:
   redis-data:
