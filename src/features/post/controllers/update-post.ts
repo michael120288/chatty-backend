@@ -12,7 +12,7 @@ import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads, videoUpload } from '@global/helpers/cloudinary-upload';
-import { BadRequestError } from '@global/helpers/error-handler';
+import { BadRequestError, NotAuthorizedError } from '@global/helpers/error-handler';
 import { imageQueue } from '@service/queues/image.queue';
 
 const postCache: PostCache = new PostCache();
@@ -33,6 +33,12 @@ export class Update {
       videoVersion,
     } = req.body;
     const { postId } = req.params;
+
+    const cachedOwnerId = await postCache.getPostOwnerFromCache(postId);
+    if (cachedOwnerId && cachedOwnerId !== `${req.currentUser!.userId}`) {
+      throw new NotAuthorizedError('Not authorized to update this post');
+    }
+
     const updatedPost: IPostDocument = {
       post,
       bgColor,
@@ -105,6 +111,12 @@ export class Update {
       videoVersion,
     } = req.body;
     const { postId } = req.params;
+
+    const cachedOwnerId = await postCache.getPostOwnerFromCache(postId);
+    if (cachedOwnerId && cachedOwnerId !== `${req.currentUser!.userId}`) {
+      throw new NotAuthorizedError('Not authorized to update this post');
+    }
+
     const updatedPost: IPostDocument = {
       post,
       bgColor,

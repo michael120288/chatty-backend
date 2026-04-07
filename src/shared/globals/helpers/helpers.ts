@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 export class Helpers {
   static firstLetterUppercase(str: string): string {
     const valueString = str.toLowerCase();
@@ -12,11 +14,12 @@ export class Helpers {
   }
 
   static generateRandomIntegers(integerLength: number): number {
-    const characters = '0123456789';
+    const bytes = crypto.randomBytes(Math.ceil(integerLength * 4 / 3));
     let result = '';
-    const charactersLength = characters.length;
-    for (let i = 0; i < integerLength; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    for (const byte of bytes) {
+      if (result.length >= integerLength) break;
+      const digit = byte % 10;
+      result += digit.toString();
     }
     return parseInt(result, 10);
   }

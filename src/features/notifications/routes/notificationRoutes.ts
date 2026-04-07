@@ -13,7 +13,7 @@ class NotificationRoutes {
   }
 
   public routes(): Router {
-    this.router.delete('/notifications',authMiddleware.checkAuthentication, Delete.prototype.notification)
+    this.router.delete('/notifications/:notificationId', authMiddleware.checkAuthentication, validateObjectId('notificationId'), Delete.prototype.notification)
     this.router.put('/notification/:notificationId', authMiddleware.checkAuthentication, validateObjectId('notificationId'), Update.prototype.notification)
     this.router.patch('/notification/:notificationId', authMiddleware.checkAuthentication, validateObjectId('notificationId'), Update.prototype.notification)
     this.router.get('/notifications', authMiddleware.checkAuthentication, Get.prototype.notifications);

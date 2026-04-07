@@ -21,7 +21,7 @@ export class UpdateComment {
       await commentCache.updateCommentInCache(postId, commentId, JSON.stringify(updated));
     }
 
-    commentQueue.addCommentJob('updateCommentInDB', { commentId, comment });
+    commentQueue.addCommentJob('updateCommentInDB', { commentId, comment, username: req.currentUser!.username });
 
     res.status(HTTP_STATUS.OK).json({ message: 'Comment updated successfully' });
   }

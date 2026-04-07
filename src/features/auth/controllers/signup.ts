@@ -25,12 +25,12 @@ export class SignUp {
   public async create(req: Request, res: Response): Promise<void> {
     const { username, email, password, avatarColor, avatarImage } = req.body;
 
-    log.info(`Signup attempt for username: ${username}, email: ${email}`);
+    log.info(`Signup attempt for username: ${username}`);
 
     const checkIfUserExist: IAuthDocument =
       await authService.getUserByUsernameOrEmail(username, email);
     if (checkIfUserExist) {
-      log.warn(`Signup failed: User already exists - username: ${username}, email: ${email}`);
+      log.warn(`Signup failed: User already exists - username: ${username}`);
       throw new BadRequestError('User already exists. Username or email is already taken.');
     }
 
@@ -66,7 +66,7 @@ export class SignUp {
       authData,
       userObjectId,
     );
-    userDataForCache.profilePicture = `https://res.cloudinary.com/dhcw9nswr/image/upload/v${result.version}/${userObjectId}`;
+    userDataForCache.profilePicture = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
     // Add to database
@@ -76,7 +76,7 @@ export class SignUp {
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
     req.session = { jwt: userJwt };
 
-    log.info(`User created successfully: ${username} (${email})`);
+    log.info(`User created successfully: ${username}`);
 
     const { password: _pw, ...safeUser } = userDataForCache as typeof userDataForCache & { password?: string };
 

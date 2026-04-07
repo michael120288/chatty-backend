@@ -268,8 +268,8 @@ export class PostCache extends BaseCache {
         await this.client.connect();
       }
       const postCount: string[] = await this.client.HMGET(
-        `users:${currentUserId}`,
-        'postCount',
+        `user:${currentUserId}`,
+        'postsCount',
       );
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       multi.ZREM('post', `${key}`);
@@ -284,6 +284,19 @@ export class PostCache extends BaseCache {
       throw new ServerError('Server error. Try again.');
     }
   }
+  public async getPostOwnerFromCache(key: string): Promise<string | null> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const userId = await this.client.HGET(`posts:${key}`, 'userId');
+      return userId ?? null;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
   public async updatePostInCache(key: string, updatedPost: IPostDocument): Promise<IPostDocument> {
     const { post, bgColor, feelings, privacy, gifUrl, imgVersion, imgId, videoId, videoVersion, profilePicture } = updatedPost;
     const dataToSave = {

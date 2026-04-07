@@ -43,7 +43,7 @@ class AuthRoutes {
     router.post('/forgot-password', authLimiter, this.password.create.bind(this.password));
     router.post('/reset-password/:token', authLimiter, this.password.update.bind(this.password));
     router.post('/signout', this.signOut.update.bind(this.signOut));
-    router.post('/sso', sso.login.bind(sso));
+    router.post('/sso', authLimiter, sso.login.bind(sso));
 
     return router;
   }

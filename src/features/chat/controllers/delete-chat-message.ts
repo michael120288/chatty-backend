@@ -11,6 +11,11 @@ const messageCache: MessageCache = new MessageCache();
 export class Delete {
   public async markMessageAsDeleted(req: Request, res: Response): Promise<void> {
     const { senderId, receiverId, messageId, type } = req.params;
+    const currentUserId = req.currentUser!.userId;
+    if (currentUserId !== senderId && currentUserId !== receiverId) {
+      res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Not authorized to delete this message' });
+      return;
+    }
     const updatedMessage: IMessageData = await messageCache.markMessageAsDeleted(`${senderId}`, `${receiverId}`, `${messageId}`, type);
     socketIOChatObject.emit('message read', updatedMessage);
     socketIOChatObject.emit('chat list', updatedMessage);

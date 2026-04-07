@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
 import { BadRequestError } from '@global/helpers/error-handler';
+import { config } from '@root/config';
 import { IMessageData, IMessageNotification } from '@chat/interfaces/chat.interface';
 import { socketIOChatObject } from '@socket/chat';
 import { MessageCache } from '@service/redis/message.cache';
@@ -42,7 +43,7 @@ export class Add {
       if (!result?.public_id) {
         throw new BadRequestError(result.message);
       }
-      fileUrl = `https://res.cloudinary.com/dhcw9nswr/image/upload/v${result.version}/${result.public_id}`;
+      fileUrl = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${result.public_id}`;
     }
 
     const messageData: IMessageData = {

@@ -22,6 +22,15 @@ class ProgressController {
     const userId = req.currentUser!.userId;
     const { completedLevels, xp } = req.body as { completedLevels: string[]; xp: number };
 
+    if (!Array.isArray(completedLevels) || !completedLevels.every((l) => typeof l === 'string')) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: 'completedLevels must be an array of strings' });
+      return;
+    }
+    if (typeof xp !== 'number' || !Number.isInteger(xp) || xp < 0) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: 'xp must be a non-negative integer' });
+      return;
+    }
+
     await ProgressModel.findOneAndUpdate(
       { userId },
       { completedLevels, xp, updatedAt: new Date() },
