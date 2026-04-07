@@ -74,17 +74,7 @@ export class ChattyServer {
 
   private standardMiddleware(app: Application): void {
     app.use(compression());
-    app.use(json({ limit: '1mb' }));
-    app.use(urlencoded({ extended: true, limit: '1mb' }));
-
-    const httpLog = config.createLogger('http');
-    app.use(
-      morgan(':method :url :status :res[content-length]b :response-time ms', {
-        stream: { write: (msg: string) => httpLog.info(msg.trim()) },
-        skip: (req: Request) => req.url === '/health'
-      })
-    );
-    // Image upload routes need a larger limit for base64 payloads
+    // Image upload routes must be registered BEFORE the global 1mb limit
     app.use(
       [
         '/api/v1/signup',
@@ -94,9 +84,20 @@ export class ChattyServer {
         '/api/v1/post/image/:postId',
         '/api/v1/post/video/post',
         '/api/v1/post/video/:postId',
-        '/api/v1/cards/with-image'
+        '/api/v1/cards/with-image',
+        '/api/v1/chat/message'
       ],
       json({ limit: '50mb' })
+    );
+    app.use(json({ limit: '1mb' }));
+    app.use(urlencoded({ extended: true, limit: '1mb' }));
+
+    const httpLog = config.createLogger('http');
+    app.use(
+      morgan(':method :url :status :res[content-length]b :response-time ms', {
+        stream: { write: (msg: string) => httpLog.info(msg.trim()) },
+        skip: (req: Request) => req.url === '/health'
+      })
     );
   }
 

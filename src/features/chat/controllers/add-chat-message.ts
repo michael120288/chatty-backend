@@ -13,6 +13,7 @@ import { IMessageData, IMessageNotification } from '@chat/interfaces/chat.interf
 import { socketIOChatObject } from '@socket/chat';
 import { MessageCache } from '@service/redis/message.cache';
 import { chatQueue } from '@service/queues/chat.queue';
+import { chatService } from '@service/db/chat.service';
 
 const userCache: UserCache = new UserCache();
 const messageCache: MessageCache = new MessageCache();
@@ -79,6 +80,8 @@ export class Add {
 
     await messageCache.addChatListToCache(`${req.currentUser!.userId}`, `${receiverId}`, `${conversationObjectId}`);
     await messageCache.addChatListToCache(`${receiverId}`, `${req.currentUser!.userId}`, `${conversationObjectId}`);
+    await chatService.restoreConversation(`${req.currentUser!.userId}`, `${receiverId}`);
+    await chatService.restoreConversation(`${receiverId}`, `${req.currentUser!.userId}`);
     await messageCache.addChatMessageToCache(`${conversationObjectId}`, messageData);
     chatQueue.addChatJob('addChatMessageToDB', messageData);
 

@@ -34,6 +34,22 @@ export class MessageCache extends BaseCache {
     }
   }
 
+  public async removeChatListEntryFromCache(userId: string, receiverId: string): Promise<void> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const userChatList = await this.client.LRANGE(`chatList:${userId}`, 0, -1);
+      const entry = userChatList.find((item: string) => item.includes(receiverId));
+      if (entry) {
+        await this.client.LREM(`chatList:${userId}`, 1, entry);
+      }
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
   public async addChatMessageToCache(conversationId: string, value: IMessageData): Promise<void> {
     try {
       if (!this.client.isOpen) {

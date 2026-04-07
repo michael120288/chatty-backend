@@ -2,7 +2,9 @@ import { IMessageData } from '@chat/interfaces/chat.interface';
 import { IConversationDocument } from '@chat/interfaces/conversation.interface';
 import { MessageModel } from '@chat/models/chat.schema';
 import { ConversationModel } from '@chat/models/conversation.schema';
+import { DeletedConversationModel } from '@chat/models/deleted-conversation.schema';
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 
 class ChatService {
   public async addMessageToDB(data: IMessageData): Promise<void> {
@@ -35,9 +37,38 @@ class ChatService {
     });
   }
 
+  public async markConversationAsDeleted(userId: string, receiverId: string): Promise<void> {
+    await DeletedConversationModel.updateOne(
+      { userId: new mongoose.Types.ObjectId(userId), receiverId: new mongoose.Types.ObjectId(receiverId) },
+      { userId: new mongoose.Types.ObjectId(userId), receiverId: new mongoose.Types.ObjectId(receiverId) },
+      { upsert: true }
+    ).exec();
+  }
+
+  public async restoreConversation(userId: string, receiverId: string): Promise<void> {
+    await DeletedConversationModel.deleteOne({
+      userId: new mongoose.Types.ObjectId(userId),
+      receiverId: new mongoose.Types.ObjectId(receiverId)
+    }).exec();
+  }
+
   public async getUserConversationList(userId: ObjectId): Promise<IMessageData[]> {
+    const deleted = await DeletedConversationModel.find({ userId }).select('receiverId').lean();
+    const deletedReceiverIds = deleted.map((d) => d.receiverId);
     const messages: IMessageData[] = await MessageModel.aggregate([
-      { $match: { $or: [{ senderId: userId }, { receiverId: userId }] } },
+      {
+        $match: {
+          $or: [{ senderId: userId }, { receiverId: userId }],
+          ...(deletedReceiverIds.length
+            ? {
+                $nor: [
+                  { senderId: userId, receiverId: { $in: deletedReceiverIds } },
+                  { senderId: { $in: deletedReceiverIds }, receiverId: userId }
+                ]
+              }
+            : {})
+        }
+      },
       {
         $group: {
           _id: '$conversationId',

@@ -6,3 +6,9 @@ export interface IConversationDocument extends Document {
   receiverId: mongoose.Types.ObjectId;
 }
 
+export interface IDeletedConversationDocument extends Document {
+  userId: mongoose.Types.ObjectId;
+  receiverId: mongoose.Types.ObjectId;
+  createdAt: Date;
+}
+
