@@ -3,6 +3,7 @@ import { authMiddleware } from '@global/helpers/auth-middleware';
 import { Add } from '@chat/controllers/add-chat-message';
 import { Get } from '@chat/controllers/get-chat-messages';
 import { Delete } from '@chat/controllers/delete-chat-message';
+import { DeleteConversation } from '@chat/controllers/delete-conversation';
 import { Update } from '@chat/controllers/update-chat-message';
 import { Message } from '@chat/controllers/add-message.reaction';
 import { validateObjectId } from '@global/helpers/object-id-validation';
@@ -28,6 +29,12 @@ class ChatRoutes {
       authMiddleware.checkAuthentication,
       validateObjectId('messageId', 'senderId', 'receiverId'),
       Delete.prototype.markMessageAsDeleted
+    );
+    this.router.delete(
+      '/chat/conversation/:receiverId',
+      authMiddleware.checkAuthentication,
+      validateObjectId('receiverId'),
+      DeleteConversation.prototype.deleteConversation
     );
 
     return this.router;

@@ -98,6 +98,22 @@ class ChatService {
     await MessageModel.updateMany(query, { $set: { isRead: true } }).exec();
   }
 
+  public async deleteConversation(senderId: ObjectId, receiverId: ObjectId): Promise<void> {
+    const conversation = await ConversationModel.findOne({
+      $or: [
+        { senderId, receiverId },
+        { senderId: receiverId, receiverId: senderId }
+      ]
+    }).exec();
+
+    if (conversation) {
+      await Promise.all([
+        MessageModel.deleteMany({ conversationId: conversation._id }).exec(),
+        ConversationModel.deleteOne({ _id: conversation._id }).exec()
+      ]);
+    }
+  }
+
   public async updateMessageReaction(messageId: ObjectId, senderName: string, reaction: string, type: 'add' | 'remove'): Promise<void> {
     if (type === 'add') {
       await MessageModel.updateOne({ _id: messageId }, { $push: { reaction: { senderName, type: reaction } } }).exec();
