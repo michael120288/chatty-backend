@@ -1,6 +1,5 @@
 import { BaseCache } from '@service/redis/base.cache';
 import Logger from 'bunyan';
-import { remove } from 'lodash';
 import mongoose from 'mongoose';
 import { config } from '@root/config';
 import { ServerError } from '@global/helpers/error-handler';
@@ -61,7 +60,8 @@ export class FollowerCache extends BaseCache {
       const response: string[] = await this.client.LRANGE(key, 0, -1);
       const list: IFollowerData[] = [];
       for (const item of response) {
-        const user: IUserDocument = (await userCache.getUserFromCache(item)) as IUserDocument;
+        const user: IUserDocument | null = (await userCache.getUserFromCache(item)) as IUserDocument | null;
+        if (!user) continue;
         const data: IFollowerData = {
           _id: new mongoose.Types.ObjectId(user._id),
           username: user.username!,
@@ -94,8 +94,7 @@ export class FollowerCache extends BaseCache {
       if (type === 'block') {
         blocked = [...blocked, value];
       } else {
-        remove(blocked, (id: string) => id === value);
-        blocked = [...blocked];
+        blocked = blocked.filter((id: string) => id !== value);
       }
       multi.HSET(`users:${key}`, `${prop}`, JSON.stringify(blocked));
       await multi.exec();

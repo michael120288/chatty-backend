@@ -14,6 +14,10 @@ export class Update {
   @joiValidation(markChatSchema)
   public async message(req: Request, res: Response): Promise<void> {
     const { senderId, receiverId } = req.body;
+    if (req.currentUser!.userId !== receiverId) {
+      res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: 'Not authorized to mark these messages as read' });
+      return;
+    }
     const updatedMessage: IMessageData = await messageCache.updateChatMessages(`${senderId}`, `${receiverId}`);
     socketIOChatObject.emit('message read', updatedMessage);
     socketIOChatObject.emit('chat list', updatedMessage);

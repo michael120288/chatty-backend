@@ -37,6 +37,7 @@ export interface INotification {
 
 export interface INotificationJobData {
   key?: string;
+  userId?: string;
 }
 
 export interface INotificationTemplate {

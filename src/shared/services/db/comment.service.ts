@@ -104,12 +104,14 @@ class CommentService {
     return commentsNamesList;
   }
 
-  public async updateCommentInDB(commentId: string, comment: string): Promise<void> {
-    await CommentsModel.updateOne({ _id: commentId }, { $set: { comment } });
+  public async updateCommentInDB(commentId: string, comment: string, username?: string): Promise<void> {
+    const filter = username ? { _id: commentId, username } : { _id: commentId };
+    await CommentsModel.updateOne(filter, { $set: { comment } });
   }
 
-  public async deleteCommentFromDB(postId: string, commentId: string): Promise<void> {
-    await CommentsModel.deleteOne({ _id: commentId });
+  public async deleteCommentFromDB(postId: string, commentId: string, username?: string): Promise<void> {
+    const filter = username ? { _id: commentId, username } : { _id: commentId };
+    await CommentsModel.deleteOne(filter);
     await PostModel.updateOne({ _id: postId }, { $inc: { commentsCount: -1 } });
   }
 }

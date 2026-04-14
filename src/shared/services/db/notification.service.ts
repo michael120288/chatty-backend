@@ -38,12 +38,12 @@ class NotificationService {
     return notifications;
   }
 
-  public async updateNotification(notificationId: string): Promise<void> {
-    await NotificationModel.updateOne({ _id: notificationId }, { $set: { read: true } }).exec();
+  public async updateNotification(notificationId: string, userId: string): Promise<void> {
+    await NotificationModel.updateOne({ _id: notificationId, userTo: new mongoose.Types.ObjectId(userId) }, { $set: { read: true } }).exec();
   }
 
-  public async deleteNotification(notificationId: string): Promise<void> {
-    await NotificationModel.deleteOne({ _id: notificationId }).exec();
+  public async deleteNotification(notificationId: string, userId: string): Promise<void> {
+    await NotificationModel.deleteOne({ _id: notificationId, userTo: new mongoose.Types.ObjectId(userId) }).exec();
   }
 }
 

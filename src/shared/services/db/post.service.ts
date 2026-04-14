@@ -7,7 +7,7 @@ import { Query, UpdateQuery } from "mongoose";
 class PostService {
   public async addPostToDB(userId: string, createPost:IPostDocument): Promise<void> {
     const post: Promise<IPostDocument> = PostModel.create(createPost);
-    const user: UpdateQuery<IUserDocument> = PostModel.updateOne({_id:userId}, {$inc:{postsCount:1}})
+    const user: UpdateQuery<IUserDocument> = UserModel.updateOne({_id:userId}, {$inc:{postsCount:1}})
     await Promise.all([post, user])
   }
   public async getPosts(query: IGetPostsQuery, skip = 0, limit = 0, sort: Record<string, 1 | -1>): Promise<IPostDocument[]> {

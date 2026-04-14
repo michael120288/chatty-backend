@@ -13,7 +13,8 @@ export class Delete {
 
     const databaseCommentData = {
       postId,
-      commentId
+      commentId,
+      username: req.currentUser!.username
     };
     commentQueue.addCommentJob('deleteCommentFromDB', databaseCommentData);
     res.status(HTTP_STATUS.OK).json({ message: 'Comment deleted successfully' });

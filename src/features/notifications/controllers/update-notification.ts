@@ -7,7 +7,7 @@ export class Update {
   public async notification(req: Request, res: Response): Promise<void> {
     const { notificationId } = req.params;
     socketIONotificationObject.emit('update notification', notificationId);
-    notificationQueue.addNotificationJob('updateNotification', { key: notificationId });
+    notificationQueue.addNotificationJob('updateNotification', { key: notificationId, userId: req.currentUser!.userId });
     res.status(HTTP_STATUS.OK).json({ message: 'Notification marked as read' });
   }
 }

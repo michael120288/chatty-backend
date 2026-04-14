@@ -12,14 +12,14 @@ class CommentWorker {
   }
 
   async updateCommentInDB(job: Job): Promise<void> {
-    const { commentId, comment } = job.data;
-    await commentService.updateCommentInDB(commentId, comment);
+    const { commentId, comment, username } = job.data;
+    await commentService.updateCommentInDB(commentId, comment, username);
     job.progress(100);
   }
 
   async deleteCommentFromDB(job: Job): Promise<void> {
-    const { postId, commentId } = job.data;
-    await commentService.deleteCommentFromDB(postId, commentId);
+    const { postId, commentId, username } = job.data;
+    await commentService.deleteCommentFromDB(postId, commentId, username);
     job.progress(100);
   }
 }

@@ -46,7 +46,8 @@ class Config {
 
   }
   public createLogger(name: string): bunyan {
-    return bunyan.createLogger({ name, level: 'debug' });
+    const level = this.NODE_ENV === 'production' ? 'warn' : 'debug';
+    return bunyan.createLogger({ name, level });
   }
   public validateConfig(): void {
     const envVarsSchema = Joi.object({

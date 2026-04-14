@@ -239,6 +239,28 @@ export class MessageCache extends BaseCache {
     return chatUsersList;
   }
 
+  public async removeConversationFromCache(userId: string, receiverId: string): Promise<void> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const removeEntry = async (listKey: string, matchId: string): Promise<void> => {
+        const list: string[] = await this.client.LRANGE(listKey, 0, -1);
+        const entry = list.find((item) => item.includes(matchId));
+        if (entry) {
+          await this.client.LREM(listKey, 1, entry);
+        }
+      };
+      await Promise.all([
+        removeEntry(`chatList:${userId}`, receiverId),
+        removeEntry(`chatList:${receiverId}`, userId)
+      ]);
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
   private async getMessage(senderId: string, receiverId: string, messageId: string): Promise<IGetMessageFromCache> {
     const userChatList: string[] = await this.client.LRANGE(`chatList:${senderId}`, 0, -1);
     const receiver: string = find(userChatList, (listItem: string) => listItem.includes(receiverId)) as string;

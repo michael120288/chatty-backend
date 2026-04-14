@@ -25,8 +25,8 @@ class ImageWorker {
   }
 
   async removeImageFromDB(job: Job): Promise<void> {
-    const { imageId } = job.data;
-    await imageService.removeImageFromDB(imageId);
+    const { imageId, userId } = job.data;
+    await imageService.removeImageFromDB(imageId, userId);
     job.progress(100);
   }
 }

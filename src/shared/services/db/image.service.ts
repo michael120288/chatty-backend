@@ -42,8 +42,9 @@ class ImageService {
       imgId: type === 'profile' ? imgId : '',
     });
   }
-  public async removeImageFromDB(imageId: string): Promise<void> {
-    await ImageModel.deleteOne({ _id: imageId }).exec();
+  public async removeImageFromDB(imageId: string, userId?: string): Promise<void> {
+    const filter = userId ? { _id: imageId, userId: new mongoose.Types.ObjectId(userId) } : { _id: imageId };
+    await ImageModel.deleteOne(filter).exec();
   }
   public async getImageByBackgroundId(
     bgImageId: string,
