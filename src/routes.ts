@@ -1,4 +1,5 @@
 import { authRoutes } from '@auth/routes/authRoutes';
+import { testCleanupRoutes } from '@auth/routes/testCleanupRoutes';
 import { currentUserRoutes } from '@auth/routes/currentRoutes';
 import { chatRoutes } from '@chat/routes/chatRoutes';
 import { commentRoutes } from '@comment/routes/commentRoutes';
@@ -42,6 +43,7 @@ export default (app: Application) => {
     app.use('/health-instance', authMiddleware.verifyUser, healthRoutes.instance());
     app.use('/fibo', authMiddleware.verifyUser, healthRoutes.fiboRoutes());
     app.use(BASE_PATH, authRoutes.routes());
+    app.use(BASE_PATH, testCleanupRoutes.routes());
 
     app.use(BASE_PATH, authMiddleware.verifyUser, currentUserRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, postRoutes.routes());
