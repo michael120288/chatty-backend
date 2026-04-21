@@ -86,6 +86,48 @@ const def: swaggerJsdoc.Options['definition'] = {
   paths: {
 
     // ══════════════════════════════════════════════════════════════════
+    //  SCHEMA DISCOVERY
+    // ══════════════════════════════════════════════════════════════════
+    '/api/v1/schema': {
+      get: {
+        tags: ['Auth'],
+        summary: 'Get all endpoint validation rules as JSON',
+        description: 'Returns every endpoint with its accepted fields, validation constraints, success response shape, and all possible error messages. Public — no authentication required. Use this when tests fail and you want to check if a validation rule changed.',
+        responses: {
+          200: {
+            description: 'Validation schema for all endpoints',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    swagger_ui:  { type: 'string', example: 'https://api.codeandtest.com/api-docs' },
+                    base_url:    { type: 'string', example: 'https://api.codeandtest.com/api/v1' },
+                    endpoints: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          method:        { type: 'string', example: 'POST' },
+                          path:          { type: 'string', example: '/api/v1/signup' },
+                          auth_required: { type: 'boolean' },
+                          description:   { type: 'string' },
+                          fields:        { type: 'array', items: { type: 'object' } },
+                          success:       { type: 'object' },
+                          errors:        { type: 'array', items: { type: 'object' } },
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    // ══════════════════════════════════════════════════════════════════
     //  TEST QUEST / AUTH
     // ══════════════════════════════════════════════════════════════════
     '/api/v1/signup': {
