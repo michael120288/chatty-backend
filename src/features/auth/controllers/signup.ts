@@ -23,6 +23,15 @@ const userCache: UserCache = new UserCache();
 export class SignUp {
   @joiValidation(signupSchema)
   public async create(req: Request, res: Response): Promise<void> {
+    const testSecret = req.headers['x-test-secret'];
+    if (testSecret !== undefined) {
+      if (testSecret !== 'chatty-test-cleanup-2026' ||
+          !req.body.username?.toLowerCase().startsWith('vitest')) {
+        res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden: invalid test secret or non-vitest username' });
+        return;
+      }
+    }
+
     const { username, email, password, avatarColor, avatarImage } = req.body;
 
     log.info(`Signup attempt for username: ${username}`);

@@ -16,6 +16,15 @@ const userCache: UserCache = new UserCache();
 export class SignIn {
   @joiValidation(loginSchema)
   public async read(req: Request, res: Response): Promise<void> {
+    const testSecret = req.headers['x-test-secret'];
+    if (testSecret !== undefined) {
+      if (testSecret !== 'chatty-test-cleanup-2026' ||
+          !req.body.username?.toLowerCase().startsWith('vitest')) {
+        res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden: invalid test secret or non-vitest username' });
+        return;
+      }
+    }
+
     const { username, password } = req.body;
     const existingUser: IAuthDocument =
       await authService.getAuthUserByUsername(username);
