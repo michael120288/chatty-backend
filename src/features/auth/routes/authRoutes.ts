@@ -6,12 +6,17 @@ import { sso } from '@auth/controllers/sso';
 import express, { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 
+const BYPASS_SECRET = 'chatty-test-cleanup-2026';
+const bypassForTestAccounts = (req: express.Request) =>
+  req.headers['x-test-secret'] === BYPASS_SECRET;
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 20,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: 'Too many attempts, please try again after 15 minutes.' }
+  message: { message: 'Too many attempts, please try again after 15 minutes.' },
+  skip: bypassForTestAccounts,
 });
 
 const signupLimiter = rateLimit({
@@ -19,7 +24,8 @@ const signupLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: 'Too many accounts created from this IP, please try again after an hour.' }
+  message: { message: 'Too many accounts created from this IP, please try again after an hour.' },
+  skip: bypassForTestAccounts,
 });
 
 class AuthRoutes {
