@@ -57,7 +57,7 @@ export class Add {
       senderUsername: `${req.currentUser!.username}`,
       senderId: `${req.currentUser!.userId}`,
       senderAvatarColor: `${req.currentUser!.avatarColor}`,
-      senderProfilePicture: `${sender.profilePicture}`,
+      senderProfilePicture: `${sender?.profilePicture ?? ''}`,
       body,
       isRead,
       gifUrl,
