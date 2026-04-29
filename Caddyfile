@@ -1,0 +1,3 @@
+api.codeandtest.com {
+    reverse_proxy backend:5000
+}

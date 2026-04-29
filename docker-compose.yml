@@ -1,12 +1,33 @@
 services:
+  caddy:
+    image: caddy:alpine
+    container_name: chatty-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /chatty/caddy
+        awslogs-region: eu-west-1
+        awslogs-stream: caddy
+
   backend:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: chatty-backend
     restart: unless-stopped
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     env_file:
       - .env.production
     volumes:
@@ -40,3 +61,5 @@ services:
 
 volumes:
   redis-data:
+  caddy_data:
+  caddy_config:
