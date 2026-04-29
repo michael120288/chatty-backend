@@ -13,12 +13,6 @@ services:
       - caddy_config:/config
     depends_on:
       - backend
-    logging:
-      driver: awslogs
-      options:
-        awslogs-group: /chatty/caddy
-        awslogs-region: eu-west-1
-        awslogs-stream: caddy
 
   backend:
     build:
