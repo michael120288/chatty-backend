@@ -36,6 +36,20 @@ export class DockerService {
     }
   }
 
+  async runVitestCode(code: string): Promise<IDockerRunResult> {
+    const tmpFile = await this.writeTemp(code, '.test.ts');
+    try {
+      return await this.execDocker(
+        tmpFile,
+        '/sandbox/submission.test.ts',
+        ['bash', '-c', 'node /app/node_modules/.bin/vitest run /sandbox/submission.test.ts --reporter=verbose --no-coverage 2>&1'],
+        false
+      );
+    } finally {
+      await fs.unlink(tmpFile).catch(() => {});
+    }
+  }
+
   async runCypressComponentCode(code: string): Promise<IDockerRunResult> {
     const tmpFile = await this.writeTemp(code, '.cy.jsx');
     try {

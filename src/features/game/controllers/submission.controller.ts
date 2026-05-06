@@ -41,11 +41,13 @@ export class SubmissionController {
     const dockerResult =
       level.tool === 'jest'
         ? await dockerService.runJestCode(code)
-        : level.tool === 'cypress-component'
-          ? await dockerService.runCypressComponentCode(code)
-          : level.tool === 'cypress'
-            ? await dockerService.runCypressCode(code)
-            : await dockerService.runCode(code);
+        : level.tool === 'vitest'
+          ? await dockerService.runVitestCode(code)
+          : level.tool === 'cypress-component'
+            ? await dockerService.runCypressComponentCode(code)
+            : level.tool === 'cypress'
+              ? await dockerService.runCypressCode(code)
+              : await dockerService.runCode(code);
 
     if (dockerResult.timedOut) {
       const result: ISubmissionResult = {
