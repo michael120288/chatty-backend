@@ -47,7 +47,9 @@ export class SubmissionController {
             ? await dockerService.runCypressComponentCode(code)
             : level.tool === 'cypress'
               ? await dockerService.runCypressCode(code)
-              : await dockerService.runCode(code);
+              : level.tool === 'python-playwright'
+                ? await dockerService.runPythonPlaywrightCode(code)
+                : await dockerService.runCode(code);
 
     if (dockerResult.timedOut) {
       const result: ISubmissionResult = {

@@ -8,12 +8,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcairo2 libatspi2.0-0 \
     libgtk-3-0 libgdk-pixbuf2.0-0 libxss1 libxtst6 \
     xvfb xauth \
+    python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY chatty-backend/sandbox/package.json ./
 RUN npm install
 RUN npx playwright install chromium
+RUN pip3 install playwright --break-system-packages
+RUN python3 -m playwright install chromium
 
 WORKDIR /sandbox
 COPY chatty-backend/sandbox/runner.js ./

@@ -50,6 +50,23 @@ export class DockerService {
     }
   }
 
+  async runPythonPlaywrightCode(code: string): Promise<IDockerRunResult> {
+    const rewritten = code
+      .replace(/localhost:4000/g, 'host.docker.internal:5000')
+      .replace(/localhost/g, 'host.docker.internal');
+    const tmpFile = await this.writeTemp(rewritten, '.py');
+    try {
+      return await this.execDocker(
+        tmpFile,
+        '/sandbox/submission.py',
+        ['bash', '-c', 'python3 /sandbox/submission.py 2>&1'],
+        false
+      );
+    } finally {
+      await fs.unlink(tmpFile).catch(() => {});
+    }
+  }
+
   async runCypressComponentCode(code: string): Promise<IDockerRunResult> {
     const tmpFile = await this.writeTemp(code, '.cy.jsx');
     try {
