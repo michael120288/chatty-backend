@@ -112,12 +112,15 @@ export class DockerService {
     readOnly: boolean
   ): Promise<IDockerRunResult> {
     return new Promise((resolve) => {
+      const containerName = `sandbox-${uuidv4()}`;
       const args = [
         'run',
         '--rm',
+        '--name', containerName,
         '--add-host', 'host.docker.internal:host-gateway',
         '--memory', '512m',
         '--cpus', '1.0',
+        '--pids-limit', '128',
         '--security-opt', 'no-new-privileges',
         '--tmpfs', '/tmp',
         ...(readOnly ? ['--read-only'] : []),
@@ -135,6 +138,15 @@ export class DockerService {
 
       const killTimer = setTimeout(() => {
         timedOut = true;
+        // Killing the local `docker` CLI process does NOT stop the container
+        // running under the daemon — `docker run` in the foreground is just a
+        // client attached to the container's streams, and SIGKILL to the
+        // client can't be forwarded. Without an explicit `docker kill` on the
+        // named container, a runaway submission (e.g. an infinite loop) keeps
+        // consuming CPU/memory past the reported timeout. Issue the kill by
+        // name and swallow errors (e.g. container already exited).
+        const containerKill = spawn('docker', ['kill', containerName]);
+        containerKill.on('error', () => {});
         docker.kill('SIGKILL');
       }, config.DOCKER_TIMEOUT);
 

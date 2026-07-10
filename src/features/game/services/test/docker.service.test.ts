@@ -212,6 +212,31 @@ describe('DockerService', () => {
       expect(result.timedOut).toBe(true);
       expect(killMock).toHaveBeenCalledWith('SIGKILL');
     });
+
+    it('issues `docker kill <container>` on the daemon, not just the local CLI process', async () => {
+      // Killing the local `docker` CLI process alone does not stop the
+      // container under the daemon — regression guard for that bug.
+      jest.useFakeTimers();
+
+      const proc = new EventEmitter();
+      (proc as any).stdout = new EventEmitter();
+      (proc as any).stderr = new EventEmitter();
+      const killMock = jest.fn(() => { proc.emit('close', null); });
+      (proc as any).kill = killMock;
+      mockSpawn.mockReturnValue(proc);
+
+      const resultPromise = service.runCode('code');
+      await jest.advanceTimersByTimeAsync(200);
+      await resultPromise;
+
+      const runArgs: string[] = mockSpawn.mock.calls[0][1];
+      const containerName = runArgs[runArgs.indexOf('--name') + 1];
+      expect(containerName).toMatch(/^sandbox-/);
+
+      const killCalls = mockSpawn.mock.calls.filter(([, callArgs]) => callArgs?.[0] === 'kill');
+      expect(killCalls).toHaveLength(1);
+      expect(killCalls[0][1]).toEqual(['kill', containerName]);
+    });
   });
 
   describe('execDocker — null exitCode', () => {
@@ -245,6 +270,21 @@ describe('DockerService', () => {
       await service.runCode('code');
       const args: string[] = mockSpawn.mock.calls[0][1];
       expect(args).toContain('host.docker.internal:host-gateway');
+    });
+
+    it('caps process count with --pids-limit to prevent fork-bomb DoS', async () => {
+      mockSpawn.mockReturnValue(makeProcess({ exitCode: 0 }));
+      await service.runCode('code');
+      const args: string[] = mockSpawn.mock.calls[0][1];
+      expect(args).toContain('--pids-limit');
+      expect(args[args.indexOf('--pids-limit') + 1]).toBe('128');
+    });
+
+    it('assigns a unique --name so the container can be targeted for a hard kill', async () => {
+      mockSpawn.mockReturnValue(makeProcess({ exitCode: 0 }));
+      await service.runCode('code');
+      const args: string[] = mockSpawn.mock.calls[0][1];
+      expect(args[args.indexOf('--name') + 1]).toMatch(/^sandbox-/);
     });
   });
 });

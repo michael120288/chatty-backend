@@ -96,6 +96,24 @@ export class UserCache extends BaseCache {
     }
   }
 
+  // Counterpart to saveUserToCache: removes both the 'user' ZSET member and
+  // the users:<key> hash. Without this, a deleted user's id stays in the
+  // ZSET forever — GET /user/all/:page then returns it as a ghost entry with
+  // every field undefined once the hash's TTL expires (or immediately if the
+  // hash is deleted directly), corrupting pagination indefinitely.
+  public async removeUserFromCache(key: string): Promise<void> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      await this.client.ZREM('user', key);
+      await this.client.DEL(`users:${key}`);
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
   public async getUserFromCache(userId: string): Promise<IUserDocument | null> {
     try {
       if (!this.client.isOpen) {
@@ -153,6 +171,13 @@ export class UserCache extends BaseCache {
         (await multi.exec()) as UserCacheMultiType;
       const userReplies: IUserDocument[] = [];
       for (const reply of replies as IUserDocument[]) {
+        // HGETALL on a key that no longer exists (TTL-expired, or the user
+        // was deleted without evicting the 'user' ZSET member) returns {} —
+        // not an error. Without this guard that empty object gets returned
+        // as a "user" with every field undefined, corrupting pagination.
+        if (!reply || !reply._id) {
+          continue;
+        }
         reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
         reply.postsCount = Helpers.parseJson(`${reply.postsCount}`);
         reply.blocked = Helpers.parseJson(`${reply.blocked}`);
@@ -235,7 +260,13 @@ export class UserCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      await this.client.HSET(`users:${userId}`, `${prop}`, JSON.stringify(value));
+      // Store plain strings as-is; only JSON-encode non-string values (objects like
+      // `social`/`notifications`). Previously every value was JSON.stringify'd, which
+      // wrapped string fields (work/school/location/quote) in literal double quotes
+      // that were never parsed back on read — a data-integrity bug that returned
+      // `"value"` instead of `value`.
+      const encoded: string = typeof value === 'string' ? value : JSON.stringify(value);
+      await this.client.HSET(`users:${userId}`, `${prop}`, encoded);
       const response: IUserDocument = (await this.getUserFromCache(
         userId,
       )) as IUserDocument;
