@@ -6,10 +6,12 @@ import { flashcardMockRequest, flashcardMockResponse } from '@root/mocks/flashca
 import { flashcardQueue } from '@service/queues/flashcard.queue';
 import { DeleteCard } from '@flashcards/controllers/delete-card';
 import { FlashcardCache } from '@service/redis/flashcard.cache';
+import { FlashcardModel } from '@flashcards/models/flashcard.schema';
 
 jest.useFakeTimers();
 jest.mock('@service/queues/base.queue');
 jest.mock('@service/redis/flashcard.cache');
+jest.mock('@flashcards/models/flashcard.schema');
 
 Object.defineProperties(flashcardServer, {
   socketIOFlashcardObject: {
@@ -35,6 +37,7 @@ describe('DeleteCard', () => {
       jest.spyOn(flashcardServer.socketIOFlashcardObject, 'emit');
       jest.spyOn(FlashcardCache.prototype, 'deleteCardFromCache').mockResolvedValue(undefined);
       jest.spyOn(flashcardQueue, 'addCardJob');
+      (FlashcardModel.findById as jest.Mock).mockResolvedValue({ userId: { toString: () => authUserPayload.userId } });
 
       await DeleteCard.prototype.card(req, res);
       expect(flashcardServer.socketIOFlashcardObject.emit).toHaveBeenCalledWith('delete card', req.params!.cardId);
@@ -45,6 +48,7 @@ describe('DeleteCard', () => {
       const res: Response = flashcardMockResponse();
       jest.spyOn(FlashcardCache.prototype, 'deleteCardFromCache').mockResolvedValue(undefined);
       jest.spyOn(flashcardQueue, 'addCardJob');
+      (FlashcardModel.findById as jest.Mock).mockResolvedValue({ userId: { toString: () => authUserPayload.userId } });
 
       await DeleteCard.prototype.card(req, res);
       expect(FlashcardCache.prototype.deleteCardFromCache).toHaveBeenCalledWith(
@@ -58,6 +62,7 @@ describe('DeleteCard', () => {
       const res: Response = flashcardMockResponse();
       jest.spyOn(FlashcardCache.prototype, 'deleteCardFromCache').mockResolvedValue(undefined);
       jest.spyOn(flashcardQueue, 'addCardJob');
+      (FlashcardModel.findById as jest.Mock).mockResolvedValue({ userId: { toString: () => authUserPayload.userId } });
 
       await DeleteCard.prototype.card(req, res);
       expect(flashcardQueue.addCardJob).toHaveBeenCalledWith('deleteCardFromDB', {
@@ -71,6 +76,7 @@ describe('DeleteCard', () => {
       const res: Response = flashcardMockResponse();
       jest.spyOn(FlashcardCache.prototype, 'deleteCardFromCache').mockResolvedValue(undefined);
       jest.spyOn(flashcardQueue, 'addCardJob');
+      (FlashcardModel.findById as jest.Mock).mockResolvedValue({ userId: { toString: () => authUserPayload.userId } });
 
       await DeleteCard.prototype.card(req, res);
       expect(res.status).toHaveBeenCalledWith(200);

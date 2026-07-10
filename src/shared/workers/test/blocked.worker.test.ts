@@ -10,38 +10,31 @@ describe('BlockedUserWorker', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('calls blockUserService.blockUser when type is "block"', async () => {
-    const done = jest.fn();
     const job = mockJob({ keyOne: 'user1', keyTwo: 'user2', type: 'block' });
     (blockUserService.blockUser as jest.Mock).mockResolvedValueOnce(undefined);
 
-    await blockedUserWorker.addBlockedUserToDB(job, done);
+    await blockedUserWorker.addBlockedUserToDB(job);
 
     expect(blockUserService.blockUser).toHaveBeenCalledWith('user1', 'user2');
     expect(blockUserService.unblockUser).not.toHaveBeenCalled();
     expect(job.progress).toHaveBeenCalledWith(100);
-    expect(done).toHaveBeenCalledWith(null, job.data);
   });
 
   it('calls blockUserService.unblockUser when type is "unblock"', async () => {
-    const done = jest.fn();
     const job = mockJob({ keyOne: 'user1', keyTwo: 'user2', type: 'unblock' });
     (blockUserService.unblockUser as jest.Mock).mockResolvedValueOnce(undefined);
 
-    await blockedUserWorker.addBlockedUserToDB(job, done);
+    await blockedUserWorker.addBlockedUserToDB(job);
 
     expect(blockUserService.unblockUser).toHaveBeenCalledWith('user1', 'user2');
     expect(blockUserService.blockUser).not.toHaveBeenCalled();
-    expect(done).toHaveBeenCalledWith(null, job.data);
   });
 
-  it('calls done with error on failure', async () => {
-    const done = jest.fn();
+  it('rejects on failure', async () => {
     const job = mockJob({ keyOne: 'a', keyTwo: 'b', type: 'block' });
     const err = new Error('Block failed');
     (blockUserService.blockUser as jest.Mock).mockRejectedValueOnce(err);
 
-    await blockedUserWorker.addBlockedUserToDB(job, done);
-
-    expect(done).toHaveBeenCalledWith(err);
+    await expect(blockedUserWorker.addBlockedUserToDB(job)).rejects.toThrow('Block failed');
   });
 });

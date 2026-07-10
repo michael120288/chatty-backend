@@ -13,50 +13,40 @@ describe('FollowerWorker', () => {
 
   describe('addFollowerToDB', () => {
     it('calls followerService.addFollowerToDB with correct args', async () => {
-      const done = jest.fn();
       const job = mockJob({ keyOne: 'user1', keyTwo: 'user2', username: 'Alice', followerDocumentId: 'doc123' });
       (followerService.addFollowerToDB as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await followerWorker.addFollowerToDB(job, done);
+      await followerWorker.addFollowerToDB(job);
 
       expect(followerService.addFollowerToDB).toHaveBeenCalledWith('user1', 'user2', 'Alice', 'doc123');
       expect(job.progress).toHaveBeenCalledWith(100);
-      expect(done).toHaveBeenCalledWith(null, job.data);
     });
 
-    it('calls done with error on failure', async () => {
-      const done = jest.fn();
+    it('rejects on failure', async () => {
       const job = mockJob({ keyOne: 'a', keyTwo: 'b', username: 'u', followerDocumentId: 'd' });
       const err = new Error('DB error');
       (followerService.addFollowerToDB as jest.Mock).mockRejectedValueOnce(err);
 
-      await followerWorker.addFollowerToDB(job, done);
-
-      expect(done).toHaveBeenCalledWith(err);
+      await expect(followerWorker.addFollowerToDB(job)).rejects.toThrow('DB error');
     });
   });
 
   describe('removeFollowerFromDB', () => {
     it('calls followerService.removeFollowerFromDB with keyOne and keyTwo', async () => {
-      const done = jest.fn();
       const job = mockJob({ keyOne: 'user1', keyTwo: 'user2' });
       (followerService.removeFollowerFromDB as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await followerWorker.removeFollowerFromDB(job, done);
+      await followerWorker.removeFollowerFromDB(job);
 
       expect(followerService.removeFollowerFromDB).toHaveBeenCalledWith('user1', 'user2');
-      expect(done).toHaveBeenCalledWith(null, job.data);
     });
 
-    it('calls done with error on failure', async () => {
-      const done = jest.fn();
+    it('rejects on failure', async () => {
       const job = mockJob({ keyOne: 'a', keyTwo: 'b' });
       const err = new Error('Not found');
       (followerService.removeFollowerFromDB as jest.Mock).mockRejectedValueOnce(err);
 
-      await followerWorker.removeFollowerFromDB(job, done);
-
-      expect(done).toHaveBeenCalledWith(err);
+      await expect(followerWorker.removeFollowerFromDB(job)).rejects.toThrow('Not found');
     });
   });
 });

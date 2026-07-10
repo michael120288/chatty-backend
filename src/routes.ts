@@ -1,5 +1,6 @@
 import { authRoutes } from '@auth/routes/authRoutes';
 import { testCleanupRoutes } from '@auth/routes/testCleanupRoutes';
+import { config } from '@root/config';
 import { schemaController } from '@auth/controllers/schema';
 import { currentUserRoutes } from '@auth/routes/currentRoutes';
 import { chatRoutes } from '@chat/routes/chatRoutes';
@@ -44,22 +45,27 @@ export default (app: Application) => {
     app.use('/health-instance', authMiddleware.verifyUser, healthRoutes.instance());
     app.use('/fibo', authMiddleware.verifyUser, healthRoutes.fiboRoutes());
     app.use(BASE_PATH, authRoutes.routes());
-    app.use(BASE_PATH, testCleanupRoutes.routes());
+    if (config.NODE_ENV !== 'production') {
+      app.use(BASE_PATH, testCleanupRoutes.routes());
+    }
     app.get(`${BASE_PATH}/schema`, schemaController.get);
 
-    app.use(BASE_PATH, authMiddleware.verifyUser, currentUserRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, postRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, reactionRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, commentRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, followerRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, notificationRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, imageRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, chatRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, currentUserRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, postRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, reactionRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, commentRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, followerRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, notificationRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, imageRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, chatRoutes.routes());
     // app.use(BASE_PATH, authMiddleware.verifyUser, flashcardRoutes.routes()); // disabled — flashcards WIP
-    app.use(BASE_PATH, authMiddleware.verifyUser, userRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, gameRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, progressRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, userRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, gameRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, progressRoutes.routes());
 
+    app.use(BASE_PATH, (req: Request, res: Response) => {
+      res.status(404).json({ message: 'Route not found', statusCode: 404, status: 'error' });
+    });
   };
   setupRoutes();
 };

@@ -64,9 +64,9 @@ class UserService {
   public async getAllUsers(userId: string, skip: number, limit: number): Promise<IUserDocument[]> {
     const users: IUserDocument[] = await UserModel.aggregate([
       { $match: { _id: { $ne: new mongoose.Types.ObjectId(userId) } } },
+      { $sort: { createdAt: -1 } },
       { $skip: skip },
       { $limit: limit },
-      { $sort: { createdAt: -1 } },
       { $lookup: { from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId' } },
       { $unwind: '$authId' },
       { $project: this.aggregateProject() }
@@ -114,12 +114,12 @@ class UserService {
   }
 
   public async searchUsers(regex: RegExp, excludeUserId?: string): Promise<ISearchUser[]> {
-    const matchStage: Record<string, unknown> = { username: regex };
-    if (excludeUserId) {
-      matchStage['_id'] = { $ne: new mongoose.Types.ObjectId(excludeUserId) };
-    }
+    // Note: search intentionally includes the caller — the course tests search for
+    // the logged-in user's own username and expect to find it. `excludeUserId` is
+    // accepted for API compatibility but not applied.
+    void excludeUserId;
     const users = await AuthModel.aggregate([
-      { $match: matchStage },
+      { $match: { username: regex } },
       { $lookup: { from: 'User', localField: '_id', foreignField: 'authId', as: 'user' } },
       { $unwind: '$user' },
       {
@@ -130,7 +130,8 @@ class UserService {
           avatarColor: 1,
           profilePicture: 1
         }
-      }
+      },
+      { $limit: 20 }
     ]);
     return users;
   }

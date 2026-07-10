@@ -2,6 +2,8 @@ import { IGetPostsQuery, IPostDocument, IQueryComplete, IQueryDeleted } from "@p
 import { PostModel } from "@post/models/post.schema";
 import { IUserDocument } from "@user/interfaces/user.interface";
 import { UserModel } from "@user/models/user.schema";
+import { CommentsModel } from "@comment/models/comment.schema";
+import { ReactionModel } from "@reaction/models/reaction.schema";
 import { Query, UpdateQuery } from "mongoose";
 
 class PostService {
@@ -30,13 +32,32 @@ class PostService {
   }
   public async deletePost(postId: string, userId:string ): Promise<void>{
     const deletePost: Query<IQueryComplete & IQueryDeleted, IPostDocument> = PostModel.deleteOne({_id:postId})
-    // delete reactions here
+    // Cascade-delete the post's comments and reactions so no orphaned documents remain.
+    const deleteComments: Query<IQueryComplete & IQueryDeleted, unknown> = CommentsModel.deleteMany({postId})
+    const deleteReactions: Query<IQueryComplete & IQueryDeleted, unknown> = ReactionModel.deleteMany({postId})
     const decrementPostCount: UpdateQuery<IUserDocument> = UserModel.updateOne({_id:userId}, {$inc:{postsCount: -1}})
-    await Promise.all([deletePost, decrementPostCount])
+    await Promise.all([deletePost, deleteComments, deleteReactions, decrementPostCount])
   }
-  public async editPost(postId: string, updatedPost:IPostDocument ): Promise<void>{
-    const updatePost: UpdateQuery<IUserDocument> = PostModel.updateOne({_id:postId}, {$set: updatedPost})
-    await Promise.all([updatePost])
+  public async getPostOwnerFromDB(postId: string): Promise<string | null> {
+    const post = await PostModel.findOne({ _id: postId }, { userId: 1 }).exec();
+    return post ? `${post.userId}` : null;
+  }
+
+  public async editPost(postId: string, updatedPost: IPostDocument): Promise<void> {
+    const updatePost: UpdateQuery<IUserDocument> = PostModel.updateOne({ _id: postId }, {
+      $set: {
+        post: updatedPost.post,
+        bgColor: updatedPost.bgColor,
+        feelings: updatedPost.feelings,
+        privacy: updatedPost.privacy,
+        gifUrl: updatedPost.gifUrl,
+        imgId: updatedPost.imgId,
+        imgVersion: updatedPost.imgVersion,
+        videoId: updatedPost.videoId,
+        videoVersion: updatedPost.videoVersion
+      }
+    });
+    await Promise.all([updatePost]);
   }
 }
 export const postService: PostService = new PostService();

@@ -31,7 +31,6 @@ export class PostCache extends BaseCache {
       _id,
       userId,
       username,
-      email,
       avatarColor,
       profilePicture,
       post,
@@ -52,7 +51,6 @@ export class PostCache extends BaseCache {
      '_id': `${_id}`,
       'userId': `${userId}`,
       'username': `${username}`,
-      'email': `${email}`,
       'avatarColor': `${avatarColor}`,
       'profilePicture': `${profilePicture}`,
       'post': `${post}`,
@@ -79,7 +77,13 @@ export class PostCache extends BaseCache {
         'postsCount',
       );
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      multi.ZADD('post', { score: parseInt(uId, 10), value: `${key}` });
+      // Score by creation time (ms) so ZRANGE ... {REV:true} yields a newest-first
+      // feed, consistent with the DB's { createdAt: -1 } sort. Scoring by the random
+      // uId produced an effectively random feed order. Fall back to uId if createdAt
+      // is somehow unparseable.
+      const createdAtScore: number = new Date(createdAt as unknown as string).getTime();
+      const score: number = Number.isNaN(createdAtScore) ? parseInt(uId, 10) : createdAtScore;
+      multi.ZADD('post', { score, value: `${key}` });
       for (const [itemKey, itemValue] of Object.entries(dataToSave)) {
         multi.HSET(`posts:${key}`, `${itemKey}`, `${itemValue}`);
       }

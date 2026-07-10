@@ -4,7 +4,7 @@ const BYPASS_SECRET = 'chatty-test-cleanup-2026';
 
 /**
  * Auth rate limiter — 5 requests per minute on /signin and /signup.
- * Requests with the correct x-test-secret header (vitest accounts only) are skipped.
+ * Requests with the correct x-test-secret header (vitest / pytest / pw_ accounts) are skipped.
  */
 export const authRateLimit = rateLimit({
   windowMs: 60 * 1000,

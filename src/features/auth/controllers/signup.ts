@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { randomUUID } from 'node:crypto';
 import { Request, Response } from 'express';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import { signupSchema } from '@auth/schemas/signup';
@@ -25,9 +26,10 @@ export class SignUp {
   public async create(req: Request, res: Response): Promise<void> {
     const testSecret = req.headers['x-test-secret'];
     if (testSecret !== undefined) {
-      if (testSecret !== 'chatty-test-cleanup-2026' ||
-          !req.body.username?.toLowerCase().startsWith('vitest')) {
-        res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden: invalid test secret or non-vitest username' });
+      const lower = req.body.username?.toLowerCase() ?? '';
+      const isTestPrefix = ['vitest', 'pytest', 'pw_'].some((p) => lower.startsWith(p));
+      if (testSecret !== 'chatty-test-cleanup-2026' || !isTestPrefix) {
+        res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden: invalid test secret or non-test username' });
         return;
       }
     }
@@ -106,9 +108,10 @@ export class SignUp {
         email: data.email,
         username: data.username,
         avatarColor: data.avatarColor,
+        jti: randomUUID(),
       },
       config.JWT_TOKEN!,
-      { expiresIn: '24h' } 
+      { expiresIn: '24h' }
     );
   }
 

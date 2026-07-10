@@ -9,7 +9,10 @@ export abstract class BaseCache {
   log: Logger;
 
   constructor(cacheName: string) {
-    this.client = createClient({ url: config.REDIS_HOST });
+    this.client = createClient({
+      url: config.REDIS_HOST,
+      ...(config.REDIS_PASSWORD ? { password: config.REDIS_PASSWORD } : {})
+    });
     this.log = config.createLogger(cacheName);
     this.cacheError();
   }

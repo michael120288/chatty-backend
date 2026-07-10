@@ -17,22 +17,36 @@ const userCache: UserCache = new UserCache();
 
 class ReactionService {
   public async addReactionDataToDB(reactionData: IReactionJob): Promise<void> {
-    const { postId, userTo, userFrom, username, type, previousReaction, reactionObject } = reactionData;
-    let updatedReactionObject: Partial<IReactionDocument> = reactionObject as IReactionDocument;
-    if (previousReaction) {
-      updatedReactionObject = omit(reactionObject, ['_id']);
+    const { postId, userTo, userFrom, username, type, reactionObject } = reactionData;
+
+    // Enforce the domain rule server-side: one reaction per user per post.
+    // Look up the user's ACTUAL existing reaction instead of trusting the
+    // client-supplied `previousReaction`, which may be stale or empty and would
+    // otherwise cause duplicate reaction documents and drifting counters.
+    const existingReaction: IReactionDocument | null = await ReactionModel.findOne({ postId, username });
+    const actualPrevious: string | undefined = existingReaction?.type;
+
+    // Replacing an existing document must not alter its immutable _id.
+    const updatedReactionObject: Partial<IReactionDocument> = existingReaction
+      ? omit(reactionObject, ['_id'])
+      : (reactionObject as IReactionDocument);
+
+    // Only adjust counters when the reaction actually changes. Re-reacting with
+    // the same type is a no-op for counts.
+    const inc: Record<string, number> = {};
+    if (actualPrevious !== type) {
+      inc[`reactions.${type}`] = 1;
+      if (actualPrevious) {
+        inc[`reactions.${actualPrevious}`] = -1;
+      }
     }
+
     const updatedReaction: [IUserDocument, IReactionDocument, IPostDocument] = (await Promise.all([
       userCache.getUserFromCache(`${userTo}`),
-      ReactionModel.replaceOne({ postId, type: previousReaction, username }, updatedReactionObject, { upsert: true }),
+      ReactionModel.replaceOne({ postId, username }, updatedReactionObject, { upsert: true }),
       PostModel.findOneAndUpdate(
         { _id: postId },
-        {
-          $inc: {
-            [`reactions.${previousReaction}`]: -1,
-            [`reactions.${type}`]: 1
-          }
-        },
+        Object.keys(inc).length ? { $inc: inc } : {},
         { new: true }
       )
     ])) as unknown as [IUserDocument, IReactionDocument, IPostDocument];

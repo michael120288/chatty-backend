@@ -10,41 +10,63 @@ const PAGE_SIZE = 10;
 export class Get {
   public async posts(req: Request, res: Response): Promise<void> {
     const { page } = req.params;
-    const skip: number = (parseInt(page) - 1) * PAGE_SIZE;
-    const limit: number = PAGE_SIZE * parseInt(page);
-    const newSkip: number = skip === 0 ? skip : skip + 1;
+    const pageNum: number = parseInt(page, 10);
+    // Guard invalid page numbers (0, negative, or non-numeric). Without this,
+    // a negative/NaN skip or limit reaches Redis/Mongo and crashes with a 500.
+    if (isNaN(pageNum) || pageNum < 1) {
+      res.status(HTTP_STATUS.OK).json({ message: 'All posts', posts: [], totalPosts: 0 });
+      return;
+    }
+    const skip: number = (pageNum - 1) * PAGE_SIZE;
+    // ZRANGE's end index is inclusive, so use skip + PAGE_SIZE - 1 to return
+    // exactly PAGE_SIZE items per page (fixes the off-by-one that returned 11 on page 1).
+    const end: number = skip + PAGE_SIZE - 1;
     let posts: IPostDocument[] = [];
     let totalPosts = 0;
-    const cachedPosts: IPostDocument[] = await postCache.getPostsFromCache('post', newSkip, limit);
+    const cachedPosts: IPostDocument[] = await postCache.getPostsFromCache('post', skip, end);
     if (cachedPosts.length) {
       posts = cachedPosts;
       totalPosts = await postCache.getTotalPostsInCache();
     } else {
-      posts = await postService.getPosts({}, skip, limit, { createdAt: -1 });
+      posts = await postService.getPosts({}, skip, PAGE_SIZE, { createdAt: -1 });
       totalPosts = await postService.postsCount();
     }
-    res.status(HTTP_STATUS.OK).json({ message: 'All posts', posts, totalPosts });
+    const currentUserId = req.currentUser?.userId;
+    const visiblePosts = posts.filter((post) => post.privacy !== 'Private' || post.userId === currentUserId);
+    res.status(HTTP_STATUS.OK).json({ message: 'All posts', posts: visiblePosts, totalPosts });
   }
 
   public async postsWithImages(req: Request, res: Response): Promise<void> {
     const { page } = req.params;
-    const skip: number = (parseInt(page) - 1) * PAGE_SIZE;
-    const limit: number = PAGE_SIZE * parseInt(page);
-    const newSkip: number = skip === 0 ? skip : skip + 1;
+    const pageNum: number = parseInt(page, 10);
+    if (isNaN(pageNum) || pageNum < 1) {
+      res.status(HTTP_STATUS.OK).json({ message: 'All posts with images', posts: [] });
+      return;
+    }
+    const skip: number = (pageNum - 1) * PAGE_SIZE;
+    const end: number = skip + PAGE_SIZE - 1;
     let posts: IPostDocument[] = [];
-    const cachedPosts: IPostDocument[] = await postCache.getPostsWithImagesFromCache('post', newSkip, limit);
-    posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ imgId: '$ne', gifUrl: '$ne' }, skip, limit, { createdAt: -1 });
-    res.status(HTTP_STATUS.OK).json({ message: 'All posts with images', posts });
+    const cachedPosts: IPostDocument[] = await postCache.getPostsWithImagesFromCache('post', skip, end);
+    posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ imgId: '$ne', gifUrl: '$ne' }, skip, PAGE_SIZE, { createdAt: -1 });
+    const currentUserId = req.currentUser?.userId;
+    const visiblePosts = posts.filter((post) => post.privacy !== 'Private' || post.userId === currentUserId);
+    res.status(HTTP_STATUS.OK).json({ message: 'All posts with images', posts: visiblePosts });
   }
 
   public async postsWithVideos(req: Request, res: Response): Promise<void> {
     const { page } = req.params;
-    const skip: number = (parseInt(page) - 1) * PAGE_SIZE;
-    const limit: number = PAGE_SIZE * parseInt(page);
-    const newSkip: number = skip === 0 ? skip : skip + 1;
+    const pageNum: number = parseInt(page, 10);
+    if (isNaN(pageNum) || pageNum < 1) {
+      res.status(HTTP_STATUS.OK).json({ message: 'All posts with videos', posts: [] });
+      return;
+    }
+    const skip: number = (pageNum - 1) * PAGE_SIZE;
+    const end: number = skip + PAGE_SIZE - 1;
     let posts: IPostDocument[] = [];
-    const cachedPosts: IPostDocument[] = await postCache.getPostsWithVideosFromCache('post', newSkip, limit);
-    posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ videoId: '$ne' }, skip, limit, { createdAt: -1 });
-    res.status(HTTP_STATUS.OK).json({ message: 'All posts with videos', posts });
+    const cachedPosts: IPostDocument[] = await postCache.getPostsWithVideosFromCache('post', skip, end);
+    posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ videoId: '$ne' }, skip, PAGE_SIZE, { createdAt: -1 });
+    const currentUserId = req.currentUser?.userId;
+    const visiblePosts = posts.filter((post) => post.privacy !== 'Private' || post.userId === currentUserId);
+    res.status(HTTP_STATUS.OK).json({ message: 'All posts with videos', posts: visiblePosts });
   }
 }

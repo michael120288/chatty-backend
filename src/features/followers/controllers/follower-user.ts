@@ -15,6 +15,18 @@ const userCache: UserCache = new UserCache();
 export class Add {
   public async follower(req: Request, res: Response): Promise<void> {
     const { followerId } = req.params;
+
+    // Idempotency: if already following, do nothing so counts and the following
+    // list can't drift on a duplicate follow request.
+    const alreadyFollowing: boolean = await followerCache.isFollowingInCache(
+      `following:${req.currentUser!.userId}`,
+      `${followerId}`
+    );
+    if (alreadyFollowing) {
+      res.status(HTTP_STATUS.OK).json({ message: 'Following user now' });
+      return;
+    }
+
     // update count in cache
     const followersCount: Promise<void> = followerCache.updateFollowersCountInCache(`${followerId}`, 'followersCount', 1);
     const followeeCount: Promise<void> = followerCache.updateFollowersCountInCache(`${req.currentUser!.userId}`, 'followingCount', 1);

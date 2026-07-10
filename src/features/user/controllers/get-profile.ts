@@ -29,11 +29,12 @@ export class Get {
   public async all(req: Request, res: Response): Promise<void> {
     const { page } = req.params;
     const skip: number = (parseInt(page) - 1) * PAGE_SIZE;
-    const limit: number = PAGE_SIZE * parseInt(page);
-    const newSkip: number = skip === 0 ? skip : skip + 1;
+    // ZRANGE end index is inclusive → skip + PAGE_SIZE - 1 yields exactly PAGE_SIZE
+    // per page (fixes off-by-one). DB path receives PAGE_SIZE as a fixed page size.
+    const end: number = skip + PAGE_SIZE - 1;
     const allUsers = await Get.prototype.allUsers({
-      newSkip,
-      limit,
+      newSkip: skip,
+      limit: end,
       skip,
       userId: `${req.currentUser!.userId}`,
     });
@@ -71,7 +72,9 @@ export class Get {
       users = cachedUsers;
     } else {
       type = 'mongodb';
-      users = await userService.getAllUsers(userId, skip, limit);
+      // Fixed page size for the DB path (the `limit` param here is the cache's
+      // inclusive ZRANGE end, not a Mongo $limit).
+      users = await userService.getAllUsers(userId, skip, PAGE_SIZE);
     }
     const totalUsers: number = await Get.prototype.usersCount(type);
     return { users, totalUsers };
@@ -105,7 +108,7 @@ export class Get {
       ? cachedUserPosts
       : await postService.getPosts({ username: userName }, 0, 100, { createdAt: -1 });
 
-    res.status(HTTP_STATUS.OK).json({ message: 'Get user profile and posts', user: existingUser, posts: userPosts });
+    res.status(HTTP_STATUS.OK).json({ message: 'Get user profile and posts', user: existingUser, posts: userPosts, totalPosts: userPosts.length });
   }
 
   private async usersCount(type: string): Promise<number> {

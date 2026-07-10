@@ -7,8 +7,9 @@ const addCommentSchema: ObjectSchema = Joi.object().keys({
   postId: Joi.string().required().messages({
     'any.required': 'postId is a required property'
   }),
-  comment: Joi.string().required().messages({
-    'any.required': 'comment is a required property'
+  comment: Joi.string().trim().required().messages({
+    'any.required': 'comment is a required property',
+    'string.empty': 'comment cannot be empty'
   }),
   profilePicture: Joi.string().optional().allow(null, ''),
   commentsCount: Joi.number().optional().allow(null, '')

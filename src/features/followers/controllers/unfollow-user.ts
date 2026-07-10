@@ -8,6 +8,18 @@ const followerCache: FollowerCache = new FollowerCache();
 export class Remove {
   public async follower(req: Request, res: Response): Promise<void> {
     const { followeeId, followerId } = req.params;
+
+    // Idempotency: only unfollow if actually following, so counts can't drift
+    // negative on a duplicate/spurious unfollow request.
+    const isFollowing: boolean = await followerCache.isFollowingInCache(
+      `following:${req.currentUser!.userId}`,
+      followeeId
+    );
+    if (!isFollowing) {
+      res.status(HTTP_STATUS.OK).json({ message: 'Unfollowed user now' });
+      return;
+    }
+
     const removeFollowerFromCache: Promise<void> = followerCache.removeFollowerFromCache(
       `following:${req.currentUser!.userId}`,
       followeeId

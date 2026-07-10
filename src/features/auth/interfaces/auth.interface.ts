@@ -16,7 +16,9 @@ export interface AuthPayload {
   email: string;
   username: string;
   avatarColor: string;
+  jti: string;
   iat?: number;
+  exp?: number;
 }
 
 export interface IAuthDocument extends Document {

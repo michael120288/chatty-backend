@@ -4,7 +4,7 @@ import { UserModel } from '@user/models/user.schema';
 
 class BlockUserService {
   public async blockUser(userId: string, followerId: string): Promise<void> {
-    UserModel.bulkWrite([
+    await UserModel.bulkWrite([
       {
         updateOne: {
           filter: { _id: new mongoose.Types.ObjectId(userId), blocked: { $ne: new mongoose.Types.ObjectId(followerId) } },
@@ -29,10 +29,10 @@ class BlockUserService {
   }
 
   public async unblockUser(userId: string, followerId: string): Promise<void> {
-    UserModel.bulkWrite([
+    await UserModel.bulkWrite([
       {
         updateOne: {
-          filter: { _id: userId },
+          filter: { _id: new mongoose.Types.ObjectId(userId) },
           update: {
             $pull: {
               blocked: new mongoose.Types.ObjectId(followerId)
@@ -42,7 +42,7 @@ class BlockUserService {
       },
       {
         updateOne: {
-          filter: { _id: followerId },
+          filter: { _id: new mongoose.Types.ObjectId(followerId) },
           update: {
             $pull: {
               blockedBy: new mongoose.Types.ObjectId(userId)

@@ -192,7 +192,7 @@ describe('SIGNUP', () => {
       console.log(error.serializeError());
     });
   });
-  it('should throw unauthorize error when user is already exist', () => {
+  it('should throw unauthorize error when user is already exist', async () => {
     const req: Request = authMockRequest(
       {},
       {
@@ -208,10 +208,13 @@ describe('SIGNUP', () => {
     jest
       .spyOn(authService, 'getUserByUsernameOrEmail')
       .mockResolvedValue(authMock);
-    SignUp.prototype.create(req, res).catch((error: CustomError) => {
+    try {
+      await SignUp.prototype.create(req, res);
+      throw new Error('Expected BadRequestError but create() resolved');
+    } catch (error: any) {
       expect(error.statusCode).toEqual(400);
       expect(error.serializeError().message).toEqual('User already exists. Username or email is already taken.');
-    });
+    }
   });
   it('should set session data for valid credentials and send correct json response', async () => {
     const req: Request = authMockRequest(
@@ -230,11 +233,13 @@ describe('SIGNUP', () => {
       const userSpy = jest.spyOn(UserCache.prototype,'saveUserToCache')
       jest.spyOn(cloudinaryUploads,'uploads').mockImplementation(():any=>Promise.resolve({version:'123123123',public_id:'123123123'}))
     await SignUp.prototype.create(req, res);
-    console.log(userSpy.mock);
     expect(req.session?.jwt).toBeDefined();
+    const capturedUser = userSpy.mock.calls[0][2];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _pw, ...expectedUser } = capturedUser as typeof capturedUser & { password?: string };
     expect(res.json).toHaveBeenCalledWith({
       message: 'User created successfully',
-      user: userSpy.mock.calls[0][2],
+      user: expectedUser,
       token:req.session?.jwt
     });
   });

@@ -25,6 +25,7 @@ const mockClient = {
   ZCARD: jest.fn(),
   ZCOUNT: jest.fn(),
   HSET: jest.fn(),
+  expire: jest.fn().mockResolvedValue(1),
   multi: jest.fn().mockReturnValue(mockMulti)
 };
 

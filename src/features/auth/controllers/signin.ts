@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { randomUUID } from 'node:crypto';
 import { config } from '@root/config';
 import JWT from 'jsonwebtoken';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
@@ -18,9 +19,10 @@ export class SignIn {
   public async read(req: Request, res: Response): Promise<void> {
     const testSecret = req.headers['x-test-secret'];
     if (testSecret !== undefined) {
-      if (testSecret !== 'chatty-test-cleanup-2026' ||
-          !req.body.username?.toLowerCase().startsWith('vitest')) {
-        res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden: invalid test secret or non-vitest username' });
+      const lower = req.body.username?.toLowerCase() ?? '';
+      const isTestPrefix = ['vitest', 'pytest', 'pw_'].some((p) => lower.startsWith(p));
+      if (testSecret !== 'chatty-test-cleanup-2026' || !isTestPrefix) {
+        res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden: invalid test secret or non-test username' });
         return;
       }
     }
@@ -47,6 +49,7 @@ export class SignIn {
         email: existingUser.email,
         username: existingUser.username,
         avatarColor: existingUser.avatarColor,
+        jti: randomUUID(),
       },
       config.JWT_TOKEN!,
       { expiresIn: '24h' },

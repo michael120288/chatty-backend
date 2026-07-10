@@ -22,6 +22,20 @@ export class FollowerCache extends BaseCache {
         await this.client.connect();
       }
       await this.client.LPUSH(key, value);
+      await this.client.EXPIRE(key, 7 * 24 * 60 * 60);
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
+  public async isFollowingInCache(key: string, value: string): Promise<boolean> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const following: string[] = await this.client.LRANGE(key, 0, -1);
+      return following.includes(value);
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');

@@ -21,6 +21,7 @@ Object.defineProperties(postServer, {
 describe('Delete', () => {
   beforeEach(() => {
     jest.restoreAllMocks();
+    jest.spyOn(PostCache.prototype, 'getPostOwnerFromCache').mockResolvedValue(`${authUserPayload.userId}`);
   });
 
   afterEach(() => {

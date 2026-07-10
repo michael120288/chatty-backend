@@ -30,7 +30,11 @@ const imageValidator = (value: string, helpers: any) => {
 };
 
 const postSchema: ObjectSchema = Joi.object().keys({
-  post: Joi.string().optional().allow(null, ''),
+  post: Joi.string().required().messages({
+    'any.required': 'Post is a required field',
+    'string.empty': 'Post cannot be empty',
+    'string.base': 'Post must be a string'
+  }),
   bgColor: Joi.string().optional().allow(null, ''),
   privacy: Joi.string().optional().allow(null, ''),
   feelings: Joi.string().optional().allow(null, ''),

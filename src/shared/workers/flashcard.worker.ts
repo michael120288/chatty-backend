@@ -19,8 +19,8 @@ class FlashcardWorker {
   }
 
   async updateCardInDB(job: Job): Promise<void> {
-    const { key, value } = job.data;
-    await flashcardService.editCard(key, value);
+    const { key, value, userId } = job.data;
+    await flashcardService.editCard(key, value, userId);
     job.progress(100);
   }
 
