@@ -7,7 +7,7 @@ import { config } from '@root/config';
 class HealthRoutes {
   public health(): Router {
     const router: Router = express.Router();
-    router.get('/health', (req: Request, res: Response) => {
+    router.get('/', (req: Request, res: Response) => {
       res.status(HTTP_STATUS.OK).send(`Health: Server instance is healthy on ${moment().format('LL')}`);
     });
     return router;
