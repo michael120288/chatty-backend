@@ -3,8 +3,12 @@ import HTTP_STATUS from 'http-status-codes';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { PostCache } from '@service/redis/post.cache';
 import { postService } from '@service/db/post.service';
+import { UserCache } from '@service/redis/user.cache';
+import { IUserDocument } from '@user/interfaces/user.interface';
+import { BlockCheck } from '@global/helpers/block-check';
 
 const postCache: PostCache = new PostCache();
+const userCache: UserCache = new UserCache();
 const PAGE_SIZE = 10;
 
 export class Get {
@@ -32,7 +36,12 @@ export class Get {
       totalPosts = await postService.postsCount();
     }
     const currentUserId = req.currentUser?.userId;
-    const visiblePosts = posts.filter((post) => post.privacy !== 'Private' || post.userId === currentUserId);
+    const currentUser: IUserDocument | null = currentUserId ? ((await userCache.getUserFromCache(`${currentUserId}`)) as IUserDocument) : null;
+    const visiblePosts = posts.filter(
+      (post) =>
+        (post.privacy !== 'Private' || post.userId === currentUserId) &&
+        !BlockCheck.isBlockedRelationship(currentUser, `${post.userId}`)
+    );
     res.status(HTTP_STATUS.OK).json({ message: 'All posts', posts: visiblePosts, totalPosts });
   }
 
@@ -49,7 +58,12 @@ export class Get {
     const cachedPosts: IPostDocument[] = await postCache.getPostsWithImagesFromCache('post', skip, end);
     posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ imgId: '$ne', gifUrl: '$ne' }, skip, PAGE_SIZE, { createdAt: -1 });
     const currentUserId = req.currentUser?.userId;
-    const visiblePosts = posts.filter((post) => post.privacy !== 'Private' || post.userId === currentUserId);
+    const currentUser: IUserDocument | null = currentUserId ? ((await userCache.getUserFromCache(`${currentUserId}`)) as IUserDocument) : null;
+    const visiblePosts = posts.filter(
+      (post) =>
+        (post.privacy !== 'Private' || post.userId === currentUserId) &&
+        !BlockCheck.isBlockedRelationship(currentUser, `${post.userId}`)
+    );
     res.status(HTTP_STATUS.OK).json({ message: 'All posts with images', posts: visiblePosts });
   }
 
@@ -66,7 +80,12 @@ export class Get {
     const cachedPosts: IPostDocument[] = await postCache.getPostsWithVideosFromCache('post', skip, end);
     posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ videoId: '$ne' }, skip, PAGE_SIZE, { createdAt: -1 });
     const currentUserId = req.currentUser?.userId;
-    const visiblePosts = posts.filter((post) => post.privacy !== 'Private' || post.userId === currentUserId);
+    const currentUser: IUserDocument | null = currentUserId ? ((await userCache.getUserFromCache(`${currentUserId}`)) as IUserDocument) : null;
+    const visiblePosts = posts.filter(
+      (post) =>
+        (post.privacy !== 'Private' || post.userId === currentUserId) &&
+        !BlockCheck.isBlockedRelationship(currentUser, `${post.userId}`)
+    );
     res.status(HTTP_STATUS.OK).json({ message: 'All posts with videos', posts: visiblePosts });
   }
 }

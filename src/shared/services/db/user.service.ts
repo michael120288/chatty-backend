@@ -64,7 +64,11 @@ class UserService {
   public async getAllUsers(userId: string, skip: number, limit: number): Promise<IUserDocument[]> {
     const users: IUserDocument[] = await UserModel.aggregate([
       { $match: { _id: { $ne: new mongoose.Types.ObjectId(userId) } } },
-      { $sort: { createdAt: -1 } },
+      // _id is a secondary sort key: bulk-created users can share the same
+      // createdAt millisecond, and createdAt alone isn't a stable sort — without
+      // a tiebreaker, repeated queries can return users in different relative
+      // order, causing pagination windows to overlap or skip rows.
+      { $sort: { createdAt: -1, _id: -1 } },
       { $skip: skip },
       { $limit: limit },
       { $lookup: { from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId' } },

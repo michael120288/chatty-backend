@@ -8,6 +8,8 @@ import { IFollowerData } from '@follower/interfaces/follower.interface';
 import mongoose from 'mongoose';
 import { socketIOFollowerObject } from '@socket/follower';
 import { followerQueue } from '@service/queues/follower.queue';
+import { BlockCheck } from '@global/helpers/block-check';
+import { ForbiddenError } from '@global/helpers/error-handler';
 
 const followerCache: FollowerCache = new FollowerCache();
 const userCache: UserCache = new UserCache();
@@ -15,6 +17,12 @@ const userCache: UserCache = new UserCache();
 export class Add {
   public async follower(req: Request, res: Response): Promise<void> {
     const { followerId } = req.params;
+
+    // A block relationship (either direction) blocks new follows outright.
+    const currentUser: IUserDocument = (await userCache.getUserFromCache(`${req.currentUser!.userId}`)) as IUserDocument;
+    if (BlockCheck.isBlockedRelationship(currentUser, `${followerId}`)) {
+      throw new ForbiddenError('You cannot follow this user.');
+    }
 
     // Idempotency: if already following, do nothing so counts and the following
     // list can't drift on a duplicate follow request.
@@ -32,12 +40,10 @@ export class Add {
     const followeeCount: Promise<void> = followerCache.updateFollowersCountInCache(`${req.currentUser!.userId}`, 'followingCount', 1);
     await Promise.all([followersCount, followeeCount]);
 
-    const cachedFollower: Promise<IUserDocument> = userCache.getUserFromCache(followerId) as Promise<IUserDocument>;
-    const cachedFollowee: Promise<IUserDocument> = userCache.getUserFromCache(`${req.currentUser!.userId}`) as Promise<IUserDocument>;
-    const response: [IUserDocument, IUserDocument] = await Promise.all([cachedFollower, cachedFollowee]);
+    const cachedFollower: IUserDocument = (await userCache.getUserFromCache(followerId)) as IUserDocument;
 
     const followerObjectId: ObjectId = new ObjectId();
-    const addFolloweeData: IFollowerData = Add.prototype.userData(response[0]);
+    const addFolloweeData: IFollowerData = Add.prototype.userData(cachedFollower);
     socketIOFollowerObject.emit('add follower', addFolloweeData);
 
     const addFollowerToCache: Promise<void> = followerCache.saveFollowerToCache(`following:${req.currentUser!.userId}`, `${followerId}`);

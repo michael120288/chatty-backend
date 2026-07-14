@@ -8,6 +8,8 @@ import { followerQueue } from '@service/queues/follower.queue';
 import { Add } from '@follower/controllers/follower-user';
 import { UserCache } from '@service/redis/user.cache';
 import { FollowerCache } from '@service/redis/follower.cache';
+import { ForbiddenError } from '@global/helpers/error-handler';
+import { IUserDocument } from '@user/interfaces/user.interface';
 
 jest.useFakeTimers();
 jest.mock('@service/queues/base.queue');
@@ -85,6 +87,28 @@ describe('Add', () => {
       expect(res.json).toHaveBeenCalledWith({
         message: 'Following user now'
       });
+    });
+
+    it('should throw ForbiddenError when the current user has blocked the target', async () => {
+      const req: Request = followersMockRequest({}, authUserPayload, { followerId: '6064861bc25eaa5a5d2f9bf4' }) as Request;
+      const res: Response = followersMockResponse();
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue({
+        ...existingUser,
+        blocked: ['6064861bc25eaa5a5d2f9bf4']
+      } as unknown as IUserDocument);
+
+      await expect(Add.prototype.follower(req, res)).rejects.toThrow(ForbiddenError);
+    });
+
+    it('should throw ForbiddenError when the target has blocked the current user', async () => {
+      const req: Request = followersMockRequest({}, authUserPayload, { followerId: '6064861bc25eaa5a5d2f9bf4' }) as Request;
+      const res: Response = followersMockResponse();
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue({
+        ...existingUser,
+        blockedBy: ['6064861bc25eaa5a5d2f9bf4']
+      } as unknown as IUserDocument);
+
+      await expect(Add.prototype.follower(req, res)).rejects.toThrow(ForbiddenError);
     });
   });
 });

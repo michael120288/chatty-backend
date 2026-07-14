@@ -8,7 +8,8 @@ import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
-import { BadRequestError } from '@global/helpers/error-handler';
+import { BadRequestError, ForbiddenError } from '@global/helpers/error-handler';
+import { BlockCheck } from '@global/helpers/block-check';
 import { config } from '@root/config';
 import { IMessageData, IMessageNotification } from '@chat/interfaces/chat.interface';
 import { socketIOChatObject } from '@socket/chat';
@@ -38,6 +39,10 @@ export class Add {
     const conversationObjectId: ObjectId = !conversationId ? new ObjectId() : new mongoose.Types.ObjectId(conversationId);
 
     const sender: IUserDocument = (await userCache.getUserFromCache(`${req.currentUser!.userId}`)) as IUserDocument;
+
+    if (BlockCheck.isBlockedRelationship(sender, `${receiverId}`)) {
+      throw new ForbiddenError('You cannot message this user.');
+    }
 
     if (selectedImage?.length) {
       const result: UploadApiResponse = (await uploads(req.body.image, req.currentUser!.userId, true, true)) as UploadApiResponse;

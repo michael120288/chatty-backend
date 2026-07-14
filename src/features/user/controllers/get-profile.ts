@@ -11,6 +11,7 @@ import { userService } from '@service/db/user.service';
 import { postService } from '@service/db/post.service';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { Helpers } from '@global/helpers/helpers';
+import { BlockCheck } from '@global/helpers/block-check';
 
 const postCache: PostCache = new PostCache();
 const userCache: UserCache = new UserCache();
@@ -64,19 +65,25 @@ export class Get {
     res.status(HTTP_STATUS.OK).json({ message: 'Get user profile by id', user: existingUser });
   }
   private async allUsers({ newSkip, limit, skip, userId }: IUserAll): Promise<IAllUsers> {
-    let users;
-    let type = '';
-    const cachedUsers: IUserDocument[] = (await userCache.getUsersFromCache(newSkip, limit, userId)) as IUserDocument[];
-    if (cachedUsers.length) {
+    // Decide the data source ONCE per request, based on whether the Redis
+    // cache holds the complete user set — not on whether this specific page's
+    // slice happens to be non-empty. A partially-warmed cache has a different
+    // relative ordering than Mongo's collection; serving page 1 from a partial
+    // cache and page 2 from Mongo (or vice versa) mixes two different orderings
+    // over the same logical list, which duplicates or skips rows across pages.
+    const [cachedTotal, dbTotal] = await Promise.all([userCache.getTotalUsersInCache(), userService.getTotalUsersInDB()]);
+    let users: IUserDocument[];
+    let type: string;
+    if (cachedTotal > 0 && cachedTotal === dbTotal) {
       type = 'redis';
-      users = cachedUsers;
+      users = (await userCache.getUsersFromCache(newSkip, limit, userId)) as IUserDocument[];
     } else {
       type = 'mongodb';
       // Fixed page size for the DB path (the `limit` param here is the cache's
       // inclusive ZRANGE end, not a Mongo $limit).
       users = await userService.getAllUsers(userId, skip, PAGE_SIZE);
     }
-    const totalUsers: number = await Get.prototype.usersCount(type);
+    const totalUsers: number = type === 'redis' ? cachedTotal : dbTotal;
     return { users, totalUsers };
   }
   private async followers(userId: string): Promise<IFollowerData[]> {
@@ -100,19 +107,23 @@ export class Get {
   public async profileAndPosts(req: Request, res: Response): Promise<void> {
     const { userId, username, uId } = req.params;
     const userName: string = Helpers.firstLetterUppercase(username);
+    const currentUserId = `${req.currentUser!.userId}`;
     const cachedUser: IUserDocument = (await userCache.getUserFromCache(userId)) as IUserDocument;
     const cachedUserPosts: IPostDocument[] = await postCache.getUserPostsFromCache('post', parseInt(uId, 10));
+    const viewer: IUserDocument = (await userCache.getUserFromCache(currentUserId)) as IUserDocument;
 
     const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(userId);
-    const userPosts: IPostDocument[] = cachedUserPosts.length
+    const allUserPosts: IPostDocument[] = cachedUserPosts.length
       ? cachedUserPosts
       : await postService.getPosts({ username: userName }, 0, 100, { createdAt: -1 });
 
-    res.status(HTTP_STATUS.OK).json({ message: 'Get user profile and posts', user: existingUser, posts: userPosts, totalPosts: userPosts.length });
-  }
+    // A block relationship (either direction) hides all of this profile's posts.
+    // Otherwise, Private posts are only visible to their own owner — same rule
+    // enforced on the main feed in get-posts.ts.
+    const userPosts: IPostDocument[] = BlockCheck.isBlockedRelationship(viewer, userId)
+      ? []
+      : allUserPosts.filter((post) => post.privacy !== 'Private' || post.userId === currentUserId);
 
-  private async usersCount(type: string): Promise<number> {
-    const totalUsers: number = type === 'redis' ? await userCache.getTotalUsersInCache() : await userService.getTotalUsersInDB();
-    return totalUsers;
+    res.status(HTTP_STATUS.OK).json({ message: 'Get user profile and posts', user: existingUser, posts: userPosts, totalPosts: userPosts.length });
   }
 }
