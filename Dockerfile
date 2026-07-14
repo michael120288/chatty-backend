@@ -33,4 +33,4 @@ COPY target-pages ./target-pages
 
 EXPOSE 5000
 
-CMD ["pm2-runtime", "build/app.js", "-i", "max"]
+CMD ["pm2-runtime", "build/src/app.js", "-i", "max"]
