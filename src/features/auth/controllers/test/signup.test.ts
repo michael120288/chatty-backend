@@ -230,6 +230,7 @@ describe('SIGNUP', () => {
     const res: Response = authMockResponse();
 
     jest.spyOn(authService, 'getUserByUsernameOrEmail').mockResolvedValue(null as any)
+      jest.spyOn(authService, 'createAuthUser').mockResolvedValue(undefined)
       const userSpy = jest.spyOn(UserCache.prototype,'saveUserToCache')
       jest.spyOn(cloudinaryUploads,'uploads').mockImplementation(():any=>Promise.resolve({version:'123123123',public_id:'123123123'}))
     await SignUp.prototype.create(req, res);

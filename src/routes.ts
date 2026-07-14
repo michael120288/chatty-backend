@@ -1,6 +1,5 @@
 import { authRoutes } from '@auth/routes/authRoutes';
 import { testCleanupRoutes } from '@auth/routes/testCleanupRoutes';
-import { config } from '@root/config';
 import { schemaController } from '@auth/controllers/schema';
 import { currentUserRoutes } from '@auth/routes/currentRoutes';
 import { chatRoutes } from '@chat/routes/chatRoutes';
@@ -45,9 +44,11 @@ export default (app: Application) => {
     app.use('/health-instance', authMiddleware.verifyUser, healthRoutes.instance());
     app.use('/fibo', authMiddleware.verifyUser, healthRoutes.fiboRoutes());
     app.use(BASE_PATH, authRoutes.routes());
-    if (config.NODE_ENV !== 'production') {
-      app.use(BASE_PATH, testCleanupRoutes.routes());
-    }
+    // Enabled in all environments, including production, so QA test accounts
+    // (vitest/pytest/pw_ prefixes) created against codeandtest.com can be
+    // cleaned up too. Guarded by TEST_CLEANUP_SECRET + username-prefix checks
+    // inside testCleanupRoutes/test-cleanup.ts.
+    app.use(BASE_PATH, testCleanupRoutes.routes());
     app.get(`${BASE_PATH}/schema`, schemaController.get);
 
     app.use(BASE_PATH, authMiddleware.identifyUser, currentUserRoutes.routes());

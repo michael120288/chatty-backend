@@ -12,7 +12,6 @@ import HTTP_STATUS from 'http-status-codes';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { UserCache } from '@service/redis/user.cache';
 import JWT from 'jsonwebtoken';
-import { authQueue } from '@service/queues/auth.queue';
 import { userQueue } from '@service/queues/user.queue';
 import { config } from '@root/config';
 import { BadRequestError } from '@global/helpers/error-handler';
@@ -28,7 +27,7 @@ export class SignUp {
     if (testSecret !== undefined) {
       const lower = req.body.username?.toLowerCase() ?? '';
       const isTestPrefix = ['vitest', 'pytest', 'pw_'].some((p) => lower.startsWith(p));
-      if (testSecret !== 'chatty-test-cleanup-2026' || !isTestPrefix) {
+      if (testSecret !== config.TEST_CLEANUP_SECRET || !isTestPrefix) {
         res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden: invalid test secret or non-test username' });
         return;
       }
@@ -80,8 +79,15 @@ export class SignUp {
     userDataForCache.profilePicture = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
-    // Add to database
-    authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
+    // Auth document is written synchronously (not queued) because /signin
+    // queries this collection directly, with no Redis cache in front of it —
+    // an async write here raced against an immediate signin, intermittently
+    // returning "Invalid credentials" for a real, just-created account.
+    await authService.createAuthUser(authData);
+    // The User profile document can stay queued: it's already synchronously
+    // cached in Redis above (saveUserToCache), and every read path that needs
+    // it (currentuser, profile, etc.) checks that cache before falling back
+    // to Mongo, so there's no equivalent immediate-read race for this one.
     userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);

@@ -1,6 +1,5 @@
 import rateLimit from 'express-rate-limit';
-
-const BYPASS_SECRET = 'chatty-test-cleanup-2026';
+import { config } from '@root/config';
 
 /**
  * Auth rate limiter — 5 requests per minute on /signin and /signup.
@@ -10,7 +9,7 @@ export const authRateLimit = rateLimit({
   windowMs: 60 * 1000,
   max: 5,
   message: { message: 'Too many attempts, please try again after 15 minutes.', status: 'error', statusCode: 429 },
-  skip: (req) => req.headers['x-test-secret'] === BYPASS_SECRET,
+  skip: (req) => req.headers['x-test-secret'] === config.TEST_CLEANUP_SECRET,
   standardHeaders: true,
   legacyHeaders: false,
 });

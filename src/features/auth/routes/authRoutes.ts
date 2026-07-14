@@ -3,12 +3,12 @@ import { SignIn } from '@auth/controllers/signin';
 import { SignOut } from '@auth/controllers/signout';
 import { SignUp } from '@auth/controllers/signup';
 import { sso } from '@auth/controllers/sso';
+import { config } from '@root/config';
 import express, { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 
-const BYPASS_SECRET = 'chatty-test-cleanup-2026';
 const bypassForTestAccounts = (req: express.Request) =>
-  req.headers['x-test-secret'] === BYPASS_SECRET;
+  req.headers['x-test-secret'] === config.TEST_CLEANUP_SECRET;
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

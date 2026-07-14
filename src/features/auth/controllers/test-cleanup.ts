@@ -13,10 +13,8 @@ const userCache: UserCache = new UserCache();
 // All recognised test-account prefixes — update here if new QA tracks are added.
 const TEST_USERNAME_PREFIXES = ['vitest', 'pytest', 'pw_'];
 
-// Hardcoded value — no env var needed.
-// Anyone calling this endpoint must send: x-test-secret: chatty-test-cleanup-2026
 // The username prefix list is the real safety guard against accidental deletions.
-const CLEANUP_HEADER_VALUE = 'chatty-test-cleanup-2026';
+const CLEANUP_HEADER_VALUE = config.TEST_CLEANUP_SECRET;
 
 class TestCleanup {
   public async deleteUser(req: Request, res: Response): Promise<void> {

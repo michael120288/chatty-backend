@@ -21,7 +21,7 @@ export class SignIn {
     if (testSecret !== undefined) {
       const lower = req.body.username?.toLowerCase() ?? '';
       const isTestPrefix = ['vitest', 'pytest', 'pw_'].some((p) => lower.startsWith(p));
-      if (testSecret !== 'chatty-test-cleanup-2026' || !isTestPrefix) {
+      if (testSecret !== config.TEST_CLEANUP_SECRET || !isTestPrefix) {
         res.status(HTTP_STATUS.FORBIDDEN).json({ message: 'Forbidden: invalid test secret or non-test username' });
         return;
       }
