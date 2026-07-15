@@ -24,7 +24,9 @@ class Config {
   public DOCKER_TIMEOUT: number = parseInt(process.env.DOCKER_TIMEOUT || '120000', 10);
   public MAX_CODE_LENGTH: number = parseInt(process.env.MAX_CODE_LENGTH || '50000', 10);
   public SANDBOX_IMAGE: string = process.env.SANDBOX_IMAGE || 'test-quest-sandbox:latest';
-  public TEST_CLEANUP_SECRET: string = process.env.TEST_CLEANUP_SECRET || 'chatty-test-cleanup-2026';
+  // No hardcoded fallback — if unset, comparisons against this value must fail closed.
+  // See setupServer.ts / test-cleanup.ts for the fail-closed usage.
+  public TEST_CLEANUP_SECRET: string | undefined = process.env.TEST_CLEANUP_SECRET;
 
   private readonly DEFAULT_DATABASE_URL =
     'mongodb://127.0.0.1:27017/chattyapp-backend';

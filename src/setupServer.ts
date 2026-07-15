@@ -38,6 +38,9 @@ export class ChattyServer {
   }
 
   public start(): void {
+    if (!config.TEST_CLEANUP_SECRET) {
+      log.warn('TEST_CLEANUP_SECRET is not set — the test-cleanup endpoint and rate-limit bypass will refuse all requests (fail closed).');
+    }
     this.securityMiddleware(this.app);
     this.standardMiddleware(this.app);
     this.routesMiddleware(this.app);
@@ -78,7 +81,8 @@ export class ChattyServer {
     app.use(compression());
 
     const isTestSessionUser = (req: Request): boolean => {
-      if (req.headers['x-test-secret'] === 'chatty-test-cleanup-2026') return true;
+      // Fail closed: if TEST_CLEANUP_SECRET is not configured, this bypass can never match.
+      if (config.TEST_CLEANUP_SECRET && req.headers['x-test-secret'] === config.TEST_CLEANUP_SECRET) return true;
       const token = req.session?.jwt;
       if (!token) return false;
       try {
