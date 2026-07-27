@@ -278,6 +278,35 @@ export class UserCache extends BaseCache {
     }
   }
 
+  // Backs search-user's Mongo query: the User profile document is written to
+  // Mongo asynchronously via a queue (see signup.ts), so a just-created user
+  // can be briefly absent from the Mongo-side $lookup/$unwind join. Checking
+  // the cache (populated synchronously on signup) closes that race.
+  public async getUsersFromCacheByUsername(regex: RegExp): Promise<IUserDocument[]> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const keys: string[] = await this.client.ZRANGE('user', 0, -1);
+      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+      for (const key of keys) {
+        multi.HGETALL(`users:${key}`);
+      }
+      const replies: UserCacheMultiType = (await multi.exec()) as UserCacheMultiType;
+      const matched: IUserDocument[] = [];
+      for (const reply of replies as IUserDocument[]) {
+        if (!reply || !reply._id || !reply.username || !regex.test(`${reply.username}`)) {
+          continue;
+        }
+        matched.push(reply);
+      }
+      return matched;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
   public async getTotalUsersInCache(): Promise<number> {
     try {
       if (!this.client.isOpen) {

@@ -4,6 +4,9 @@ import mongoose from 'mongoose';
 import { indexOf } from 'lodash';
 import { followerService } from '@service/db/follower.service';
 import { AuthModel } from '@auth/models/auth.schema';
+import { UserCache } from '@service/redis/user.cache';
+
+const userCache: UserCache = new UserCache();
 
 class UserService {
   public async addUserData(data: IUserDocument): Promise<void> {
@@ -122,7 +125,7 @@ class UserService {
     // the logged-in user's own username and expect to find it. `excludeUserId` is
     // accepted for API compatibility but not applied.
     void excludeUserId;
-    const users = await AuthModel.aggregate([
+    const users: ISearchUser[] = await AuthModel.aggregate([
       { $match: { username: regex } },
       { $lookup: { from: 'User', localField: '_id', foreignField: 'authId', as: 'user' } },
       { $unwind: '$user' },
@@ -137,7 +140,28 @@ class UserService {
       },
       { $limit: 20 }
     ]);
-    return users;
+
+    // A just-signed-up user's Mongo `User` document is written asynchronously via
+    // a queue, so it can briefly miss the $lookup/$unwind join above. Fall back to
+    // the Redis cache (populated synchronously on signup) for any regex match the
+    // Mongo aggregation didn't return yet.
+    const foundIds = new Set(users.map((u) => `${u._id}`));
+    const cachedMatches = await userCache.getUsersFromCacheByUsername(regex);
+    for (const cached of cachedMatches) {
+      if (foundIds.has(`${cached._id}`)) {
+        continue;
+      }
+      foundIds.add(`${cached._id}`);
+      users.push({
+        _id: `${cached._id}`,
+        username: `${cached.username}`,
+        email: `${cached.email}`,
+        avatarColor: `${cached.avatarColor}`,
+        profilePicture: `${cached.profilePicture}`
+      });
+    }
+
+    return users.slice(0, 20);
   }
 
   private aggregateProject() {

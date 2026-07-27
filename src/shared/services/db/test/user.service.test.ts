@@ -2,11 +2,13 @@ import { userService } from '@service/db/user.service';
 import { UserModel } from '@user/models/user.schema';
 import { AuthModel } from '@auth/models/auth.schema';
 import { followerService } from '@service/db/follower.service';
+import { UserCache } from '@service/redis/user.cache';
 
 jest.mock('@user/models/user.schema');
 jest.mock('@auth/models/auth.schema');
 jest.mock('@service/db/follower.service');
 jest.mock('@service/queues/base.queue');
+jest.mock('@service/redis/user.cache');
 
 const userId1 = '507f1f77bcf86cd799439011';
 const authId1 = '507f1f77bcf86cd799439020';
@@ -118,6 +120,10 @@ describe('UserService', () => {
   });
 
   describe('searchUsers', () => {
+    beforeEach(() => {
+      (UserCache.prototype.getUsersFromCacheByUsername as jest.Mock).mockResolvedValue([]);
+    });
+
     it('aggregates AuthModel with regex match and excludeUserId filter', async () => {
       (AuthModel.aggregate as jest.Mock).mockResolvedValue([mockUser]);
       const result = await userService.searchUsers(/alice/i, userId1);
@@ -127,6 +133,26 @@ describe('UserService', () => {
 
     it('aggregates without _id exclusion when no excludeUserId', async () => {
       (AuthModel.aggregate as jest.Mock).mockResolvedValue([mockUser]);
+      const result = await userService.searchUsers(/alice/i);
+      expect(result).toEqual([mockUser]);
+    });
+
+    it('adds cache matches not already returned by the Mongo aggregation', async () => {
+      (AuthModel.aggregate as jest.Mock).mockResolvedValue([]);
+      (UserCache.prototype.getUsersFromCacheByUsername as jest.Mock).mockResolvedValue([
+        { _id: userId1, username: 'Alice', email: 'alice@test.com', avatarColor: 'red', profilePicture: '' }
+      ]);
+      const result = await userService.searchUsers(/alice/i);
+      expect(result).toEqual([
+        { _id: userId1, username: 'Alice', email: 'alice@test.com', avatarColor: 'red', profilePicture: '' }
+      ]);
+    });
+
+    it('does not duplicate a user found by both Mongo and the cache', async () => {
+      (AuthModel.aggregate as jest.Mock).mockResolvedValue([mockUser]);
+      (UserCache.prototype.getUsersFromCacheByUsername as jest.Mock).mockResolvedValue([
+        { _id: userId1, username: 'Alice', email: 'alice@test.com', avatarColor: 'red', profilePicture: '' }
+      ]);
       const result = await userService.searchUsers(/alice/i);
       expect(result).toEqual([mockUser]);
     });

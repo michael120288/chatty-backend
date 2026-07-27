@@ -90,7 +90,11 @@ export class PostCache extends BaseCache {
       const count: number = parseInt(postCount[0], 10) + 1;
       multi.HSET(`user:${currentUserId}`, 'postsCount', count);
       await multi.exec();
-      await this.client.expire(`posts:${key}`, 86400);
+      // No TTL here: `posts:${key}` is indexed permanently by the 'post' ZSET above,
+      // which is only ever removed via explicit ZREM in deletePostFromCache. A TTL on
+      // the hash alone left the ZSET pointing at posts whose HASH had expired, so
+      // pagination returned "ghost" entries with every field (including _id) undefined.
+      // The hash must live exactly as long as its ZSET membership — i.e. until deletion.
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
