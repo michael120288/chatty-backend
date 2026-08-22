@@ -1,25 +1,21 @@
 
-import { IFollowers } from "@follower/interfaces/follower.interface";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 
-
+// 'remove follower' is now broadcast directly from the REST unfollow
+// controller (unfollow-user.ts), right after it decrements counts in cache —
+// the same pattern 'add follower' already uses in follower-user.ts. That
+// avoids racing a separate client-emitted socket event against the REST
+// call that does the actual decrement, which used to let the broadcast go
+// out with stale (pre-decrement) counts depending on which finished first.
 export let socketIOFollowerObject: Server;
 
-export  class SocketIOFollowerHandler{
+export class SocketIOFollowerHandler {
   private io: Server;
-  constructor(io: Server){
+  constructor(io: Server) {
     this.io = io;
     socketIOFollowerObject = io;
   }
-  public listen():void{
-    this.io.on('connection', (socket: Socket) => {
-
-      socket.on('unfollow user', (data:IFollowers)=>{
-        const socketUserId = socket.data?.user?.userId as string | undefined;
-        if (!socketUserId || socketUserId !== data.userId) return;
-        this.io.emit('remove follower', data)
-      })
-
-    })
+  public listen(): void {
+    // No client-originated events to listen for on this namespace anymore.
   }
 }

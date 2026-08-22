@@ -14,6 +14,23 @@ import { ForbiddenError } from '@global/helpers/error-handler';
 const followerCache: FollowerCache = new FollowerCache();
 const userCache: UserCache = new UserCache();
 
+// Shared with the 'unfollow user' socket handler (@socket/follower) so both
+// 'add follower' and 'remove follower' broadcasts carry freshly-read counts
+// from cache rather than whatever a client happened to send.
+export function buildFollowerUserData(user: IUserDocument): IFollowerData {
+  return {
+    _id: new mongoose.Types.ObjectId(user._id),
+    username: user.username!,
+    avatarColor: user.avatarColor!,
+    postCount: user.postsCount,
+    followersCount: user.followersCount,
+    followingCount: user.followingCount,
+    profilePicture: user.profilePicture,
+    uId: user.uId!,
+    userProfile: user
+  };
+}
+
 export class Add {
   public async follower(req: Request, res: Response): Promise<void> {
     const { followerId } = req.params;
@@ -43,7 +60,7 @@ export class Add {
     const cachedFollower: IUserDocument = (await userCache.getUserFromCache(followerId)) as IUserDocument;
 
     const followerObjectId: ObjectId = new ObjectId();
-    const addFolloweeData: IFollowerData = Add.prototype.userData(cachedFollower);
+    const addFolloweeData: IFollowerData = buildFollowerUserData(cachedFollower);
     socketIOFollowerObject.emit('add follower', addFolloweeData);
 
     const addFollowerToCache: Promise<void> = followerCache.saveFollowerToCache(`following:${req.currentUser!.userId}`, `${followerId}`);
@@ -57,19 +74,5 @@ export class Add {
       followerDocumentId: followerObjectId
     });
     res.status(HTTP_STATUS.OK).json({ message: 'Following user now' });
-  }
-
-  private userData(user: IUserDocument): IFollowerData {
-    return {
-      _id: new mongoose.Types.ObjectId(user._id),
-      username: user.username!,
-      avatarColor: user.avatarColor!,
-      postCount: user.postsCount,
-      followersCount: user.followersCount,
-      followingCount: user.followingCount,
-      profilePicture: user.profilePicture,
-      uId: user.uId!,
-      userProfile: user
-    };
   }
 }

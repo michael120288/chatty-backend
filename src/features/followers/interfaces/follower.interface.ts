@@ -4,6 +4,10 @@ import { IUserDocument } from '@user/interfaces/user.interface';
 
 export interface IFollowers {
   userId: string;
+  // The followee's own _id — present on the client's 'unfollow user' payload
+  // (the target user's card data) so the handler can re-fetch fresh cached
+  // data for that user before broadcasting 'remove follower'.
+  _id?: string;
 }
 
 export interface IFollowerDocument extends Document {
