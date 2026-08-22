@@ -89,6 +89,18 @@ describe('CommentService', () => {
       expect(socketIONotificationObject.emit).not.toHaveBeenCalled();
       expect(emailQueue.addEmailJob).not.toHaveBeenCalled();
     });
+
+    it('does not throw and skips notification when the comment recipient is not in cache', async () => {
+      // Regression guard: getUserFromCache can return null for a corrupted or
+      // partially-expired entry; the old unguarded `.notifications.comments`
+      // access would throw on that null instead of just skipping the notification.
+      (CommentsModel.create as jest.Mock).mockResolvedValue(mockComment);
+      (PostModel.findOneAndUpdate as jest.Mock).mockResolvedValue(mockPost);
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(null);
+
+      await expect(commentService.addCommentToDB(baseData)).resolves.not.toThrow();
+      expect(socketIONotificationObject.emit).not.toHaveBeenCalled();
+    });
   });
 
   describe('getPostComments', () => {

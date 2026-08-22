@@ -8,7 +8,8 @@ import { followerQueue } from '@service/queues/follower.queue';
 import { Add } from '@follower/controllers/follower-user';
 import { UserCache } from '@service/redis/user.cache';
 import { FollowerCache } from '@service/redis/follower.cache';
-import { ForbiddenError } from '@global/helpers/error-handler';
+import { userService } from '@service/db/user.service';
+import { ForbiddenError, NotFoundError } from '@global/helpers/error-handler';
 import { IUserDocument } from '@user/interfaces/user.interface';
 
 jest.useFakeTimers();
@@ -109,6 +110,34 @@ describe('Add', () => {
       } as unknown as IUserDocument);
 
       await expect(Add.prototype.follower(req, res)).rejects.toThrow(ForbiddenError);
+    });
+
+    it('falls back to Mongo when the followee is not in cache (a corrupted or partially-expired entry)', async () => {
+      // Regression guard: getUserFromCache now returns null for a corrupted
+      // entry instead of a fabricated object — buildFollowerUserData would
+      // otherwise throw on a null deref (Cannot read properties of null).
+      const req: Request = followersMockRequest({}, authUserPayload, { followerId: '6064861bc25eaa5a5d2f9bf4' }) as Request;
+      const res: Response = followersMockResponse();
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(null);
+      jest.spyOn(userService, 'getUserById').mockResolvedValue(existingUser);
+      jest.spyOn(followerServer.socketIOFollowerObject, 'emit');
+
+      await Add.prototype.follower(req, res);
+      expect(userService.getUserById).toHaveBeenCalledWith('6064861bc25eaa5a5d2f9bf4');
+      expect(followerServer.socketIOFollowerObject.emit).toHaveBeenCalledWith(
+        'add follower',
+        expect.objectContaining({ username: existingUser.username })
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('throws NotFoundError when the followee exists in neither cache nor Mongo', async () => {
+      const req: Request = followersMockRequest({}, authUserPayload, { followerId: '6064861bc25eaa5a5d2f9bf4' }) as Request;
+      const res: Response = followersMockResponse();
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(null);
+      jest.spyOn(userService, 'getUserById').mockResolvedValue(undefined as unknown as IUserDocument);
+
+      await expect(Add.prototype.follower(req, res)).rejects.toThrow(NotFoundError);
     });
   });
 });

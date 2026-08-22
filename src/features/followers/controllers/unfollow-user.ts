@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
 import { FollowerCache } from '@service/redis/follower.cache';
 import { UserCache } from '@service/redis/user.cache';
+import { userService } from '@service/db/user.service';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { IFollowerData } from '@follower/interfaces/follower.interface';
 import { buildFollowerUserData } from '@follower/controllers/follower-user';
@@ -39,10 +40,16 @@ export class Remove {
     // Broadcast fresh post-decrement counts for the unfollowed user, mirroring
     // 'add follower' in follower-user.ts — read cache again rather than
     // computing the new count locally, so this stays correct if anything else
-    // concurrently updates it.
-    const cachedFollowee: IUserDocument = (await userCache.getUserFromCache(followeeId)) as IUserDocument;
-    const removeFolloweeData: IFollowerData = buildFollowerUserData(cachedFollowee);
-    socketIOFollowerObject.emit('remove follower', removeFolloweeData);
+    // concurrently updates it. Falls back to Mongo on a cache miss (a
+    // corrupted/partially-expired entry); the unfollow itself is already
+    // applied above by this point, so a still-missing user here just skips
+    // the broadcast rather than failing the whole request.
+    const cachedFollowee: IUserDocument | undefined =
+      (await userCache.getUserFromCache(followeeId)) ?? (await userService.getUserById(followeeId));
+    if (cachedFollowee) {
+      const removeFolloweeData: IFollowerData = buildFollowerUserData(cachedFollowee);
+      socketIOFollowerObject.emit('remove follower', removeFolloweeData);
+    }
 
     followerQueue.addFollowerJob('removeFollowerFromDB', {
       keyOne: `${followeeId}`,

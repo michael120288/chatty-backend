@@ -90,6 +90,18 @@ describe('ReactionService', () => {
 
       expect(socketIONotificationObject.emit).not.toHaveBeenCalled();
     });
+
+    it('does not throw and skips notification when the reaction recipient is not in cache', async () => {
+      // Regression guard: getUserFromCache can return null for a corrupted or
+      // partially-expired entry; the old unguarded `.notifications.reactions`
+      // access would throw on that null instead of just skipping the notification.
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(null);
+      (ReactionModel.replaceOne as jest.Mock).mockResolvedValue({ _id: 'r1' });
+      (PostModel.findOneAndUpdate as jest.Mock).mockResolvedValue({ post: 'Hello', imgId: '', imgVersion: '', gifUrl: '' });
+
+      await expect(reactionService.addReactionDataToDB(mockReactionJob as any)).resolves.not.toThrow();
+      expect(socketIONotificationObject.emit).not.toHaveBeenCalled();
+    });
   });
 
   describe('removeReactionDataFromDB', () => {

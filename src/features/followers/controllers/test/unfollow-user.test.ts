@@ -7,6 +7,7 @@ import { existingUser } from '@root/mocks/user.mock';
 import { followerQueue } from '@service/queues/follower.queue';
 import { FollowerCache } from '@service/redis/follower.cache';
 import { UserCache } from '@service/redis/user.cache';
+import { userService } from '@service/db/user.service';
 import { Remove } from '@follower/controllers/unfollow-user';
 
 jest.useFakeTimers();
@@ -87,5 +88,42 @@ describe('Remove', () => {
         followingCount: existingUser.followingCount
       })
     );
+  });
+
+  it('falls back to Mongo and still broadcasts when the followee is not in cache', async () => {
+    const req: Request = followersMockRequest({}, authUserPayload, {
+      followerId: '6064861bc25eaa5a5d2f9bf4',
+      followeeId: `${existingUser._id}`
+    }) as Request;
+    const res: Response = followersMockResponse();
+    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(null);
+    jest.spyOn(userService, 'getUserById').mockResolvedValue(existingUser);
+    jest.spyOn(followerServer.socketIOFollowerObject, 'emit');
+
+    await Remove.prototype.follower(req, res);
+    expect(userService.getUserById).toHaveBeenCalledWith(req.params.followeeId);
+    expect(followerServer.socketIOFollowerObject.emit).toHaveBeenCalledWith(
+      'remove follower',
+      expect.objectContaining({ username: existingUser.username })
+    );
+  });
+
+  it('skips the broadcast (but still responds 200) when the followee exists in neither cache nor Mongo', async () => {
+    // Regression guard: this used to throw on a null deref inside
+    // buildFollowerUserData — the unfollow itself has already been applied
+    // by this point, so a missing broadcast target should not fail the request.
+    const req: Request = followersMockRequest({}, authUserPayload, {
+      followerId: '6064861bc25eaa5a5d2f9bf4',
+      followeeId: `${existingUser._id}`
+    }) as Request;
+    const res: Response = followersMockResponse();
+    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(null);
+    jest.spyOn(userService, 'getUserById').mockResolvedValue(undefined as unknown as typeof existingUser);
+    jest.spyOn(followerServer.socketIOFollowerObject, 'emit');
+
+    await Remove.prototype.follower(req, res);
+    expect(followerServer.socketIOFollowerObject.emit).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Unfollowed user now' });
   });
 });
