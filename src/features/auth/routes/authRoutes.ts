@@ -8,7 +8,7 @@ import express, { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 
 const bypassForTestAccounts = (req: express.Request) =>
-  req.headers['x-test-secret'] === config.TEST_CLEANUP_SECRET;
+  !!config.TEST_CLEANUP_SECRET && req.headers['x-test-secret'] === config.TEST_CLEANUP_SECRET;
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
