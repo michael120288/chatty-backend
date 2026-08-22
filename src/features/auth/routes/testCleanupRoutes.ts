@@ -11,7 +11,7 @@ class TestCleanupRoutes {
   public routes(): Router {
     // DELETE /api/v1/test/cleanup/user/:authId
     // Required header: x-test-secret: value of process.env.TEST_CLEANUP_SECRET
-    // Safety: only deletes users whose username starts with "vitest"
+    // Safety: only deletes users whose username starts with "vitest", "pytest", or "pw_"
     this.router.delete(
       '/test/cleanup/user/:authId',
       testCleanup.deleteUser.bind(testCleanup)
