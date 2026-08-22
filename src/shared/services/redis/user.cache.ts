@@ -6,6 +6,7 @@ import {
 } from '@user/interfaces/user.interface';
 import Logger from 'bunyan';
 import { indexOf, findIndex } from 'lodash';
+import { Types } from 'mongoose';
 import { config } from '@root/config';
 import { ServerError } from '@global/helpers/error-handler';
 import { Helpers } from '@global/helpers/helpers';
@@ -114,6 +115,35 @@ export class UserCache extends BaseCache {
     }
   }
 
+  // Shared by every cache read that HGETALLs a users:<id> hash. A hash that's
+  // missing individual fields (a partially-expired/corrupted entry, not a
+  // fully-missing one) used to have those fields template-coerced to the
+  // literal string "undefined" before being handed to Helpers.parseJson,
+  // which can't parse that and hands the corrupt string straight back —
+  // silently propagating "undefined" text into API responses, and worse,
+  // into `new mongoose.Types.ObjectId(user._id)` calls elsewhere (e.g.
+  // follower.cache.ts), which fabricates a brand-new random id rather than
+  // throwing when given something that isn't a real id.
+  private normalizeUserFields(user: IUserDocument): IUserDocument {
+    user.createdAt = new Date(Helpers.parseJsonSafe(user.createdAt, Date.now()));
+    user.postsCount = Helpers.parseJsonSafe(user.postsCount, 0);
+    user.blocked = Helpers.parseJsonSafe(user.blocked, []);
+    user.blockedBy = Helpers.parseJsonSafe(user.blockedBy, []);
+    user.notifications = Helpers.parseJsonSafe(user.notifications, {
+      messages: true,
+      reactions: true,
+      comments: true,
+      follows: true
+    });
+    user.social = Helpers.parseJsonSafe(user.social, { facebook: '', instagram: '', twitter: '', youtube: '' });
+    user.followersCount = Helpers.parseJsonSafe(user.followersCount, 0);
+    user.followingCount = Helpers.parseJsonSafe(user.followingCount, 0);
+    user.bgImageId = Helpers.parseJsonSafe(user.bgImageId, '');
+    user.bgImageVersion = Helpers.parseJsonSafe(user.bgImageVersion, '');
+    user.profilePicture = Helpers.parseJsonSafe(user.profilePicture, '');
+    return user;
+  }
+
   public async getUserFromCache(userId: string): Promise<IUserDocument | null> {
     try {
       if (!this.client.isOpen) {
@@ -122,26 +152,17 @@ export class UserCache extends BaseCache {
 
       const raw = await this.client.HGETALL(`users:${userId}`);
 
-      // Key not found — fall through to DB lookup
-      if (!raw || Object.keys(raw).length === 0) {
+      // Key not found, or present but missing/invalid _id (a corrupted or
+      // partially-expired hash) — fail closed rather than let a broken
+      // record propagate downstream. See getUsersFromCache for the same
+      // guard applied to the paginated list read.
+      if (!raw || Object.keys(raw).length === 0 || !raw._id || !Types.ObjectId.isValid(raw._id)) {
         return null;
       }
 
       const response = raw as unknown as IUserDocument;
 
-      response.createdAt = new Date(Helpers.parseJson(`${response.createdAt}`));
-      response.postsCount = Helpers.parseJson(`${response.postsCount}`);
-      response.blocked = Helpers.parseJson(`${response.blocked}`);
-      response.blockedBy = Helpers.parseJson(`${response.blockedBy}`);
-      response.notifications = Helpers.parseJson(`${response.notifications}`);
-      response.social = Helpers.parseJson(`${response.social}`);
-      response.followersCount = Helpers.parseJson(`${response.followersCount}`);
-      response.followingCount = Helpers.parseJson(`${response.followingCount}`);
-      response.bgImageId = Helpers.parseJson(`${response.bgImageId}`);
-      response.bgImageVersion = Helpers.parseJson(`${response.bgImageVersion}`);
-      response.profilePicture = Helpers.parseJson(`${response.profilePicture}`);
-
-      return response;
+      return this.normalizeUserFields(response);
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
@@ -175,22 +196,10 @@ export class UserCache extends BaseCache {
         // was deleted without evicting the 'user' ZSET member) returns {} —
         // not an error. Without this guard that empty object gets returned
         // as a "user" with every field undefined, corrupting pagination.
-        if (!reply || !reply._id) {
+        if (!reply || !reply._id || !Types.ObjectId.isValid(reply._id as unknown as string)) {
           continue;
         }
-        reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
-        reply.postsCount = Helpers.parseJson(`${reply.postsCount}`);
-        reply.blocked = Helpers.parseJson(`${reply.blocked}`);
-        reply.blockedBy = Helpers.parseJson(`${reply.blockedBy}`);
-        reply.notifications = Helpers.parseJson(`${reply.notifications}`);
-        reply.social = Helpers.parseJson(`${reply.social}`);
-        reply.followersCount = Helpers.parseJson(`${reply.followersCount}`);
-        reply.followingCount = Helpers.parseJson(`${reply.followingCount}`);
-        reply.bgImageId = Helpers.parseJson(`${reply.bgImageId}`);
-        reply.bgImageVersion = Helpers.parseJson(`${reply.bgImageVersion}`);
-        reply.profilePicture = Helpers.parseJson(`${reply.profilePicture}`);
-
-        userReplies.push(reply);
+        userReplies.push(this.normalizeUserFields(reply));
       }
       return userReplies;
     } catch (error) {
@@ -221,7 +230,12 @@ export class UserCache extends BaseCache {
           const userHash: IUserDocument = (await this.client.HGETALL(
             `users:${key}`,
           )) as unknown as IUserDocument;
-          if (Object.keys(userHash).length && userHash.username) {
+          if (
+            Object.keys(userHash).length &&
+            userHash.username &&
+            userHash._id &&
+            Types.ObjectId.isValid(userHash._id as unknown as string)
+          ) {
             replies.push(userHash);
           }
         }
@@ -232,17 +246,7 @@ export class UserCache extends BaseCache {
       ]);
       replies.splice(excludedUsernameIndex, 1);
       for (const reply of replies) {
-        reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
-        reply.postsCount = Helpers.parseJson(`${reply.postsCount}`);
-        reply.blocked = Helpers.parseJson(`${reply.blocked}`);
-        reply.blockedBy = Helpers.parseJson(`${reply.blockedBy}`);
-        reply.notifications = Helpers.parseJson(`${reply.notifications}`);
-        reply.social = Helpers.parseJson(`${reply.social}`);
-        reply.followersCount = Helpers.parseJson(`${reply.followersCount}`);
-        reply.followingCount = Helpers.parseJson(`${reply.followingCount}`);
-        reply.bgImageId = Helpers.parseJson(`${reply.bgImageId}`);
-        reply.bgImageVersion = Helpers.parseJson(`${reply.bgImageVersion}`);
-        reply.profilePicture = Helpers.parseJson(`${reply.profilePicture}`);
+        this.normalizeUserFields(reply);
       }
       return replies;
     } catch (error) {
