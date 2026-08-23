@@ -14,10 +14,29 @@ import { imageQueue } from '@service/queues/image.queue';
 
 const postCache: PostCache = new PostCache();
 
+// postSchema/postWithImageSchema/postWithVideoSchema all mark these fields
+// optional, so a client can legitimately omit any of them — destructuring
+// straight from req.body then leaves them as real `undefined`, which
+// PostCache.savePostToCache's `${value}` coercion bakes into Redis as the
+// literal text "undefined" (and broadcasts the same via the 'add post' socket
+// event, before the cache is even involved). Defaulting here, at the single
+// point every creation path constructs its post body, closes that off for
+// every path at once rather than patching the cache write in isolation.
+export function withPostDefaults(body: Record<string, unknown>) {
+  return {
+    post: body.post as string,
+    bgColor: (body.bgColor as string) || '#ffffff',
+    privacy: (body.privacy as string) || 'Public',
+    gifUrl: (body.gifUrl as string) || '',
+    profilePicture: (body.profilePicture as string) || '',
+    feelings: (body.feelings as string) || ''
+  };
+}
+
 export class Create {
   @joiValidation(postSchema)
   public async post(req: Request, res: Response): Promise<void> {
-    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
     const postObjectId: ObjectId = new ObjectId();
     const createdPost: IPostDocument = {
       _id: postObjectId,
@@ -52,7 +71,8 @@ export class Create {
 
   @joiValidation(postWithImageSchema)
   public async postWithImage(req: Request, res: Response): Promise<void> {
-    const { post, bgColor, privacy, gifUrl, profilePicture, feelings, image } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
+    const { image } = req.body;
 
     const result: UploadApiResponse = (await uploads(image)) as UploadApiResponse;
     if (!result?.public_id) {
@@ -98,7 +118,8 @@ export class Create {
 
   @joiValidation(postWithVideoSchema)
   public async postWithVideo(req: Request, res: Response): Promise<void> {
-    const { post, bgColor, privacy, gifUrl, profilePicture, feelings, video } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
+    const { video } = req.body;
 
     const result: UploadApiResponse = (await videoUpload(video)) as UploadApiResponse;
     if (!result?.public_id) {

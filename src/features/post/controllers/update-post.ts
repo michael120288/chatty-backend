@@ -15,6 +15,7 @@ import { uploads, videoUpload } from '@global/helpers/cloudinary-upload';
 import { BadRequestError, ForbiddenError, NotFoundError } from '@global/helpers/error-handler';
 import { imageQueue } from '@service/queues/image.queue';
 import { postService } from '@service/db/post.service';
+import { withPostDefaults } from '@post/controllers/create-post';
 
 const postCache: PostCache = new PostCache();
 
@@ -35,18 +36,8 @@ async function verifyPostOwnership(postId: string, userId: string): Promise<void
 export class Update {
   @joiValidation(postSchema)
   public async posts(req: Request, res: Response): Promise<void> {
-    const {
-      post,
-      bgColor,
-      feelings,
-      privacy,
-      gifUrl,
-      imgVersion,
-      imgId,
-      profilePicture,
-      videoId,
-      videoVersion,
-    } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
+    const { imgVersion, imgId, videoId, videoVersion } = req.body;
     const { postId } = req.params;
 
     await verifyPostOwnership(postId, `${req.currentUser!.userId}`);
@@ -110,18 +101,8 @@ export class Update {
   }
 
   private async updatePost(req: Request): Promise<void> {
-    const {
-      post,
-      bgColor,
-      feelings,
-      privacy,
-      gifUrl,
-      imgVersion,
-      imgId,
-      profilePicture,
-      videoId,
-      videoVersion,
-    } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
+    const { imgVersion, imgId, videoId, videoVersion } = req.body;
     const { postId } = req.params;
 
     await verifyPostOwnership(postId, `${req.currentUser!.userId}`);
@@ -149,16 +130,8 @@ export class Update {
   private async addFileToExistingPost(
     req: Request,
   ): Promise<UploadApiResponse> {
-    const {
-      post,
-      bgColor,
-      feelings,
-      privacy,
-      gifUrl,
-      profilePicture,
-      image,
-      video,
-    } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
+    const { image, video } = req.body;
     const { postId } = req.params;
 
     await verifyPostOwnership(postId, `${req.currentUser!.userId}`);

@@ -98,6 +98,18 @@ describe('Helpers', () => {
       expect(Helpers.parseJsonSafe(0, 99)).toBe(0);
       expect(Helpers.parseJsonSafe('', 'fallback')).toBe('');
     });
+
+    it('treats the literal string "undefined" as missing (self-heals already-corrupted stored data)', () => {
+      expect(Helpers.parseJsonSafe('undefined', 'Public')).toBe('Public');
+    });
+
+    it('treats the literal string "null" as missing', () => {
+      expect(Helpers.parseJsonSafe('null', '#ffffff')).toBe('#ffffff');
+    });
+
+    it('passes through a plain non-JSON string unchanged', () => {
+      expect(Helpers.parseJsonSafe('Public', 'fallback')).toBe('Public');
+    });
   });
 
   // ── isDataURL ────────────────────────────────────────────────────────────

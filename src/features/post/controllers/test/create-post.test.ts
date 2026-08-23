@@ -55,6 +55,25 @@ describe('Create', () => {
         message: 'Post created successfully'
       });
     });
+
+    it('defaults omitted optional fields instead of leaving them undefined', async () => {
+      // Regression guard: bgColor/privacy/feelings/gifUrl/profilePicture are all
+      // optional per postSchema. Omitting them used to reach PostCache.savePostToCache
+      // as real `undefined`, which gets stringified into the literal text
+      // "undefined" — and broadcast via the 'add post' socket event before the
+      // cache is even involved, since createdPost is built from these same values.
+      const req: Request = postMockRequest({ post: 'just text, nothing else' } as any, authUserPayload) as Request;
+      const res: Response = postMockResponse();
+      const spy = jest.spyOn(PostCache.prototype, 'savePostToCache');
+
+      await Create.prototype.post(req, res);
+      const createdPost = spy.mock.calls[0][0].createdPost;
+      expect(createdPost.privacy).toBe('Public');
+      expect(createdPost.bgColor).toBe('#ffffff');
+      expect(createdPost.feelings).toBe('');
+      expect(createdPost.gifUrl).toBe('');
+      expect(createdPost.profilePicture).toBe('');
+    });
   });
 
   describe('postWithImage', () => {
