@@ -19,6 +19,18 @@ const authLimiter = rateLimit({
   skip: bypassForTestAccounts,
 });
 
+// forgot-password/reset-password/sso have no username-prefix gate downstream, so a full
+// skip on the test header would give anyone who reads the (public) test secret unlimited
+// requests against real accounts. Give the header a relaxed cap instead of no cap at all.
+const relaxedTestLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many attempts, please try again after 15 minutes.' },
+  skip: (req: express.Request) => !bypassForTestAccounts(req),
+});
+
 // Signup rate limit removed — this is a QA learning platform where students
 // create pw_* test accounts frequently. The /test/cleanup endpoint handles data cleanup.
 
@@ -40,10 +52,10 @@ class AuthRoutes {
 
     router.post('/signup', this.signUp.create.bind(this.signUp));
     router.post('/signin', authLimiter, this.signIn.read.bind(this.signIn));
-    router.post('/forgot-password', authLimiter, this.password.create.bind(this.password));
-    router.post('/reset-password/:token', authLimiter, this.password.update.bind(this.password));
+    router.post('/forgot-password', authLimiter, relaxedTestLimiter, this.password.create.bind(this.password));
+    router.post('/reset-password/:token', authLimiter, relaxedTestLimiter, this.password.update.bind(this.password));
     router.post('/signout', this.signOut.update.bind(this.signOut));
-    router.post('/sso', authLimiter, sso.login.bind(sso));
+    router.post('/sso', authLimiter, relaxedTestLimiter, sso.login.bind(sso));
 
     return router;
   }

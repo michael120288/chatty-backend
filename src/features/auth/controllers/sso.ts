@@ -14,9 +14,9 @@ export class SSO {
     const { token } = req.body;
     if (!token) throw new BadRequestError('Token required');
 
-    let payload: { username: string; jti?: string };
+    let payload: { username: string; jti?: string; exp?: number };
     try {
-      payload = JWT.verify(token, config.JWT_TOKEN!) as { username: string; jti?: string };
+      payload = JWT.verify(token, config.JWT_TOKEN!) as { username: string; jti?: string; exp?: number };
     } catch {
       // Malformed / expired / tampered token — return a clean 400 instead of a 500.
       throw new BadRequestError('Invalid or expired token');
@@ -31,6 +31,18 @@ export class SSO {
 
     const user = await userService.getUserByAuthId(`${authUser._id}`);
 
+    // Cap the renewed session at the presented token's own expiry (instead of a fresh
+    // 24h), and revoke the presented token's jti so it can't be replayed through /sso
+    // again — otherwise a stolen token could be laundered into an unending chain of
+    // sessions the original owner's signout can never reach.
+    const remainingSeconds = payload.exp
+      ? Math.max(payload.exp - Math.floor(Date.now() / 1000), 1)
+      : 24 * 60 * 60;
+
+    if (payload.jti) {
+      await tokenBlocklistCache.revokeToken(payload.jti, remainingSeconds);
+    }
+
     const userJwt: string = JWT.sign(
       {
         userId: user._id,
@@ -41,7 +53,7 @@ export class SSO {
         jti: randomUUID(),
       },
       config.JWT_TOKEN!,
-      { expiresIn: '24h' }
+      { expiresIn: remainingSeconds }
     );
     req.session = { jwt: userJwt };
 

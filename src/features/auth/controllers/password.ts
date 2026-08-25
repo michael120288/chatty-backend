@@ -20,28 +20,30 @@ export class Password {
     const { email } = req.body;
     const existingUser: IAuthDocument =
       await authService.getAuthUserByEmail(email);
-    if (!existingUser) {
-      throw new BadRequestError('Invalid credentials');
+
+    if (existingUser) {
+      const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(20));
+      const randomCharacters: string = randomBytes.toString('hex');
+      await authService.updatePasswordToken(
+        `${existingUser._id!}`,
+        randomCharacters,
+        Date.now() + 60 * 60 * 1000,
+      );
+
+      const resetLink = `${config.CLIENT_URL}/reset-password?token=${randomCharacters}`;
+      const template: string = forgotPasswordTemplate.passwordResetTemplate(
+        existingUser.username!,
+        resetLink,
+      );
+      emailQueue.addEmailJob('forgotPasswordEmail', {
+        template,
+        receiverEmail: email,
+        subject: 'Reset your password',
+      });
     }
 
-    const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(20));
-    const randomCharacters: string = randomBytes.toString('hex');
-    await authService.updatePasswordToken(
-      `${existingUser._id!}`,
-      randomCharacters,
-      Date.now() + 60 * 60 * 1000,
-    );
-
-    const resetLink = `${config.CLIENT_URL}/reset-password?token=${randomCharacters}`;
-    const template: string = forgotPasswordTemplate.passwordResetTemplate(
-      existingUser.username!,
-      resetLink,
-    );
-    emailQueue.addEmailJob('forgotPasswordEmail', {
-      template,
-      receiverEmail: email,
-      subject: 'Reset your password',
-    });
+    // Always respond identically whether or not the account exists — branching the
+    // response on existence turns this endpoint into an email-enumeration oracle.
     res.status(HTTP_STATUS.OK).json({ message: 'Password reset email sent.' });
   }
 

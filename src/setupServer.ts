@@ -103,6 +103,18 @@ export class ChattyServer {
       skip: isTestSessionUser
     });
 
+    // The test-secret path of isTestSessionUser needs no auth to match, so a full skip
+    // would let anyone with the (public) test secret send unlimited 50mb bodies. Give it
+    // a relaxed cap instead of removing the cap entirely.
+    const relaxedUploadLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 300,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { message: 'Too many upload requests, please try again later.' },
+      skip: (req: Request) => !isTestSessionUser(req)
+    });
+
     // Image upload routes must be registered BEFORE the global 1mb limit
     app.use(
       [
@@ -117,6 +129,7 @@ export class ChattyServer {
         '/api/v1/chat/message'
       ],
       uploadLimiter,
+      relaxedUploadLimiter,
       json({ limit: '50mb' })
     );
     app.use(json({ limit: '1mb' }));

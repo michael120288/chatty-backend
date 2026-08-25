@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import { testCleanup } from '@auth/controllers/test-cleanup';
+import { validateObjectId } from '@global/helpers/object-id-validation';
 
 class TestCleanupRoutes {
   private router: Router;
@@ -14,6 +15,7 @@ class TestCleanupRoutes {
     // Safety: only deletes users whose username starts with "vitest", "pytest", or "pw_"
     this.router.delete(
       '/test/cleanup/user/:authId',
+      validateObjectId('authId'),
       testCleanup.deleteUser.bind(testCleanup)
     );
 
