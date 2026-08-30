@@ -4,44 +4,45 @@
   <meta charset="UTF-8" />
   <title>The Rune Board — Level 23</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #100010; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #d946ef; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a3a8f; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 40px; }
     .board-area { max-width: 700px; margin: 0 auto; }
     .board-layout { display: flex; gap: 24px; }
     .rune-source { flex: 0 0 180px; }
     .slots-grid { flex: 1; }
     .source-title, .slots-title {
-      color: #d946ef; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
-      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2d1040;
+      color: #4a3a8f; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(18,18,18,.14);
     }
     .source-rune {
-      background: #1a0028; border: 2px solid #4d1a7a; border-radius: 8px;
+      background: #ffffff; border: 2px solid #c3acff; border-radius: 8px;
       padding: 12px; margin-bottom: 8px; cursor: grab; text-align: center;
       transition: border-color 0.15s, transform 0.1s; user-select: none;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .source-rune:hover { border-color: #d946ef; }
+    .source-rune:hover { border-color: #8f74e8; }
     .source-rune:active { cursor: grabbing; transform: scale(0.97); }
     .source-rune .r-icon { font-size: 28px; }
-    .source-rune .r-name { font-size: 12px; color: #888; margin-top: 4px; }
+    .source-rune .r-name { font-size: 12px; color: #6b6b6b; margin-top: 4px; }
     .slot-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .rune-slot {
-      background: #1a0028; border: 2px dashed #4d1a7a; border-radius: 8px;
+      background: #f3f0ff; border: 2px dashed #c3acff; border-radius: 8px;
       padding: 16px; text-align: center; min-height: 70px;
       display: flex; align-items: center; justify-content: center; flex-direction: column;
       transition: border-color 0.2s, background 0.2s;
     }
-    .rune-slot.highlight { border-color: #d946ef; background: #2d0040; border-style: solid; }
-    .rune-slot.filled { border-style: solid; border-color: #d946ef; }
-    .slot-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+    .rune-slot.highlight { border-color: #8f74e8; background: #ece4ff; border-style: solid; }
+    .rune-slot.filled { border-style: solid; border-color: #8f74e8; }
+    .slot-label { font-size: 10px; color: #767676; text-transform: uppercase; letter-spacing: 1px; }
     .slot-content { font-size: 28px; }
-    .slot-name { font-size: 11px; color: #d946ef; margin-top: 4px; }
+    .slot-name { font-size: 11px; color: #4a3a8f; margin-top: 4px; }
     #board-result {
       margin-top: 20px; padding: 16px; border-radius: 8px;
-      background: #1a0028; border: 1px solid #4d1a7a; color: #555; font-size: 13px; text-align: center;
+      background: #f3f0ff; border: 1px solid #c3acff; color: #767676; font-size: 13px; text-align: center;
     }
-    #board-result.complete { background: #0a2e14; border-color: #4ecca3; color: #4ecca3; }
-    #complete-word { font-size: 24px; font-family: monospace; letter-spacing: 4px; margin-top: 8px; color: #ffd700; }
+    #board-result.complete { background: #e6f9f0; border-color: #34b378; color: #1f8a5c; }
+    #complete-word { font-size: 24px; font-family: monospace; letter-spacing: 4px; margin-top: 8px; color: #8f5a00; }
   </style>
 </head>
 <body>

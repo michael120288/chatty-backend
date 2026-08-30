@@ -4,40 +4,40 @@
   <meta charset="UTF-8" />
   <title>The Arcane Observatory — Level 47</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0f14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #22d3ee; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #6f8cff; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 30px; }
     .observatory { max-width: 520px; margin: 0 auto; }
     .control-panel {
-      background: #0d1520; border: 1px solid #1e3a52; border-radius: 12px;
-      padding: 24px; margin-bottom: 20px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px;
+      padding: 24px; margin-bottom: 20px; box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .panel-title { color: #22d3ee; font-size: 15px; font-weight: bold; margin-bottom: 16px; }
+    .panel-title { color: #6f8cff; font-size: 15px; font-weight: bold; margin-bottom: 16px; }
     .api-btns { display: flex; flex-direction: column; gap: 10px; }
     .api-btn {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px; background: #061520; border: 1px solid #1e3a52;
+      padding: 12px 16px; background: #f8f8f8; border: 1px solid rgba(18,18,18,.08);
       border-radius: 8px; cursor: pointer; transition: all 0.2s;
     }
-    .api-btn:hover { border-color: #22d3ee; }
+    .api-btn:hover { border-color: #6f8cff; }
     .api-btn-info { display: flex; align-items: center; gap: 10px; }
     .api-icon { font-size: 20px; }
     .api-name { font-size: 14px; font-weight: bold; }
-    .api-url { font-size: 11px; color: #555; font-family: monospace; }
-    .api-method { font-size: 12px; color: #22d3ee; font-weight: bold; padding: 2px 8px; background: #061a20; border: 1px solid #22d3ee; border-radius: 4px; }
-    .request-log { background: #060e14; border: 1px solid #1e3a52; border-radius: 10px; overflow: hidden; }
-    .log-header { background: #0a1a20; padding: 8px 14px; font-size: 12px; color: #555; border-bottom: 1px solid #1e3a52; }
+    .api-url { font-size: 11px; color: #6b6b6b; font-family: monospace; }
+    .api-method { font-size: 12px; color: #6f8cff; font-weight: bold; padding: 2px 8px; background: #ede7ff; border: 1px solid #6f8cff; border-radius: 4px; }
+    .request-log { background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px; overflow: hidden; }
+    .log-header { background: #f8f8f8; padding: 8px 14px; font-size: 12px; color: #6b6b6b; border-bottom: 1px solid rgba(18,18,18,.08); }
     .log-body { padding: 12px 14px; font-family: monospace; font-size: 12px; min-height: 80px; }
     .log-entry { margin-bottom: 6px; display: flex; gap: 8px; }
     .log-status { font-weight: bold; }
-    .log-200 { color: #4ecca3; }
-    .log-url { color: #888; overflow: hidden; text-overflow: ellipsis; }
-    .log-empty { color: #555; font-size: 13px; }
+    .log-200 { color: #4a3a8f; }
+    .log-url { color: #6b6b6b; overflow: hidden; text-overflow: ellipsis; }
+    .log-empty { color: #6b6b6b; font-size: 13px; }
     .hint-box {
-      margin-top: 20px; padding: 14px; background: #0a1520; border: 1px solid #1e3a52;
-      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+      margin-top: 20px; padding: 14px; background: #ffffff; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 13px; color: #6b6b6b; line-height: 1.6;
     }
-    code { color: #22d3ee; font-family: monospace; }
+    code { color: #6f8cff; font-family: monospace; }
   </style>
 </head>
 <body>

@@ -4,35 +4,36 @@
   <meta charset="UTF-8" />
   <title>The Arcane Evaluator — Level 13</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #001a0a; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #10b981; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #6f5aa8; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b76; margin-bottom: 40px; }
     .eval-chamber { max-width: 600px; margin: 0 auto; }
     .spell-tome {
-      background: #0a1f0f; border: 1px solid #1a5c33; border-radius: 12px; padding: 28px; margin-bottom: 20px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 28px; margin-bottom: 20px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .tome-title { color: #10b981; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+    .tome-title { color: #6f5aa8; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
     .code-display {
-      background: #000d05; border: 1px solid #0d3319; border-radius: 6px; padding: 16px;
-      font-family: monospace; font-size: 14px; color: #6ee7b7;
+      background: #f3f0fb; border: 1px solid rgba(18,18,18,.08); border-radius: 6px; padding: 16px;
+      font-family: monospace; font-size: 14px; color: #4a3a8f;
     }
-    .code-comment { color: #4a7a5a; }
+    .code-comment { color: #9a94ab; }
     .visible-data { margin-top: 20px; }
     .data-row {
       display: flex; justify-content: space-between; padding: 10px 14px;
-      background: #0a1f0f; border: 1px solid #1a5c33; border-radius: 6px; margin-bottom: 8px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 6px; margin-bottom: 8px;
     }
-    .data-key { color: #888; }
-    .data-val { color: #10b981; font-family: monospace; }
+    .data-key { color: #6b6b76; }
+    .data-val { color: #6f5aa8; font-family: monospace; }
     .hidden-section {
-      background: #001a0a; border: 1px dashed #1a5c33; border-radius: 8px;
-      padding: 20px; text-align: center; color: #2a5c3a; font-style: italic;
+      background: #f3f0fb; border: 1px dashed rgba(18,18,18,.14); border-radius: 8px;
+      padding: 20px; text-align: center; color: #9a94ab; font-style: italic;
     }
     .hint-panel {
-      background: #0a1f0f; border: 1px solid #1a5c33; border-radius: 8px;
-      padding: 16px; margin-top: 20px; font-size: 13px; color: #6ee7b7;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px;
+      padding: 16px; margin-top: 20px; font-size: 13px; color: #4a3a8f;
     }
-    code { background: #001a0a; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+    code { background: #f3f0fb; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
   </style>
 </head>
 <body>
@@ -57,9 +58,9 @@
       </div>
       <div class="code-display" style="margin-top:14px;">
         <span class="code-comment">// Injected into window context:</span><br/>
-        window.SECRET_RUNE = <span style="color:#f59e0b;">'???'</span>;<br/>
-        window.MAGIC_NUMBER = <span style="color:#f59e0b;">???</span>;<br/>
-        window.ARCANE_ARRAY = <span style="color:#f59e0b;">[???, ???, ???]</span>;
+        window.SECRET_RUNE = <span style="color:#8f74e8;">'???'</span>;<br/>
+        window.MAGIC_NUMBER = <span style="color:#8f74e8;">???</span>;<br/>
+        window.ARCANE_ARRAY = <span style="color:#8f74e8;">[???, ???, ???]</span>;
       </div>
     </div>
 

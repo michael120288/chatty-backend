@@ -5,41 +5,41 @@
   <title>The Shapeshifter's Trial — Level 49</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; }
 
     /* ── Desktop nav ── */
     .desktop-nav {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 32px; background: #0d0d20; border-bottom: 1px solid #2a2050;
+      padding: 14px 32px; background: #ffffff; border-bottom: 1px solid rgba(18,18,18,.08);
     }
-    .nav-brand { font-size: 18px; font-weight: bold; color: #818cf8; }
+    .nav-brand { font-size: 18px; font-weight: bold; color: #6f8cff; }
     .nav-links { display: flex; gap: 24px; }
-    .nav-links a { color: #ccc; text-decoration: none; font-size: 14px; }
-    .nav-links a:hover { color: #818cf8; }
-    #hamburger { display: none; font-size: 24px; cursor: pointer; color: #818cf8; background: none; border: none; }
+    .nav-links a { color: #4a4a4a; text-decoration: none; font-size: 14px; }
+    .nav-links a:hover { color: #6f8cff; }
+    #hamburger { display: none; font-size: 24px; cursor: pointer; color: #6f8cff; background: none; border: none; }
 
     /* ── Mobile nav (hidden on desktop) ── */
     #mobile-menu {
-      display: none; flex-direction: column; background: #0d0d20;
-      border-bottom: 1px solid #2a2050; padding: 10px 20px;
+      display: none; flex-direction: column; background: #ffffff;
+      border-bottom: 1px solid rgba(18,18,18,.08); padding: 10px 20px;
     }
     #mobile-menu a {
-      padding: 10px 0; color: #ccc; text-decoration: none; font-size: 14px;
-      border-bottom: 1px solid #1a1a30;
+      padding: 10px 0; color: #4a4a4a; text-decoration: none; font-size: 14px;
+      border-bottom: 1px solid rgba(18,18,18,.08);
     }
     #mobile-menu a:last-child { border-bottom: none; }
     #mobile-menu.open { display: flex; }
 
     /* ── Hero section ── */
     .hero { padding: 60px 32px; text-align: center; }
-    .hero-title { font-size: 36px; font-weight: bold; color: #818cf8; margin-bottom: 12px; }
-    .hero-sub { font-size: 16px; color: #888; margin-bottom: 30px; }
+    .hero-title { font-size: 36px; font-weight: bold; color: #6f8cff; margin-bottom: 12px; }
+    .hero-sub { font-size: 16px; color: #6b6b6b; margin-bottom: 30px; }
     #layout-badge {
       display: inline-block; padding: 6px 20px; border-radius: 20px;
       font-size: 14px; font-weight: bold;
     }
-    #layout-badge.desktop { background: #1a1a40; color: #818cf8; border: 1px solid #818cf8; }
-    #layout-badge.mobile { background: #1a0a40; color: #c084fc; border: 1px solid #c084fc; }
+    #layout-badge.desktop { background: #ede7ff; color: #6f8cff; border: 1px solid #6f8cff; }
+    #layout-badge.mobile { background: #f3f0ff; color: #8f74e8; border: 1px solid #8f74e8; }
 
     /* ── Feature grid (desktop) ── */
     .feature-grid {
@@ -47,16 +47,17 @@
       padding: 0 32px 40px; max-width: 900px; margin: 0 auto;
     }
     .feature-card {
-      background: #0d0d20; border: 1px solid #2a2050; border-radius: 10px; padding: 20px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px; padding: 20px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .feature-icon { font-size: 28px; margin-bottom: 10px; }
-    .feature-title { font-size: 14px; font-weight: bold; color: #818cf8; }
+    .feature-title { font-size: 14px; font-weight: bold; color: #6f8cff; }
 
     /* ── Mobile-only content ── */
     #mobile-banner {
       display: none; margin: 0 16px 24px; padding: 16px;
-      background: #1a0a30; border: 1px solid #c084fc; border-radius: 10px;
-      text-align: center; color: #c084fc; font-size: 14px;
+      background: #f3f0ff; border: 1px solid #8f74e8; border-radius: 10px;
+      text-align: center; color: #4a3a8f; font-size: 14px;
     }
     #mobile-banner.visible { display: block; }
 
@@ -71,11 +72,11 @@
     }
 
     .hint-box {
-      margin: 0 32px 40px; padding: 14px; background: #0a0a18;
-      border: 1px solid #2a2050; border-radius: 8px; font-size: 13px;
-      color: #666; line-height: 1.6;
+      margin: 0 32px 40px; padding: 14px; background: #ffffff;
+      border: 1px solid rgba(18,18,18,.08); border-radius: 8px; font-size: 13px;
+      color: #6b6b6b; line-height: 1.6;
     }
-    code { color: #818cf8; font-family: monospace; }
+    code { color: #6f8cff; font-family: monospace; }
   </style>
 </head>
 <body>

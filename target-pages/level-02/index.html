@@ -4,29 +4,30 @@
   <meta charset="UTF-8" />
   <title>Forest of Interactions — Level 2</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0d1b0d; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #4ecca3; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #6f8cff; text-align: center; }
+    .subtitle { text-align: center; color: #767676; margin-bottom: 40px; }
     .scene {
       max-width: 500px; margin: 0 auto; text-align: center;
-      background: #1a2e1a; border: 1px solid #2d5a27; border-radius: 12px; padding: 40px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 40px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .chest { font-size: 80px; margin-bottom: 20px; }
     button {
-      background: #4ecca3; color: #000; border: none; padding: 14px 28px;
+      background: #6f8cff; color: #ffffff; border: none; padding: 14px 28px;
       font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer;
       transition: transform 0.1s, background 0.2s;
     }
-    button:hover { background: #3bbf94; transform: scale(1.02); }
+    button:hover { background: #4a6fe0; transform: scale(1.02); }
     button:active { transform: scale(0.98); }
     #secret-message {
       display: none; margin-top: 24px; padding: 16px;
-      background: #0f3322; border: 1px solid #4ecca3; border-radius: 8px;
-      color: #4ecca3; font-size: 18px; font-weight: bold;
+      background: #eef1ff; border: 1px solid #6f8cff; border-radius: 8px;
+      color: #3a4fa8; font-size: 18px; font-weight: bold;
     }
     #secret-message.visible { display: block; animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    .click-count { margin-top: 16px; color: #888; font-size: 13px; }
+    .click-count { margin-top: 16px; color: #767676; font-size: 13px; }
   </style>
 </head>
 <body>
@@ -53,7 +54,7 @@
       msg.classList.add('visible');
       chest.textContent = '🔓';
       btn.textContent = 'Secret Revealed!';
-      btn.style.background = '#e94560';
+      btn.style.background = '#8f74e8';
     });
   </script>
 </body>

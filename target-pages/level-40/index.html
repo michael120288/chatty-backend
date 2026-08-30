@@ -4,32 +4,33 @@
   <meta charset="UTF-8" />
   <title>The Waypoint Nexus — Level 40</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a10; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #818cf8; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #8f74e8; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 30px; }
     .nexus { max-width: 500px; margin: 0 auto; }
     .waypoints { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
     .waypoint-btn {
       display: flex; align-items: center; gap: 14px;
-      padding: 16px 20px; background: #0d0d1a; border: 1px solid #2a2a50;
+      padding: 16px 20px; background: #ffffff; border: 1px solid rgba(18,18,18,.08);
       border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: left;
+      box-shadow: 0 12px 32px rgba(80,60,160,.06);
     }
-    .waypoint-btn:hover { background: #14143a; border-color: #818cf8; }
+    .waypoint-btn:hover { background: #f4f2fb; border-color: #8f74e8; }
     .waypoint-icon { font-size: 28px; }
-    .waypoint-name { font-size: 15px; font-weight: bold; color: #eee; }
-    .waypoint-path { font-size: 12px; color: #555; font-family: monospace; margin-top: 2px; }
+    .waypoint-name { font-size: 15px; font-weight: bold; color: #121212; }
+    .waypoint-path { font-size: 12px; color: #9a94b8; font-family: monospace; margin-top: 2px; }
     #current-location {
-      padding: 20px; background: #0d0d1a; border: 1px solid #2a2a50;
-      border-radius: 10px; text-align: center;
+      padding: 20px; background: #ffffff; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 10px; text-align: center; box-shadow: 0 12px 32px rgba(80,60,160,.06);
     }
-    .location-label { font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    #location-name { font-size: 20px; font-weight: bold; color: #818cf8; }
-    #location-hash { font-size: 13px; color: #555; font-family: monospace; margin-top: 4px; }
+    .location-label { font-size: 12px; color: #9a94b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    #location-name { font-size: 20px; font-weight: bold; color: #8f74e8; }
+    #location-hash { font-size: 13px; color: #9a94b8; font-family: monospace; margin-top: 4px; }
     .hint-box {
-      margin-top: 20px; padding: 14px; background: #0a0a18; border: 1px solid #2a2a50;
-      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+      margin-top: 20px; padding: 14px; background: #f4f2fb; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 13px; color: #6b6b6b; line-height: 1.6;
     }
-    code { color: #818cf8; font-family: monospace; }
+    code { color: #4a3a8f; font-family: monospace; }
   </style>
 </head>
 <body>

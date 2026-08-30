@@ -4,36 +4,36 @@
   <meta charset="UTF-8" />
   <title>The Guild Roster — Level 27</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0a1a; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #a78bfa; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a3a8f; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 40px; }
     .roster { max-width: 600px; margin: 0 auto; }
     .roster-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #2d1a4a;
+      margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(18,18,18,.14);
     }
-    .roster-title { color: #a78bfa; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-    .roster-count { color: #555; font-size: 13px; }
+    .roster-title { color: #4a3a8f; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+    .roster-count { color: #767676; font-size: 13px; }
     .guild-member {
       display: flex; align-items: center; gap: 14px;
-      background: #16102a; border: 1px solid #2d1a4a; border-radius: 8px;
-      padding: 14px 18px; margin-bottom: 10px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px;
+      padding: 14px 18px; margin-bottom: 10px; box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .member-avatar { font-size: 28px; }
     .member-info { flex: 1; }
-    .member-name { font-size: 15px; font-weight: bold; color: #eee; }
-    .member-class { font-size: 12px; color: #888; margin-top: 2px; }
+    .member-name { font-size: 15px; font-weight: bold; color: #121212; }
+    .member-class { font-size: 12px; color: #6b6b6b; margin-top: 2px; }
     .member-status {
       padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold;
     }
-    .member-status.Active { background: #0a2e14; color: #4ecca3; border: 1px solid #4ecca3; }
-    .member-status.Inactive { background: #1a1a1a; color: #555; border: 1px solid #333; }
-    .member-level { color: #a78bfa; font-size: 13px; margin-left: 8px; }
+    .member-status.Active { background: #e6f9f0; color: #1f8a5c; border: 1px solid #34b378; }
+    .member-status.Inactive { background: #f0f0f0; color: #767676; border: 1px solid rgba(18,18,18,.14); }
+    .member-level { color: #6f5aa8; font-size: 13px; margin-left: 8px; }
     .filter-hint {
-      margin-top: 20px; padding: 16px; background: #12091e; border: 1px solid #2d1a4a;
-      border-radius: 8px; font-size: 13px; color: #888; line-height: 1.6;
+      margin-top: 20px; padding: 16px; background: #f3f0ff; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 13px; color: #6b6b6b; line-height: 1.6;
     }
-    code { color: #a78bfa; font-family: monospace; background: #0a0010; padding: 1px 5px; border-radius: 3px; }
+    code { color: #6f5aa8; font-family: monospace; background: #ece4ff; padding: 1px 5px; border-radius: 3px; }
   </style>
 </head>
 <body>

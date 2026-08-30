@@ -4,64 +4,65 @@
   <meta charset="UTF-8" />
   <title>The Rune Circle — Level 17</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0010; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #a855f7; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #8f74e8; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b76; margin-bottom: 40px; }
     .arena { max-width: 600px; margin: 0 auto; }
     .arena-layout { display: flex; gap: 24px; align-items: flex-start; }
     .spell-rack { flex: 1; }
     .rack-title {
-      color: #a855f7; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
-      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a1a3e;
+      color: #8f74e8; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(18,18,18,.08);
     }
     .rune {
-      background: #1a0a2e; border: 2px solid #4a2a6e; border-radius: 8px;
+      background: #ffffff; border: 2px solid rgba(18,18,18,.14); border-radius: 8px;
       padding: 14px 16px; margin-bottom: 10px; cursor: grab; display: flex;
       align-items: center; gap: 12px; user-select: none; transition: border-color 0.2s, transform 0.1s;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .rune:active { cursor: grabbing; transform: scale(0.98); }
-    .rune:hover { border-color: #a855f7; }
+    .rune:hover { border-color: #8f74e8; }
     .rune-icon { font-size: 24px; }
     .rune-name { font-size: 14px; font-weight: 600; }
-    .rune-power { font-size: 12px; color: #888; }
+    .rune-power { font-size: 12px; color: #6b6b76; }
 
-    #rune-fire { border-color: #7a2a0a; }
-    #rune-fire:hover { border-color: #f97316; }
-    #rune-fire .rune-name { color: #f97316; }
+    #rune-fire { border-color: #f3c7cf; }
+    #rune-fire:hover { border-color: #d97757; }
+    #rune-fire .rune-name { color: #c1573a; }
 
-    #rune-ice { border-color: #0a2a5e; }
-    #rune-ice:hover { border-color: #38bdf8; }
-    #rune-ice .rune-name { color: #38bdf8; }
+    #rune-ice { border-color: #cbd5ff; }
+    #rune-ice:hover { border-color: #6f8cff; }
+    #rune-ice .rune-name { color: #4a63c9; }
 
-    #rune-lightning { border-color: #3a3a0a; }
-    #rune-lightning:hover { border-color: #fde047; }
-    #rune-lightning .rune-name { color: #fde047; }
+    #rune-lightning { border-color: #e6ddff; }
+    #rune-lightning:hover { border-color: #a78bfa; }
+    #rune-lightning .rune-name { color: #6f5aa8; }
 
     .casting-zone { flex: 0 0 200px; }
     .zone-title {
-      color: #a855f7; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
-      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #2a1a3e;
+      color: #8f74e8; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(18,18,18,.08);
     }
     #casting-circle {
       width: 180px; height: 180px; border-radius: 50%;
-      border: 3px dashed #4a2a6e; display: flex; align-items: center; justify-content: center;
+      border: 3px dashed rgba(18,18,18,.14); display: flex; align-items: center; justify-content: center;
       flex-direction: column; text-align: center; transition: all 0.3s;
-      font-size: 13px; color: #555; font-style: italic;
+      font-size: 13px; color: #9a94ab; font-style: italic;
     }
-    #casting-circle.ready { border-color: #a855f7; border-style: solid; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 #a855f744; } 50% { box-shadow: 0 0 0 12px #a855f700; } }
+    #casting-circle.ready { border-color: #8f74e8; border-style: solid; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(143,116,232,.27); } 50% { box-shadow: 0 0 0 12px rgba(143,116,232,0); } }
     #casting-circle.activated { border-style: solid; }
-    #casting-circle.fire-active { border-color: #f97316; background: #1a0800; }
-    #casting-circle.ice-active { border-color: #38bdf8; background: #001a2e; }
-    #casting-circle.lightning-active { border-color: #fde047; background: #1a1800; }
+    #casting-circle.fire-active { border-color: #d97757; background: #fdf0ec; }
+    #casting-circle.ice-active { border-color: #6f8cff; background: #eef2ff; }
+    #casting-circle.lightning-active { border-color: #a78bfa; background: #f3ecff; }
     #cast-icon { font-size: 48px; }
     #cast-text { margin-top: 8px; font-style: normal; }
-    #cast-text.fire { color: #f97316; }
-    #cast-text.ice { color: #38bdf8; }
-    #cast-text.lightning { color: #fde047; }
+    #cast-text.fire { color: #c1573a; }
+    #cast-text.ice { color: #4a63c9; }
+    #cast-text.lightning { color: #6f5aa8; }
     .result-panel {
-      margin-top: 24px; padding: 16px; background: #12091e; border: 1px solid #2a1a3e;
-      border-radius: 8px; font-size: 13px; color: #888; min-height: 48px;
+      margin-top: 24px; padding: 16px; background: #ffffff; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 13px; color: #6b6b76; min-height: 48px;
     }
   </style>
 </head>
@@ -130,19 +131,19 @@
         castIcon.textContent = '🔥';
         castText.textContent = 'Fire Rune Activated!';
         castText.className = 'fire';
-        resultPanel.innerHTML = '<span style="color:#f97316">🔥 Fire Rune Activated!</span> The circle blazes with 120 flame damage. The rune has been cast!';
+        resultPanel.innerHTML = '<span style="color:#c1573a">🔥 Fire Rune Activated!</span> The circle blazes with 120 flame damage. The rune has been cast!';
       } else if (runeId === 'rune-ice') {
         circle.classList.add('ice-active');
         castIcon.textContent = '❄️';
         castText.textContent = 'Ice Rune Activated!';
         castText.className = 'ice';
-        resultPanel.innerHTML = '<span style="color:#38bdf8">❄️ Ice Rune Activated!</span> The circle freezes with cold power.';
+        resultPanel.innerHTML = '<span style="color:#4a63c9">❄️ Ice Rune Activated!</span> The circle freezes with cold power.';
       } else if (runeId === 'rune-lightning') {
         circle.classList.add('lightning-active');
         castIcon.textContent = '⚡';
         castText.textContent = 'Lightning Rune Activated!';
         castText.className = 'lightning';
-        resultPanel.innerHTML = '<span style="color:#fde047">⚡ Lightning Rune Activated!</span> Electricity crackles through the circle.';
+        resultPanel.innerHTML = '<span style="color:#6f5aa8">⚡ Lightning Rune Activated!</span> Electricity crackles through the circle.';
       }
     });
   </script>

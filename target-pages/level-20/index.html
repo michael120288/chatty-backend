@@ -4,41 +4,41 @@
   <meta charset="UTF-8" />
   <title>The Sorcerer's Duel — Level 20</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0010; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #e879f9; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #8f74e8; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b76; margin-bottom: 40px; }
     .duel-arena { max-width: 520px; margin: 0 auto; }
     .arena-banner {
-      text-align: center; background: linear-gradient(135deg, #1a0028, #0a0010);
-      border: 2px solid #e879f9; border-radius: 12px; padding: 28px; margin-bottom: 24px;
+      text-align: center; background: linear-gradient(135deg, #f3ecff, #f8f8f8);
+      border: 2px solid #c3acff; border-radius: 12px; padding: 28px; margin-bottom: 24px;
     }
     .vs-icon { font-size: 64px; margin-bottom: 12px; }
-    .arena-title { color: #e879f9; font-size: 20px; font-weight: bold; }
-    .arena-sub { color: #888; font-size: 14px; margin-top: 4px; }
-    .spell-panel { background: #12001a; border: 1px solid #3d1a55; border-radius: 10px; padding: 24px; margin-bottom: 16px; }
-    .spell-label { color: #e879f9; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .arena-title { color: #4a3a8f; font-size: 20px; font-weight: bold; }
+    .arena-sub { color: #6b6b76; font-size: 14px; margin-top: 4px; }
+    .spell-panel { background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px; padding: 24px; margin-bottom: 16px; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
+    .spell-label { color: #8f74e8; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
     #spell-input {
-      width: 100%; padding: 12px 16px; background: #0a0010; border: 2px solid #3d1a55;
-      border-radius: 8px; color: #eee; font-size: 16px; font-family: monospace;
+      width: 100%; padding: 12px 16px; background: #f8f8f8; border: 2px solid rgba(18,18,18,.14);
+      border-radius: 8px; color: #121212; font-size: 16px; font-family: monospace;
       letter-spacing: 2px; box-sizing: border-box; transition: border-color 0.2s;
     }
-    #spell-input:focus { outline: none; border-color: #e879f9; }
-    .cast-hint { color: #555; font-size: 12px; margin-top: 8px; }
+    #spell-input:focus { outline: none; border-color: #8f74e8; }
+    .cast-hint { color: #9a94ab; font-size: 12px; margin-top: 8px; }
     #duel-btn {
-      width: 100%; background: #e879f9; color: #000; border: none; padding: 14px;
+      width: 100%; background: #8f74e8; color: #fff; border: none; padding: 14px;
       font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 12px;
     }
-    #duel-btn:hover { background: #d946ef; }
+    #duel-btn:hover { background: #7458d6; }
     #duel-result {
       padding: 20px; border-radius: 10px; text-align: center; min-height: 60px;
       display: flex; align-items: center; justify-content: center; flex-direction: column;
       gap: 8px; font-size: 18px; font-weight: bold;
-      background: #12001a; border: 1px solid #3d1a55; color: #555; font-style: italic;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); color: #9a94ab; font-style: italic;
       transition: all 0.3s;
     }
-    #duel-result.victory { background: #0a2e14; border-color: #4ecca3; color: #4ecca3; font-style: normal; }
-    #duel-result.defeat { background: #2e0a0a; border-color: #e94560; color: #e94560; font-style: normal; }
-    #duel-sub { font-size: 13px; font-weight: normal; color: #888; }
+    #duel-result.victory { background: #eafaf3; border-color: #34c78c; color: #1f9d6b; font-style: normal; }
+    #duel-result.defeat { background: #fdeef0; border-color: #e0577a; color: #c23a5e; font-style: normal; }
+    #duel-sub { font-size: 13px; font-weight: normal; color: #6b6b76; }
   </style>
 </head>
 <body>

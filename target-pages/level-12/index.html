@@ -4,34 +4,34 @@
   <meta charset="UTF-8" />
   <title>The Oracle's Chamber — Level 12</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0a00; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #f59e0b; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #8f74e8; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b76; margin-bottom: 40px; }
     .oracle-chamber { max-width: 500px; margin: 0 auto; text-align: center; }
-    .oracle-statue { font-size: 80px; margin-bottom: 24px; filter: drop-shadow(0 0 12px #f59e0b88); }
+    .oracle-statue { font-size: 80px; margin-bottom: 24px; filter: drop-shadow(0 0 12px rgba(143,116,232,.35)); }
     .buttons-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
     .oracle-btn {
       padding: 14px 24px; border: none; border-radius: 8px; font-size: 15px;
       font-weight: bold; cursor: pointer; transition: transform 0.1s, background 0.2s;
     }
     .oracle-btn:active { transform: scale(0.97); }
-    #confirm-btn { background: #f59e0b; color: #000; }
-    #confirm-btn:hover { background: #d97706; }
-    #alert-btn { background: #1a1a2e; color: #aaa; border: 1px solid #3a3a5e; }
-    #alert-btn:hover { background: #2a2a4e; }
-    #prompt-btn { background: #1a1a2e; color: #aaa; border: 1px solid #3a3a5e; }
-    #prompt-btn:hover { background: #2a2a4e; }
+    #confirm-btn { background: #8f74e8; color: #fff; }
+    #confirm-btn:hover { background: #7458d6; }
+    #alert-btn { background: #ffffff; color: #4a3a8f; border: 1px solid rgba(18,18,18,.14); }
+    #alert-btn:hover { background: #f3f0fb; }
+    #prompt-btn { background: #ffffff; color: #4a3a8f; border: 1px solid rgba(18,18,18,.14); }
+    #prompt-btn:hover { background: #f3f0fb; }
     #oracle-result {
       padding: 20px; border-radius: 10px; min-height: 60px;
       display: flex; align-items: center; justify-content: center;
       font-size: 18px; font-weight: bold; transition: all 0.3s;
-      background: #1a1200; border: 1px solid #3a2a00; color: #555; font-style: italic;
+      background: #f3f0fb; border: 1px solid rgba(18,18,18,.08); color: #9a94ab; font-style: italic;
     }
-    #oracle-result.accepted { background: #0a2e14; border-color: #4ecca3; color: #4ecca3; }
-    #oracle-result.rejected { background: #2e0a0a; border-color: #e94560; color: #e94560; }
-    #oracle-result.alerted { background: #0a1a2e; border-color: #4da6ff; color: #4da6ff; }
-    #oracle-result.prompted { background: #1a0a2e; border-color: #c084fc; color: #c084fc; }
-    .dialog-type { margin-top: 8px; font-size: 12px; color: #555; }
+    #oracle-result.accepted { background: #eafaf3; border-color: #34c78c; color: #1f9d6b; }
+    #oracle-result.rejected { background: #fdeef0; border-color: #e0577a; color: #c23a5e; }
+    #oracle-result.alerted { background: #eef2ff; border-color: #6f8cff; color: #4a63c9; }
+    #oracle-result.prompted { background: #f3ecff; border-color: #a78bfa; color: #6f5aa8; }
+    .dialog-type { margin-top: 8px; font-size: 12px; color: #9a94ab; }
   </style>
 </head>
 <body>

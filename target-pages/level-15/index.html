@@ -4,41 +4,42 @@
   <meta charset="UTF-8" />
   <title>The Cookie Vault — Level 15</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0500; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #f97316; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a3a8f; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b76; margin-bottom: 40px; }
     .vault { max-width: 500px; margin: 0 auto; text-align: center; }
     .vault-door {
-      background: linear-gradient(135deg, #1a0a00, #2a1500);
-      border: 3px solid #f97316; border-radius: 50%; width: 180px; height: 180px;
+      background: linear-gradient(135deg, #f3ecff, #e8e0ff);
+      border: 3px solid #8f74e8; border-radius: 50%; width: 180px; height: 180px;
       margin: 0 auto 32px; display: flex; align-items: center; justify-content: center;
       font-size: 72px; transition: all 0.5s;
     }
-    .vault-door.open { border-color: #4ecca3; background: linear-gradient(135deg, #0a2e14, #0d3a1a); }
+    .vault-door.open { border-color: #34c78c; background: linear-gradient(135deg, #eafaf3, #e0f7ec); }
     .vault-panel {
-      background: #1a0a00; border: 1px solid #3a2000; border-radius: 12px; padding: 28px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 28px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    #vault-locked { color: #e94560; }
-    #vault-locked h3 { color: #e94560; margin: 0 0 12px; font-size: 20px; }
-    #vault-locked p { color: #888; font-size: 14px; line-height: 1.5; margin: 0; }
+    #vault-locked { color: #c23a5e; }
+    #vault-locked h3 { color: #c23a5e; margin: 0 0 12px; font-size: 20px; }
+    #vault-locked p { color: #6b6b76; font-size: 14px; line-height: 1.5; margin: 0; }
     .required-cookie {
-      background: #2e0a0a; border: 1px solid #e94560; border-radius: 6px;
+      background: #fdeef0; border: 1px solid #e0577a; border-radius: 6px;
       padding: 12px; margin-top: 16px; font-family: monospace; font-size: 13px;
       text-align: left;
     }
-    .cookie-key { color: #e94560; }
-    .cookie-val { color: #ffd700; }
+    .cookie-key { color: #c23a5e; }
+    .cookie-val { color: #4a3a8f; }
     #vault-content {
-      display: none; color: #4ecca3;
+      display: none; color: #1f9d6b;
     }
-    #vault-content h3 { color: #4ecca3; margin: 0 0 12px; font-size: 20px; }
-    #vault-content p { color: #aaa; font-size: 14px; margin: 0 0 16px; }
+    #vault-content h3 { color: #1f9d6b; margin: 0 0 12px; font-size: 20px; }
+    #vault-content p { color: #6b6b76; font-size: 14px; margin: 0 0 16px; }
     .treasure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
     .treasure-item {
-      background: #0a2e14; border: 1px solid #4ecca3; border-radius: 6px;
+      background: #eafaf3; border: 1px solid #34c78c; border-radius: 6px;
       padding: 10px; text-align: center; font-size: 20px;
     }
-    .treasure-label { font-size: 11px; color: #888; margin-top: 4px; }
+    .treasure-label { font-size: 11px; color: #6b6b76; margin-top: 4px; }
   </style>
 </head>
 <body>

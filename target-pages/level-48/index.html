@@ -4,37 +4,38 @@
   <meta charset="UTF-8" />
   <title>The Summoning Circle — Level 48</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a0f; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #a78bfa; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #8f74e8; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 30px; }
     .circle { max-width: 520px; margin: 0 auto; }
     .summon-btn {
-      display: block; width: 100%; padding: 14px; background: #1a0a2e;
-      border: 1px solid #7c3aed; border-radius: 10px; color: #a78bfa;
+      display: block; width: 100%; padding: 14px; background: #ede7ff;
+      border: 1px solid #8f74e8; border-radius: 10px; color: #4a3a8f;
       font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 20px;
       transition: background 0.2s;
     }
-    .summon-btn:hover { background: #2a1a3e; }
+    .summon-btn:hover { background: #ddd0ff; }
     .summon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .summon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .entity-card {
-      background: #0d0d20; border: 1px solid #2a2050; border-radius: 10px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px;
       padding: 16px; text-align: center; opacity: 0; transition: opacity 0.4s;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .entity-card.appeared { opacity: 1; }
     .entity-icon { font-size: 36px; margin-bottom: 8px; }
-    .entity-name { font-size: 14px; font-weight: bold; color: #eee; }
-    .entity-power { font-size: 12px; color: #888; margin-top: 4px; }
+    .entity-name { font-size: 14px; font-weight: bold; color: #121212; }
+    .entity-power { font-size: 12px; color: #6b6b6b; margin-top: 4px; }
     #summon-status {
-      text-align: center; font-size: 14px; color: #888; padding: 16px;
+      text-align: center; font-size: 14px; color: #6b6b6b; padding: 16px;
       min-height: 48px;
     }
-    #summon-status.done { color: #4ecca3; font-weight: bold; }
+    #summon-status.done { color: #4a3a8f; font-weight: bold; }
     .hint-box {
-      margin-top: 20px; padding: 14px; background: #0a0a18; border: 1px solid #2a2050;
-      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+      margin-top: 20px; padding: 14px; background: #ffffff; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 13px; color: #6b6b6b; line-height: 1.6;
     }
-    code { color: #a78bfa; font-family: monospace; }
+    code { color: #8f74e8; font-family: monospace; }
   </style>
 </head>
 <body>

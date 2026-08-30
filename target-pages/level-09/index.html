@@ -4,20 +4,21 @@
   <meta charset="UTF-8" />
   <title>The Portal — Level 9</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a001f; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #7b61ff; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #8f74e8; text-align: center; }
+    .subtitle { text-align: center; color: #767676; margin-bottom: 40px; }
     .portal-area { max-width: 700px; margin: 0 auto; }
     .portal-description {
-      background: #12072e; border: 1px solid #3d2a6e; border-radius: 8px;
-      padding: 20px; margin-bottom: 24px; color: #aaa; font-size: 14px; line-height: 1.6;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px;
+      padding: 20px; margin-bottom: 24px; color: #5a5a5a; font-size: 14px; line-height: 1.6;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .portal-container {
-      border: 3px solid #7b61ff; border-radius: 12px; overflow: hidden;
-      position: relative; background: #0a001f;
+      border: 3px solid #8f74e8; border-radius: 12px; overflow: hidden;
+      position: relative; background: #ffffff;
     }
     .portal-label {
-      background: #7b61ff; color: white; padding: 8px 16px;
+      background: #8f74e8; color: white; padding: 8px 16px;
       font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
       display: flex; align-items: center; gap: 8px;
     }
@@ -25,14 +26,14 @@
       width: 100%; height: 280px; border: none; display: block;
     }
     .outer-content {
-      padding: 24px; background: #12072e;
+      padding: 24px; background: #f3f0ff;
     }
-    .outer-info { color: #555; font-size: 13px; }
+    .outer-info { color: #6b6b6b; font-size: 13px; }
     .frame-indicator {
       display: flex; align-items: center; gap: 8px; margin-top: 16px;
-      padding: 10px 14px; background: #1a0a3e; border-radius: 6px; font-size: 13px;
+      padding: 10px 14px; background: #e9e2ff; border-radius: 6px; font-size: 13px;
     }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #7b61ff; animation: blink 1.5s infinite; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #8f74e8; animation: blink 1.5s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
   </style>
 </head>

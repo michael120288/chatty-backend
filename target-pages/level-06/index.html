@@ -4,39 +4,40 @@
   <meta charset="UTF-8" />
   <title>Marketplace of Many — Level 6</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0d0d1a; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #ff6b9d; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #a78bfa; text-align: center; }
+    .subtitle { text-align: center; color: #767676; margin-bottom: 40px; }
     .marketplace { max-width: 700px; margin: 0 auto; }
     .marketplace-item {
       display: flex; align-items: center; justify-content: space-between;
-      background: #16162a; border: 1px solid #2a2a4a; border-radius: 8px;
-      padding: 14px 18px; margin-bottom: 10px; gap: 12px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px;
+      padding: 14px 18px; margin-bottom: 10px; gap: 12px; box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .marketplace-item.item-rare {
-      border-color: #e94560; background: #1a0e1e;
+      border-color: #8f74e8; background: #f7f4ff;
     }
-    .marketplace-item.item-common { border-color: #2a2a4a; }
-    .marketplace-item.item-epic { border-color: #7b61ff; background: #11082e; }
+    .marketplace-item.item-common { border-color: rgba(18,18,18,.08); }
+    .marketplace-item.item-epic { border-color: #4a3a8f; background: #f1eeff; }
     .item-name { font-weight: bold; font-size: 16px; }
-    .item-rare .item-name { color: #e94560; }
-    .item-epic .item-name { color: #7b61ff; }
-    .item-common .item-name { color: #aaa; }
-    .item-price { color: #ffd700; font-size: 14px; }
+    .item-rare .item-name { color: #6f5aa8; }
+    .item-epic .item-name { color: #4a3a8f; }
+    .item-common .item-name { color: #5a5a5a; }
+    .item-price { color: #6f8cff; font-size: 14px; }
     .item-badge {
       display: inline-block; padding: 3px 10px; border-radius: 12px;
       font-size: 11px; font-weight: bold; text-transform: uppercase;
     }
-    .badge-rare { background: #e94560; color: white; }
-    .badge-common { background: #555; color: white; }
-    .badge-epic { background: #7b61ff; color: white; }
+    .badge-rare { background: #8f74e8; color: white; }
+    .badge-common { background: #9a9a9a; color: white; }
+    .badge-epic { background: #4a3a8f; color: white; }
     .stats-bar {
-      margin-top: 24px; padding: 16px; background: #16162a;
-      border: 1px solid #2a2a4a; border-radius: 8px; display: flex; gap: 20px;
+      margin-top: 24px; padding: 16px; background: #ffffff;
+      border: 1px solid rgba(18,18,18,.08); border-radius: 8px; display: flex; gap: 20px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .stat-item { text-align: center; flex: 1; }
-    .stat-num { font-size: 24px; font-weight: bold; color: #ff6b9d; }
-    .stat-lbl { font-size: 12px; color: #888; }
+    .stat-num { font-size: 24px; font-weight: bold; color: #a78bfa; }
+    .stat-lbl { font-size: 12px; color: #767676; }
   </style>
 </head>
 <body>

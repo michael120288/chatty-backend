@@ -4,49 +4,49 @@
   <meta charset="UTF-8" />
   <title>The Archive — Level 26</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0f14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #60a5fa; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #3d52a8; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 40px; }
     .file-browser { max-width: 520px; margin: 0 auto; }
     .browser-header {
-      background: #12181f; border: 1px solid #1e2d3e; border-radius: 10px 10px 0 0;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px 10px 0 0;
       padding: 10px 16px; display: flex; align-items: center; gap: 8px;
     }
     .dot { width: 12px; height: 12px; border-radius: 50%; }
     .dot-red { background: #e94560; } .dot-yellow { background: #ffd700; } .dot-green { background: #4ecca3; }
-    .browser-path { color: #555; font-size: 12px; font-family: monospace; margin-left: 8px; }
-    .file-list { background: #0d1520; border: 1px solid #1e2d3e; border-top: none; border-radius: 0 0 10px 10px; }
+    .browser-path { color: #767676; font-size: 12px; font-family: monospace; margin-left: 8px; }
+    .file-list { background: #fbfaff; border: 1px solid rgba(18,18,18,.08); border-top: none; border-radius: 0 0 10px 10px; }
     .file-item {
       display: flex; align-items: center; gap: 12px;
       padding: 10px 16px; cursor: pointer; user-select: none;
-      border-bottom: 1px solid #1e2d3e; transition: background 0.15s;
+      border-bottom: 1px solid rgba(18,18,18,.08); transition: background 0.15s;
     }
     .file-item:last-child { border-bottom: none; }
-    .file-item:hover { background: #172030; }
-    .file-item.selected { background: #0d2040; }
+    .file-item:hover { background: #eef1ff; }
+    .file-item.selected { background: #dbe4ff; }
     .file-icon { font-size: 18px; }
-    .file-name { font-size: 14px; color: #ccc; }
-    .file-meta { margin-left: auto; font-size: 12px; color: #555; }
+    .file-name { font-size: 14px; color: #121212; }
+    .file-meta { margin-left: auto; font-size: 12px; color: #767676; }
     .rename-box {
-      display: none; padding: 12px 16px; background: #0d2040;
-      border-top: 2px solid #60a5fa;
+      display: none; padding: 12px 16px; background: #dbe4ff;
+      border-top: 2px solid #3d52a8;
     }
-    .rename-label { font-size: 12px; color: #60a5fa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .rename-label { font-size: 12px; color: #3d52a8; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
     #rename-input {
-      width: 100%; padding: 8px 12px; background: #0a0f14; border: 1px solid #60a5fa;
-      border-radius: 6px; color: #eee; font-size: 14px; box-sizing: border-box;
+      width: 100%; padding: 8px 12px; background: #ffffff; border: 1px solid #3d52a8;
+      border-radius: 6px; color: #121212; font-size: 14px; box-sizing: border-box;
     }
     #rename-input:focus { outline: none; }
-    .rename-hint { color: #555; font-size: 11px; margin-top: 6px; }
+    .rename-hint { color: #767676; font-size: 11px; margin-top: 6px; }
     #rename-success {
-      display: none; padding: 14px 16px; background: #0a2e14; border-top: 2px solid #4ecca3;
-      color: #4ecca3; font-size: 14px; font-weight: bold;
+      display: none; padding: 14px 16px; background: #e6f9f0; border-top: 2px solid #34b378;
+      color: #1f8a5c; font-size: 14px; font-weight: bold;
     }
     .info-box {
-      margin-top: 20px; padding: 14px; background: #0d1520; border: 1px solid #1e2d3e;
-      border-radius: 8px; font-size: 12px; color: #555; line-height: 1.6;
+      margin-top: 20px; padding: 14px; background: #fbfaff; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 12px; color: #767676; line-height: 1.6;
     }
-    code { color: #60a5fa; font-family: monospace; }
+    code { color: #3d52a8; font-family: monospace; }
   </style>
 </head>
 <body>

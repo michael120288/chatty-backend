@@ -4,23 +4,23 @@
   <meta charset="UTF-8" />
   <title>The Hero Registry — Level 69</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #10b981; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a3a8f; text-align: center; }
+    .subtitle { text-align: center; color: rgba(18,18,18,.55); margin-bottom: 40px; }
     .registry { max-width: 680px; margin: 0 auto; }
-    .registry-header { background: #0d0d2e; border: 1px solid #0d2e1a; border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
-    .registry-title { color: #10b981; font-size: 16px; font-weight: bold; }
-    .load-btn { padding: 8px 20px; background: #10b981; border: none; border-radius: 6px; color: #000; font-weight: bold; cursor: pointer; font-size: 13px; }
-    .load-btn:hover { background: #059669; }
-    .hero-table { width: 100%; background: #0d0d2e; border: 1px solid #0d2e1a; border-radius: 12px; overflow: hidden; }
-    .hero-table th { background: #0a1a0a; color: #10b981; padding: 12px 16px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
-    .hero-table td { padding: 12px 16px; border-top: 1px solid #0d2e1a; font-size: 13px; color: #ccc; }
-    .hero-row:hover td { background: #0a1a10; }
-    .empty-state { text-align: center; padding: 40px; color: #555; }
+    .registry-header { background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
+    .registry-title { color: #4a3a8f; font-size: 16px; font-weight: bold; }
+    .load-btn { padding: 8px 20px; background: #8f74e8; border: none; border-radius: 6px; color: #ffffff; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .load-btn:hover { background: #6f56c9; }
+    .hero-table { width: 100%; background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; overflow: hidden; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
+    .hero-table th { background: #f3effe; color: #4a3a8f; padding: 12px 16px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
+    .hero-table td { padding: 12px 16px; border-top: 1px solid rgba(18,18,18,.08); font-size: 13px; color: #333; }
+    .hero-row:hover td { background: #eef1ff; }
+    .empty-state { text-align: center; padding: 40px; color: rgba(18,18,18,.4); }
     .class-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
-    .class-warrior { background: #1a0a00; color: #f97316; border: 1px solid #f97316; }
-    .class-mage { background: #0a0a2e; color: #8b5cf6; border: 1px solid #8b5cf6; }
-    .class-archer { background: #0a1a0a; color: #10b981; border: 1px solid #10b981; }
+    .class-warrior { background: #fff2e8; color: #c2660b; border: 1px solid #f4a35e; }
+    .class-mage { background: #f3effe; color: #6f5aa8; border: 1px solid #a78bfa; }
+    .class-archer { background: #eafaf0; color: #15803d; border: 1px solid #4ade80; }
   </style>
 </head>
 <body>
@@ -67,7 +67,7 @@
           `).join('');
         })
         .catch(() => {
-          document.getElementById('heroes-tbody').innerHTML = '<tr><td colspan="4" class="empty-state" style="color:#ef4444">Failed to load heroes</td></tr>';
+          document.getElementById('heroes-tbody').innerHTML = '<tr><td colspan="4" class="empty-state" style="color:#dc2626">Failed to load heroes</td></tr>';
         });
     }
   </script>

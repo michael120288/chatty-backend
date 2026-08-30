@@ -4,85 +4,86 @@
   <meta charset="UTF-8" />
   <title>The Archmage's Gauntlet — Level 25</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #05000a; color: #eee; margin: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; }
     .app-shell { display: flex; height: 100vh; flex-direction: column; }
     /* Top bar */
     .app-bar {
-      background: #0d001a; border-bottom: 1px solid #2d0050; padding: 0 24px;
+      background: #ffffff; border-bottom: 1px solid rgba(18,18,18,.08); padding: 0 24px;
       height: 52px; display: flex; align-items: center; justify-content: space-between;
     }
-    .app-brand { color: #a855f7; font-size: 16px; font-weight: bold; }
-    #user-info { font-size: 13px; color: #555; }
-    #user-info.logged-in { color: #a855f7; }
+    .app-brand { color: #4a3a8f; font-size: 16px; font-weight: bold; }
+    #user-info { font-size: 13px; color: #767676; }
+    #user-info.logged-in { color: #8f74e8; }
     /* Body */
     .app-body { display: flex; flex: 1; overflow: hidden; }
     /* Sidebar */
     .sidebar {
-      width: 200px; border-right: 1px solid #1a0030; background: #080010;
+      width: 200px; border-right: 1px solid rgba(18,18,18,.08); background: #f3f0ff;
       display: flex; flex-direction: column; padding: 16px 12px;
     }
-    .sidebar-title { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .sidebar-title { font-size: 11px; color: #767676; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
     .sidebar-item {
-      padding: 9px 12px; border-radius: 6px; font-size: 13px; color: #888;
+      padding: 9px 12px; border-radius: 6px; font-size: 13px; color: #6b6b6b;
       cursor: pointer; margin-bottom: 4px; transition: background 0.15s;
     }
-    .sidebar-item:hover { background: #1a0030; color: #eee; }
-    .sidebar-item.active { background: #1a0030; color: #a855f7; }
+    .sidebar-item:hover { background: #ece4ff; color: #121212; }
+    .sidebar-item.active { background: #ece4ff; color: #8f74e8; }
     /* Main content */
     .main { flex: 1; padding: 24px; overflow-y: auto; }
     /* Login form */
     #login-section { max-width: 360px; margin: 0 auto; padding-top: 20px; }
-    #login-section h2 { color: #a855f7; margin: 0 0 20px; }
+    #login-section h2 { color: #4a3a8f; margin: 0 0 20px; }
     .form-field { margin-bottom: 14px; }
-    .form-field label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; }
+    .form-field label { display: block; font-size: 13px; color: #6b6b6b; margin-bottom: 6px; }
     .form-field input {
-      width: 100%; padding: 10px 12px; background: #0d001a; border: 1px solid #2d0050;
-      border-radius: 6px; color: #eee; font-size: 14px; box-sizing: border-box;
+      width: 100%; padding: 10px 12px; background: #ffffff; border: 1px solid rgba(18,18,18,.14);
+      border-radius: 6px; color: #121212; font-size: 14px; box-sizing: border-box;
     }
-    .form-field input:focus { outline: none; border-color: #a855f7; }
+    .form-field input:focus { outline: none; border-color: #8f74e8; }
     #login-btn {
-      width: 100%; background: #a855f7; color: white; border: none; padding: 12px;
+      width: 100%; background: #8f74e8; color: white; border: none; padding: 12px;
       font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 4px;
     }
-    #login-btn:hover { background: #9333ea; }
-    #login-error { color: #e94560; font-size: 13px; margin-top: 8px; display: none; }
+    #login-btn:hover { background: #7a5cd6; }
+    #login-error { color: #c23652; font-size: 13px; margin-top: 8px; display: none; }
     /* Dashboard */
     #dashboard-section { display: none; }
     .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
     .stat-widget {
-      background: #0d001a; border: 1px solid #2d0050; border-radius: 10px; padding: 18px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px; padding: 18px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .widget-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-    .widget-value { font-size: 28px; font-weight: bold; color: #a855f7; }
+    .widget-label { font-size: 11px; color: #767676; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .widget-value { font-size: 28px; font-weight: bold; color: #4a3a8f; }
     /* Settings panel */
     #settings-panel {
       display: none; position: fixed; top: 0; right: 0; width: 320px; height: 100vh;
-      background: #0d001a; border-left: 1px solid #2d0050; padding: 24px;
-      z-index: 200; box-shadow: -4px 0 20px #0005;
+      background: #ffffff; border-left: 1px solid rgba(18,18,18,.08); padding: 24px;
+      z-index: 200; box-shadow: -4px 0 20px rgba(80,60,160,.15);
     }
-    #settings-panel h3 { color: #a855f7; margin: 0 0 20px; }
+    #settings-panel h3 { color: #4a3a8f; margin: 0 0 20px; }
     .setting-row { margin-bottom: 14px; }
-    .setting-row label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; }
+    .setting-row label { display: block; font-size: 13px; color: #6b6b6b; margin-bottom: 6px; }
     .setting-row input[type="text"] {
-      width: 100%; padding: 8px 12px; background: #08000f; border: 1px solid #2d0050;
-      border-radius: 6px; color: #eee; font-size: 13px; box-sizing: border-box;
+      width: 100%; padding: 8px 12px; background: #ffffff; border: 1px solid rgba(18,18,18,.14);
+      border-radius: 6px; color: #121212; font-size: 13px; box-sizing: border-box;
     }
     .close-settings {
-      background: #1a0030; color: #aaa; border: none; padding: 8px 14px;
+      background: #ece4ff; color: #4a3a8f; border: none; padding: 8px 14px;
       border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: 8px;
     }
     #settings-btn {
-      background: #1a0030; color: #a855f7; border: 1px solid #2d0050; padding: 8px 14px;
+      background: #ece4ff; color: #8f74e8; border: 1px solid #c3acff; padding: 8px 14px;
       border-radius: 6px; cursor: pointer; font-size: 13px;
     }
     /* API section */
     #api-section { margin-top: 24px; }
-    .api-panel { background: #0d001a; border: 1px solid #2d0050; border-radius: 10px; padding: 18px; }
-    .api-label { font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .api-panel { background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px; padding: 18px; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
+    .api-label { font-size: 12px; color: #767676; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
     #api-data-list { min-height: 40px; }
-    .api-entry { padding: 8px 12px; background: #08000f; border-radius: 6px; margin-bottom: 6px; font-size: 13px; color: #c4b5fd; }
+    .api-entry { padding: 8px 12px; background: #f3f0ff; border-radius: 6px; margin-bottom: 6px; font-size: 13px; color: #6f5aa8; }
     #fetch-api-btn {
-      background: #a855f7; color: white; border: none; padding: 8px 16px;
+      background: #8f74e8; color: white; border: none; padding: 8px 16px;
       border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: 8px;
     }
   </style>
@@ -133,7 +134,7 @@
           <div id="api-section">
             <div class="api-panel">
               <div class="api-label">🔌 Live Arcane Feed — /api/arcane-feed</div>
-              <div id="api-data-list"><div style="color:#555;font-size:13px">No data yet</div></div>
+              <div id="api-data-list"><div style="color:#767676;font-size:13px">No data yet</div></div>
               <button id="fetch-api-btn" onclick="fetchArcaneFeed()">Fetch Feed</button>
             </div>
           </div>
@@ -187,7 +188,7 @@
 
     async function fetchArcaneFeed() {
       const list = document.getElementById('api-data-list');
-      list.innerHTML = '<div style="color:#555;font-size:13px">Loading...</div>';
+      list.innerHTML = '<div style="color:#767676;font-size:13px">Loading...</div>';
       try {
         const res = await fetch('/api/arcane-feed');
         const data = await res.json();
@@ -196,7 +197,7 @@
           list.innerHTML += `<div class="api-entry">✨ ${s.name} — Power: ${s.power}</div>`;
         });
       } catch {
-        list.innerHTML = '<div style="color:#e94560;font-size:13px">Failed to fetch feed</div>';
+        list.innerHTML = '<div style="color:#c23652;font-size:13px">Failed to fetch feed</div>';
       }
     }
   </script>

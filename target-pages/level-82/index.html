@@ -5,67 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Crossroads Tavern</title>
   <style>
-    body { background: #0d0d1e; color: #ccc; font-family: monospace; padding: 20px; margin: 0; }
-    h1 { color: #ffd700; margin-top: 0; }
-    h2 { color: #a78bfa; font-size: 16px; }
+    body { background: #f8f8f8; color: #121212; font-family: monospace; padding: 20px; margin: 0; }
+    h1 { color: #4a3a8f; margin-top: 0; }
+    h2 { color: #6f5aa8; font-size: 16px; }
 
     /* Random modal */
     #random-modal {
       display: none;
       position: fixed; inset: 0;
-      background: rgba(0,0,0,0.7);
+      background: rgba(18,18,18,0.4);
       justify-content: center; align-items: center;
       z-index: 100;
     }
     .modal-box {
-      background: #1a1a3e;
-      border: 2px solid #a78bfa;
+      background: #ffffff;
+      border: 2px solid #8f74e8;
       border-radius: 10px;
       padding: 24px 32px;
       text-align: center;
       max-width: 360px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .modal-box h2 { color: #ffd700; margin-top: 0; }
-    .modal-box p { color: #aaa; margin-bottom: 16px; }
-    .btn { background: #4da6ff; color: #000; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-family: monospace; font-size: 13px; }
-    .btn.danger { background: #ef4444; color: #fff; }
+    .modal-box h2 { color: #4a3a8f; margin-top: 0; }
+    .modal-box p { color: rgba(18,18,18,.6); margin-bottom: 16px; }
+    .btn { background: #6f8cff; color: #ffffff; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-family: monospace; font-size: 13px; }
+    .btn.danger { background: #dc2626; color: #fff; }
 
     /* Campaign banner */
     #campaign-banner {
       display: none;
-      background: #1a0a3e;
-      border: 1px solid #a78bfa;
+      background: #f2f0fb;
+      border: 1px solid #8f74e8;
       border-radius: 6px;
       padding: 10px 16px;
       margin-bottom: 16px;
-      color: #c4b5fd;
+      color: #4a3a8f;
       font-size: 13px;
     }
-    #campaign-banner.campaign-a { border-color: #22c55e; background: #0a1e0a; color: #86efac; }
-    #campaign-banner.campaign-b { border-color: #ffd700; background: #1a1500; color: #fde68a; }
+    #campaign-banner.campaign-a { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+    #campaign-banner.campaign-b { border-color: #6f8cff; background: #eef2ff; color: #3b4b8f; }
 
     /* Returning user banner */
     #returning-banner {
       display: none;
-      background: #0a1628;
-      border: 1px solid #4da6ff;
+      background: #eef2ff;
+      border: 1px solid #6f8cff;
       border-radius: 6px;
       padding: 10px 16px;
       margin-bottom: 16px;
-      color: #93c5fd;
+      color: #2d3f8f;
       font-size: 13px;
     }
 
     /* Main content */
-    .panel { background: #1a1a3e; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .panel { background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
     #tavern-menu { display: none; margin-top: 12px; }
     #tavern-menu ul { list-style: none; padding: 0; margin: 0; }
-    #tavern-menu li { padding: 6px 0; border-bottom: 1px solid #222; color: #ccc; }
+    #tavern-menu li { padding: 6px 0; border-bottom: 1px solid rgba(18,18,18,.08); color: #121212; }
     #tavern-menu li:last-child { border-bottom: none; }
-    .menu-price { color: #ffd700; float: right; }
+    .menu-price { color: #8f74e8; float: right; }
 
     /* Notice board */
-    #notice { display: none; background: #0a1e14; border: 1px solid #22c55e; border-radius: 6px; padding: 12px; color: #86efac; font-size: 13px; margin-top: 12px; }
+    #notice { display: none; background: #f0fdf4; border: 1px solid #16a34a; border-radius: 6px; padding: 12px; color: #166534; font-size: 13px; margin-top: 12px; }
   </style>
 </head>
 <body>
@@ -168,7 +169,7 @@
     document.getElementById('load-quests').addEventListener('click', function () {
       const quests = ['Slay the Mountain Dragon', 'Retrieve the Lost Artifact', 'Escort the Merchant'];
       const list = document.getElementById('quest-list');
-      list.innerHTML = quests.map((q) => `<div class="quest-item" style="padding:4px 0;border-bottom:1px solid #222;color:#c4b5fd">${q}</div>`).join('');
+      list.innerHTML = quests.map((q) => `<div class="quest-item" style="padding:4px 0;border-bottom:1px solid rgba(18,18,18,.08);color:#4a3a8f">${q}</div>`).join('');
       document.getElementById('quest-board').dataset.questsLoaded = 'true';
       this.style.display = 'none';
     });

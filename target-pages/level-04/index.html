@@ -4,31 +4,32 @@
   <meta charset="UTF-8" />
   <title>Hall of Truth — Level 4</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #1a1500; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #ffd700; text-align: center; font-size: 2.4em; margin-bottom: 8px; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a3a8f; text-align: center; font-size: 2.4em; margin-bottom: 8px; }
+    .subtitle { text-align: center; color: #767676; margin-bottom: 40px; }
     .hall { max-width: 600px; margin: 0 auto; }
     .badge-container { text-align: center; margin-bottom: 32px; }
     #hero-badge {
       display: inline-block; padding: 12px 32px; border-radius: 30px;
       font-size: 18px; font-weight: bold; letter-spacing: 1px;
     }
-    .badge-gold { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; }
+    .badge-gold { background: linear-gradient(135deg, #c3acff, #8f74e8); color: #12102a; }
     .truth-list { list-style: none; padding: 0; }
     .truth-list li {
-      background: #1a1500; border: 1px solid #3a3000; border-radius: 8px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px;
       padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .truth-list li::before { content: '⚖️'; font-size: 20px; }
-    .truth-list li span { color: #ffd700; font-size: 13px; }
+    .truth-list li span { color: #6f5aa8; font-size: 13px; }
     .stat-row { display: flex; gap: 16px; margin-top: 24px; }
     .stat {
-      flex: 1; background: #1a1500; border: 1px solid #3a3000; border-radius: 8px;
-      padding: 16px; text-align: center;
+      flex: 1; background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px;
+      padding: 16px; text-align: center; box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .stat-value { font-size: 28px; font-weight: bold; color: #ffd700; }
-    .stat-label { font-size: 12px; color: #888; margin-top: 4px; }
-    .hidden-truth { color: #333; font-size: 10px; }
+    .stat-value { font-size: 28px; font-weight: bold; color: #8f74e8; }
+    .stat-label { font-size: 12px; color: #767676; margin-top: 4px; }
+    .hidden-truth { color: #cfcfcf; font-size: 10px; }
   </style>
 </head>
 <body>
