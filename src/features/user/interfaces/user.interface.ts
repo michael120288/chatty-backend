@@ -81,6 +81,11 @@ export interface IUserJob {
   keyTwo?: string;
   key?: string;
   value?: string | INotificationSettings | IUserDocument;
+  // Optional CVC-prototype instrumentation (see /cvc-prototype). Undefined
+  // for every real signup — only set when the request carried the
+  // x-test-secret test-harness header.
+  cvcTestId?: string;
+  cvcSuppressUserWrite?: boolean;
 }
 
 export interface IEmailJob {

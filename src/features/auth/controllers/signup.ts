@@ -15,6 +15,7 @@ import JWT from 'jsonwebtoken';
 import { userQueue } from '@service/queues/user.queue';
 import { config } from '@root/config';
 import { BadRequestError } from '@global/helpers/error-handler';
+import { recordCvcEffect } from '@service/db/cvc-trace';
 import Logger from 'bunyan';
 
 const log: Logger = config.createLogger('signup');
@@ -33,12 +34,28 @@ export class SignUp {
       }
     }
 
+    // CVC prototype instrumentation (see /cvc-prototype). Only honored once
+    // the test-secret check above has already passed — a real caller never
+    // reaches here with these headers doing anything, since testSecret is
+    // undefined and cvcTestId stays undefined below.
+    const cvcTestId: string | undefined =
+      testSecret !== undefined ? (req.headers['x-cvc-test-id'] as string | undefined) : undefined;
+    const cvcSuppress = new Set(
+      (cvcTestId && (req.headers['x-cvc-suppress'] as string | undefined)
+        ? (req.headers['x-cvc-suppress'] as string).split(',')
+        : []
+      ).map((s) => s.trim()).filter(Boolean)
+    );
+
     const { username, email, password, avatarColor, avatarImage } = req.body;
 
     log.info(`Signup attempt for username: ${username}`);
 
-    const checkIfUserExist: IAuthDocument =
-      await authService.getUserByUsernameOrEmail(username, email);
+    const duplicateCheckSuppressed = cvcSuppress.has('rule.duplicate-check');
+    if (cvcTestId) await recordCvcEffect(cvcTestId, 'rule.duplicate-check', { username, email }, duplicateCheckSuppressed);
+    const checkIfUserExist: IAuthDocument | null = duplicateCheckSuppressed
+      ? null
+      : await authService.getUserByUsernameOrEmail(username, email);
     if (checkIfUserExist) {
       log.warn(`Signup failed: User already exists - username: ${username}`);
       throw new BadRequestError('User already exists. Username or email is already taken.');
@@ -77,18 +94,35 @@ export class SignUp {
       userObjectId,
     );
     userDataForCache.profilePicture = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
-    await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
+    const cacheSuppressed = cvcSuppress.has('cache.write.user');
+    if (cvcTestId) await recordCvcEffect(cvcTestId, 'cache.write.user', { userId: `${userObjectId}` }, cacheSuppressed);
+    if (!cacheSuppressed) {
+      await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
+    }
 
     // Auth document is written synchronously (not queued) because /signin
     // queries this collection directly, with no Redis cache in front of it —
     // an async write here raced against an immediate signin, intermittently
     // returning "Invalid credentials" for a real, just-created account.
-    await authService.createAuthUser(authData);
+    const authWriteSuppressed = cvcSuppress.has('db.write.auth');
+    if (cvcTestId) await recordCvcEffect(cvcTestId, 'db.write.auth', { authId: `${authObjectId}` }, authWriteSuppressed);
+    if (!authWriteSuppressed) {
+      await authService.createAuthUser(authData);
+    }
     // The User profile document can stay queued: it's already synchronously
     // cached in Redis above (saveUserToCache), and every read path that needs
     // it (currentuser, profile, etc.) checks that cache before falling back
     // to Mongo, so there's no equivalent immediate-read race for this one.
-    userQueue.addUserJob('addUserToDB', { value: userDataForCache });
+    const queueSuppressed = cvcSuppress.has('queue.publish.user');
+    const userWriteSuppressed = cvcSuppress.has('db.write.user');
+    if (cvcTestId) await recordCvcEffect(cvcTestId, 'queue.publish.user', { userId: `${userObjectId}` }, queueSuppressed);
+    if (!queueSuppressed) {
+      userQueue.addUserJob('addUserToDB', {
+        value: userDataForCache,
+        cvcTestId,
+        cvcSuppressUserWrite: userWriteSuppressed
+      });
+    }
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
     req.session = { jwt: userJwt };

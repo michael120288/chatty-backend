@@ -30,7 +30,7 @@ export default (app: Application) => {
     const targetPagesPath = path.join(process.cwd(), 'target-pages');
     // Mock API routes for target pages (no auth — called from iframes)
     app.use('/api', mockApiRoutes.routes());
-
+    app.use(express.static(path.join(process.cwd(), 'public')));
     app.use('/pages', (_req: Request, res: Response, next: NextFunction) => {
       const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
       res.setHeader('Content-Security-Policy', `frame-ancestors 'self' ${clientUrl}`);
