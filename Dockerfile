@@ -30,6 +30,7 @@ COPY --from=builder /app/build ./build
 
 # Copy any static assets needed at runtime
 COPY target-pages ./target-pages
+COPY public ./public
 
 EXPOSE 5000
 
