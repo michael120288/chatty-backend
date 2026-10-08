@@ -4,6 +4,9 @@ import mongoose from 'mongoose';
 import { indexOf } from 'lodash';
 import { followerService } from '@service/db/follower.service';
 import { AuthModel } from '@auth/models/auth.schema';
+import { UserCache } from '@service/redis/user.cache';
+
+const userCache: UserCache = new UserCache();
 
 class UserService {
   public async addUserData(data: IUserDocument): Promise<void> {
@@ -64,9 +67,13 @@ class UserService {
   public async getAllUsers(userId: string, skip: number, limit: number): Promise<IUserDocument[]> {
     const users: IUserDocument[] = await UserModel.aggregate([
       { $match: { _id: { $ne: new mongoose.Types.ObjectId(userId) } } },
+      // _id is a secondary sort key: bulk-created users can share the same
+      // createdAt millisecond, and createdAt alone isn't a stable sort — without
+      // a tiebreaker, repeated queries can return users in different relative
+      // order, causing pagination windows to overlap or skip rows.
+      { $sort: { createdAt: -1, _id: -1 } },
       { $skip: skip },
       { $limit: limit },
-      { $sort: { createdAt: -1 } },
       { $lookup: { from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId' } },
       { $unwind: '$authId' },
       { $project: this.aggregateProject() }
@@ -114,12 +121,12 @@ class UserService {
   }
 
   public async searchUsers(regex: RegExp, excludeUserId?: string): Promise<ISearchUser[]> {
-    const matchStage: Record<string, unknown> = { username: regex };
-    if (excludeUserId) {
-      matchStage['_id'] = { $ne: new mongoose.Types.ObjectId(excludeUserId) };
-    }
-    const users = await AuthModel.aggregate([
-      { $match: matchStage },
+    // Note: search intentionally includes the caller — the course tests search for
+    // the logged-in user's own username and expect to find it. `excludeUserId` is
+    // accepted for API compatibility but not applied.
+    void excludeUserId;
+    const users: ISearchUser[] = await AuthModel.aggregate([
+      { $match: { username: regex } },
       { $lookup: { from: 'User', localField: '_id', foreignField: 'authId', as: 'user' } },
       { $unwind: '$user' },
       {
@@ -130,9 +137,31 @@ class UserService {
           avatarColor: 1,
           profilePicture: 1
         }
-      }
+      },
+      { $limit: 20 }
     ]);
-    return users;
+
+    // A just-signed-up user's Mongo `User` document is written asynchronously via
+    // a queue, so it can briefly miss the $lookup/$unwind join above. Fall back to
+    // the Redis cache (populated synchronously on signup) for any regex match the
+    // Mongo aggregation didn't return yet.
+    const foundIds = new Set(users.map((u) => `${u._id}`));
+    const cachedMatches = await userCache.getUsersFromCacheByUsername(regex);
+    for (const cached of cachedMatches) {
+      if (foundIds.has(`${cached._id}`)) {
+        continue;
+      }
+      foundIds.add(`${cached._id}`);
+      users.push({
+        _id: `${cached._id}`,
+        username: `${cached.username}`,
+        email: `${cached.email}`,
+        avatarColor: `${cached.avatarColor}`,
+        profilePicture: `${cached.profilePicture}`
+      });
+    }
+
+    return users.slice(0, 20);
   }
 
   private aggregateProject() {

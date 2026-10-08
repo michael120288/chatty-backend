@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { authMockRequest, authMockResponse, authUserPayload } from '@root/mocks/auth.mock';
 import { UserCache } from '@service/redis/user.cache';
 import { FollowerCache } from '@service/redis/follower.cache';
-import { existingUser } from '@root/mocks/user.mock';
+import { existingUser, existingUserTwo } from '@root/mocks/user.mock';
 import { Get } from '@user/controllers/get-profile';
 import { PostCache } from '@service/redis/post.cache';
 import { postMockData } from '@root/mocks/post.mock';
@@ -37,6 +37,7 @@ describe('Get', () => {
       const res: Response = authMockResponse();
       jest.spyOn(UserCache.prototype, 'getUsersFromCache').mockResolvedValue([existingUser]);
       jest.spyOn(UserCache.prototype, 'getTotalUsersInCache').mockResolvedValue(1);
+      jest.spyOn(userService, 'getTotalUsersInDB').mockResolvedValue(1);
       jest.spyOn(FollowerCache.prototype, 'getFollowersFromCache').mockResolvedValue([mockFollowerData]);
       await Get.prototype.all(req, res);
       expect(FollowerCache.prototype.getFollowersFromCache).toHaveBeenCalledWith(`followers:${req.currentUser!.userId}`);
@@ -119,7 +120,58 @@ describe('Get', () => {
       expect(res.json).toHaveBeenCalledWith({
         message: 'Get user profile and posts',
         user: existingUser,
-        posts: [postMockData]
+        posts: [postMockData],
+        totalPosts: 1
+      });
+    });
+
+    it('excludes a Private post when the viewer is not the owner', async () => {
+      const req: Request = authMockRequest({}, {}, authUserPayload, {
+        username: existingUserTwo.username,
+        userId: existingUserTwo._id,
+        uId: existingUserTwo.uId
+      }) as Request;
+      const res: Response = authMockResponse();
+      const privatePost = { ...postMockData, userId: existingUserTwo._id, privacy: 'Private' } as typeof postMockData;
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockImplementation((id: string) =>
+        Promise.resolve(id === existingUserTwo._id ? existingUserTwo : existingUser)
+      );
+      jest.spyOn(PostCache.prototype, 'getUserPostsFromCache').mockResolvedValue([privatePost]);
+
+      await Get.prototype.profileAndPosts(req, res);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        message: 'Get user profile and posts',
+        user: existingUserTwo,
+        posts: [],
+        totalPosts: 0
+      });
+    });
+
+    it('excludes all posts when the viewer is in a block relationship with the profile owner', async () => {
+      const req: Request = authMockRequest({}, {}, authUserPayload, {
+        username: existingUserTwo.username,
+        userId: existingUserTwo._id,
+        uId: existingUserTwo.uId
+      }) as Request;
+      const res: Response = authMockResponse();
+      const publicPost = { ...postMockData, userId: existingUserTwo._id, privacy: 'Public' } as typeof postMockData;
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockImplementation((id: string) =>
+        Promise.resolve(
+          id === existingUserTwo._id
+            ? existingUserTwo
+            : ({ ...existingUser, blocked: [existingUserTwo._id] } as unknown as typeof existingUser)
+        )
+      );
+      jest.spyOn(PostCache.prototype, 'getUserPostsFromCache').mockResolvedValue([publicPost]);
+
+      await Get.prototype.profileAndPosts(req, res);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        message: 'Get user profile and posts',
+        user: existingUserTwo,
+        posts: [],
+        totalPosts: 0
       });
     });
 
@@ -144,7 +196,8 @@ describe('Get', () => {
       expect(res.json).toHaveBeenCalledWith({
         message: 'Get user profile and posts',
         user: existingUser,
-        posts: [postMockData]
+        posts: [postMockData],
+        totalPosts: 1
       });
     });
   });

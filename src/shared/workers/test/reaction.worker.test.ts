@@ -12,42 +12,35 @@ describe('ReactionWorker', () => {
 
   describe('addReactionToDB', () => {
     it('calls reactionService.addReactionDataToDB with job.data', async () => {
-      const done = jest.fn();
       const data = { postId: 'p1', type: 'like', username: 'Alice' };
       const job = mockJob(data);
       (reactionService.addReactionDataToDB as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await reactionWorker.addReactionToDB(job, done);
+      await reactionWorker.addReactionToDB(job);
 
       expect(reactionService.addReactionDataToDB).toHaveBeenCalledWith(data);
       expect(job.progress).toHaveBeenCalledWith(100);
-      expect(done).toHaveBeenCalledWith(null, data);
     });
 
-    it('calls done with error on failure', async () => {
-      const done = jest.fn();
+    it('rejects on failure', async () => {
       const data = { postId: 'p1' };
       const job = mockJob(data);
       const err = new Error('DB error');
       (reactionService.addReactionDataToDB as jest.Mock).mockRejectedValueOnce(err);
 
-      await reactionWorker.addReactionToDB(job, done);
-
-      expect(done).toHaveBeenCalledWith(err);
+      await expect(reactionWorker.addReactionToDB(job)).rejects.toThrow('DB error');
     });
   });
 
   describe('removeReactionFromDB', () => {
     it('calls reactionService.removeReactionDataFromDB with job.data', async () => {
-      const done = jest.fn();
       const data = { postId: 'p1', previousReaction: 'like', postReactions: {} };
       const job = mockJob(data);
       (reactionService.removeReactionDataFromDB as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await reactionWorker.removeReactionFromDB(job, done);
+      await reactionWorker.removeReactionFromDB(job);
 
       expect(reactionService.removeReactionDataFromDB).toHaveBeenCalledWith(data);
-      expect(done).toHaveBeenCalledWith(null, data);
     });
   });
 });

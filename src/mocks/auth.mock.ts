@@ -20,7 +20,8 @@ export const authMockRequest = (sessionData: IJWT, body: IAuthMock,currentUser?:
   session:sessionData,
   body,
   params,
-  currentUser
+  currentUser,
+  headers: {} as Record<string, string>
 })
 
 export const authMockResponse = (): Response => {
@@ -62,6 +63,7 @@ export const authUserPayload: AuthPayload = {
   username: 'Manny',
   email: 'manny@me.com',
   avatarColor: '#9c27b0',
+  jti: 'mock-jti-60263f14648fed5246e322d9',
   iat: 12345
 };
 

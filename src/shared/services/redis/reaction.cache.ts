@@ -19,9 +19,11 @@ export class ReactionCache extends BaseCache {
       if(!this.client.isOpen){
         await this.client.connect();
       }
-      if(previousReaction){
-        this.removePostReactionFromCache(key, reaction.username,postReactions);
-      }
+      // Always remove the user's existing reaction on this post (if any) before
+      // adding the new one. Enforcing this server-side — keyed on the user, not on
+      // the client-supplied `previousReaction` — keeps it to one reaction per user
+      // per post even when the client sends a stale or empty previousReaction.
+      await this.removePostReactionFromCache(key, reaction.username, postReactions);
       if(type){
         await this.client.LPUSH(`reactions:${key}`, JSON.stringify(reaction))
         await this.client.HSET(`posts:${key}`, 'reactions',JSON.stringify(postReactions))
@@ -37,8 +39,12 @@ export class ReactionCache extends BaseCache {
         await this.client.connect();
       }
       const response : string []= await this.client.LRANGE(`reactions:${key}`,0,-1)
+      const userPreviousReaction: IReactionDocument | undefined = this.getPreviousReaction(response,username);
+      // No existing reaction for this user — nothing to remove.
+      if(!userPreviousReaction){
+        return;
+      }
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      const userPreviousReaction: IReactionDocument =this.getPreviousReaction(response,username) as IReactionDocument;
       multi.LREM(`reactions:${key}`,1,JSON.stringify(userPreviousReaction));
       await multi.exec()
       await this.client.HSET(`posts:${key}`, 'reactions',JSON.stringify(postReaction))

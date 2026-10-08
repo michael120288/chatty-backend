@@ -30,7 +30,7 @@ describe('AuthMiddleware', () => {
     });
 
     it('sets req.currentUser and calls next() for a valid JWT', () => {
-      const token = JWT.sign(authUserPayload, process.env.JWT_TOKEN ?? '6CoXLSV8/zcDx6a4j/Dh7MoucX0BEZHJtUeVQIfISkE=');
+      const token = JWT.sign(authUserPayload, process.env.JWT_TOKEN!);
       const req = authMockRequest({ jwt: token }, {}) as unknown as Request;
       const res = authMockResponse();
 
@@ -42,7 +42,7 @@ describe('AuthMiddleware', () => {
     });
 
     it('sets the full payload on req.currentUser', () => {
-      const token = JWT.sign(authUserPayload, process.env.JWT_TOKEN ?? '6CoXLSV8/zcDx6a4j/Dh7MoucX0BEZHJtUeVQIfISkE=');
+      const token = JWT.sign(authUserPayload, process.env.JWT_TOKEN!);
       const req = authMockRequest({ jwt: token }, {}) as unknown as Request;
       const res = authMockResponse();
 

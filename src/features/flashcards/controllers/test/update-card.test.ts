@@ -63,7 +63,8 @@ describe('UpdateCard', () => {
       await UpdateCard.prototype.card(req, res);
       expect(flashcardQueue.addCardJob).toHaveBeenCalledWith('updateCardInDB', {
         key: req.params!.cardId,
-        value: cardMockData
+        value: cardMockData,
+        userId: req.currentUser!.userId
       });
     });
 

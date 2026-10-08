@@ -4,37 +4,38 @@
   <meta charset="UTF-8" />
   <title>The Twin APIs — Level 21</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #001a14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #06b6d4; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a63c9; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b76; margin-bottom: 40px; }
     .dashboard { max-width: 700px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .api-panel {
-      background: #0a1a14; border: 1px solid #1a4a3a; border-radius: 12px; padding: 24px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 24px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .api-title { color: #06b6d4; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
-    .api-endpoint { color: #555; font-size: 11px; font-family: monospace; margin-bottom: 16px; }
+    .api-title { color: #4a63c9; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+    .api-endpoint { color: #9a94ab; font-size: 11px; font-family: monospace; margin-bottom: 16px; }
     .api-data { min-height: 80px; }
     .data-item {
-      background: #001a14; border: 1px solid #1a3a2a; border-radius: 6px;
+      background: #f3f0fb; border: 1px solid rgba(18,18,18,.08); border-radius: 6px;
       padding: 10px 14px; margin-bottom: 8px; font-size: 14px;
     }
-    .data-item-name { color: #eee; }
-    .data-item-sub { color: #888; font-size: 12px; margin-top: 2px; }
+    .data-item-name { color: #121212; }
+    .data-item-sub { color: #6b6b76; font-size: 12px; margin-top: 2px; }
     #heroes-loading, #quests-loading {
-      color: #555; font-style: italic; font-size: 13px; text-align: center; padding: 20px;
+      color: #9a94ab; font-style: italic; font-size: 13px; text-align: center; padding: 20px;
     }
     .status-row {
-      grid-column: 1 / -1; background: #0a1a14; border: 1px solid #1a4a3a;
+      grid-column: 1 / -1; background: #ffffff; border: 1px solid rgba(18,18,18,.08);
       border-radius: 8px; padding: 16px; display: flex; gap: 16px; align-items: center;
     }
     .status-badge {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;
     }
-    .status-ok { background: #0a2e14; color: #4ecca3; border: 1px solid #4ecca3; }
-    .status-err { background: #2e0a0a; color: #e94560; border: 1px solid #e94560; }
-    .status-load { background: #1a1a00; color: #ffd700; border: 1px solid #ffd700; }
-    #combined-result { font-size: 13px; color: #888; flex: 1; }
+    .status-ok { background: #eafaf3; color: #1f9d6b; border: 1px solid #34c78c; }
+    .status-err { background: #fdeef0; color: #c23a5e; border: 1px solid #e0577a; }
+    .status-load { background: #f3ecff; color: #6f5aa8; border: 1px solid #a78bfa; }
+    #combined-result { font-size: 13px; color: #6b6b76; flex: 1; }
   </style>
 </head>
 <body>
@@ -103,7 +104,7 @@
       const questOk = document.getElementById('quests-status').className.includes('status-ok');
       if (heroOk && questOk) {
         document.getElementById('combined-result').textContent = 'Both APIs responded successfully!';
-        document.getElementById('combined-result').style.color = '#4ecca3';
+        document.getElementById('combined-result').style.color = '#1f9d6b';
       }
     }
 

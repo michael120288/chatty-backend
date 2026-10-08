@@ -20,9 +20,30 @@ export type PostCacheMultiType =
   | IPostDocument
   | IPostDocument[];
 
+const DEFAULT_REACTIONS: IReactions = { like: 0, love: 0, happy: 0, sad: 0, wow: 0, angry: 0 };
+
 export class PostCache extends BaseCache {
   constructor() {
     super('post Cache');
+  }
+
+  // Self-heals posts already corrupted by pre-fix writes (savePostToCache /
+  // updatePostInCache stringifying an omitted optional field into the literal
+  // text "undefined") in addition to the normal numeric/date/JSON coercion —
+  // parseJsonSafe treats a stored "undefined"/"null" string the same as a
+  // genuinely-missing value. Without this, a post with privacy: "undefined"
+  // matches none of PostUtils.checkPrivacy's branches on the frontend and
+  // silently renders nothing, which is exactly what corrupted posts did.
+  private normalizePostFields(post: IPostDocument): IPostDocument {
+    post.commentsCount = Helpers.parseJsonSafe(post.commentsCount, 0);
+    post.reactions = Helpers.parseJsonSafe(post.reactions, DEFAULT_REACTIONS);
+    post.createdAt = new Date(Helpers.parseJsonSafe(post.createdAt, Date.now()));
+    post.privacy = Helpers.parseJsonSafe(post.privacy, 'Public');
+    post.bgColor = Helpers.parseJsonSafe(post.bgColor, '#ffffff');
+    post.feelings = Helpers.parseJsonSafe(post.feelings, '');
+    post.gifUrl = Helpers.parseJsonSafe(post.gifUrl, '');
+    post.profilePicture = Helpers.parseJsonSafe(post.profilePicture, '');
+    return post;
   }
 
   public async savePostToCache(data: ISavePostToCache): Promise<void> {
@@ -31,7 +52,6 @@ export class PostCache extends BaseCache {
       _id,
       userId,
       username,
-      email,
       avatarColor,
       profilePicture,
       post,
@@ -52,7 +72,6 @@ export class PostCache extends BaseCache {
      '_id': `${_id}`,
       'userId': `${userId}`,
       'username': `${username}`,
-      'email': `${email}`,
       'avatarColor': `${avatarColor}`,
       'profilePicture': `${profilePicture}`,
       'post': `${post}`,
@@ -79,14 +98,24 @@ export class PostCache extends BaseCache {
         'postsCount',
       );
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      multi.ZADD('post', { score: parseInt(uId, 10), value: `${key}` });
+      // Score by creation time (ms) so ZRANGE ... {REV:true} yields a newest-first
+      // feed, consistent with the DB's { createdAt: -1 } sort. Scoring by the random
+      // uId produced an effectively random feed order. Fall back to uId if createdAt
+      // is somehow unparseable.
+      const createdAtScore: number = new Date(createdAt as unknown as string).getTime();
+      const score: number = Number.isNaN(createdAtScore) ? parseInt(uId, 10) : createdAtScore;
+      multi.ZADD('post', { score, value: `${key}` });
       for (const [itemKey, itemValue] of Object.entries(dataToSave)) {
         multi.HSET(`posts:${key}`, `${itemKey}`, `${itemValue}`);
       }
       const count: number = parseInt(postCount[0], 10) + 1;
       multi.HSET(`user:${currentUserId}`, 'postsCount', count);
       await multi.exec();
-      await this.client.expire(`posts:${key}`, 86400);
+      // No TTL here: `posts:${key}` is indexed permanently by the 'post' ZSET above,
+      // which is only ever removed via explicit ZREM in deletePostFromCache. A TTL on
+      // the hash alone left the ZSET pointing at posts whose HASH had expired, so
+      // pagination returned "ghost" entries with every field (including _id) undefined.
+      // The hash must live exactly as long as its ZSET membership — i.e. until deletion.
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
@@ -113,14 +142,7 @@ export class PostCache extends BaseCache {
         (await multi.exec()) as PostCacheMultiType;
       const postReplies: IPostDocument[] = [];
       for (const post of replies as IPostDocument[]) {
-        post.commentsCount = Helpers.parseJson(
-          `${post.commentsCount}`,
-        ) as number;
-        post.reactions = Helpers.parseJson(`${post.reactions}`) as IReactions;
-        post.createdAt = new Date(
-          Helpers.parseJson(`${post.createdAt}`),
-        ) as Date;
-        postReplies.push(post);
+        postReplies.push(this.normalizePostFields(post));
       }
       return postReplies;
     } catch (error) {
@@ -162,15 +184,11 @@ export class PostCache extends BaseCache {
       const replies: PostCacheMultiType =
         (await multi.exec()) as PostCacheMultiType;
       const postWithImages: IPostDocument[] = [];
-      for (const post of replies as IPostDocument[]) {
+      for (const rawPost of replies as IPostDocument[]) {
+        // Normalize before filtering: a corrupted gifUrl ("undefined") is
+        // truthy and would otherwise wrongly qualify a post with no real gif.
+        const post = this.normalizePostFields(rawPost);
         if ((post.imgId && post.imgVersion) || post.gifUrl) {
-          post.commentsCount = Helpers.parseJson(
-            `${post.commentsCount}`,
-          ) as number;
-          post.reactions = Helpers.parseJson(`${post.reactions}`) as IReactions;
-          post.createdAt = new Date(
-            Helpers.parseJson(`${post.createdAt}`),
-          ) as Date;
           postWithImages.push(post);
         }
       }
@@ -196,10 +214,7 @@ export class PostCache extends BaseCache {
       const postWithVideos: IPostDocument[] = [];
       for (const post of replies as IPostDocument[]) {
         if (post.videoId && post.videoVersion) {
-          post.commentsCount = Helpers.parseJson(`${post.commentsCount}`) as number;
-          post.reactions = Helpers.parseJson(`${post.reactions}`) as IReactions;
-          post.createdAt = new Date(Helpers.parseJson(`${post.createdAt}`)) as Date;
-          postWithVideos.push(post);
+          postWithVideos.push(this.normalizePostFields(post));
         }
       }
       return postWithVideos;
@@ -230,14 +245,7 @@ export class PostCache extends BaseCache {
         (await multi.exec()) as PostCacheMultiType;
       const postReplies: IPostDocument[] = [];
       for (const post of replies as IPostDocument[]) {
-        post.commentsCount = Helpers.parseJson(
-          `${post.commentsCount}`,
-        ) as number;
-        post.reactions = Helpers.parseJson(`${post.reactions}`) as IReactions;
-        post.createdAt = new Date(
-          Helpers.parseJson(`${post.createdAt}`),
-        ) as Date;
-        postReplies.push(post);
+        postReplies.push(this.normalizePostFields(post));
       }
       return postReplies;
     } catch (error) {
@@ -323,11 +331,8 @@ export class PostCache extends BaseCache {
       multi.HGETALL(`posts:${key}`);
       const reply: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
       const postReply = reply as IPostDocument[];
-      postReply[0].commentsCount = Helpers.parseJson(`${postReply[0].commentsCount}`) as number;
-      postReply[0].reactions = Helpers.parseJson(`${postReply[0].reactions}`) as IReactions;
-      postReply[0].createdAt = new Date(Helpers.parseJson(`${postReply[0].createdAt}`)) as Date;
 
-      return postReply[0];
+      return this.normalizePostFields(postReply[0]);
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');

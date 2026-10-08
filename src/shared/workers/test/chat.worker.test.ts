@@ -11,66 +11,55 @@ describe('ChatWorker', () => {
 
   describe('addChatMessageToDB', () => {
     it('calls chatService.addMessageToDB with job.data', async () => {
-      const done = jest.fn();
       const data = { senderId: 'u1', receiverId: 'u2', body: 'Hello' };
       const job = mockJob(data);
       (chatService.addMessageToDB as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await chatWorker.addChatMessageToDB(job, done);
+      await chatWorker.addChatMessageToDB(job);
 
       expect(chatService.addMessageToDB).toHaveBeenCalledWith(data);
       expect(job.progress).toHaveBeenCalledWith(100);
-      expect(done).toHaveBeenCalledWith(null, data);
     });
 
-    it('calls done with error on failure', async () => {
-      const done = jest.fn();
+    it('rejects on failure', async () => {
       const job = mockJob({});
       const err = new Error('DB error');
       (chatService.addMessageToDB as jest.Mock).mockRejectedValueOnce(err);
 
-      await chatWorker.addChatMessageToDB(job, done);
-
-      expect(done).toHaveBeenCalledWith(err);
+      await expect(chatWorker.addChatMessageToDB(job)).rejects.toThrow('DB error');
     });
   });
 
   describe('markMessageAsDeleted', () => {
     it('calls chatService.markMessageAsDeleted with messageId and type', async () => {
-      const done = jest.fn();
       const job = mockJob({ messageId: 'msg1', type: 'deleteForMe' });
       (chatService.markMessageAsDeleted as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await chatWorker.markMessageAsDeleted(job, done);
+      await chatWorker.markMessageAsDeleted(job);
 
       expect(chatService.markMessageAsDeleted).toHaveBeenCalledWith('msg1', 'deleteForMe');
-      expect(done).toHaveBeenCalledWith(null, job.data);
     });
   });
 
   describe('markMessagesAsReadInDB', () => {
     it('calls chatService.markMessagesAsRead with senderId and receiverId', async () => {
-      const done = jest.fn();
       const job = mockJob({ senderId: 'u1', receiverId: 'u2' });
       (chatService.markMessagesAsRead as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await chatWorker.markMessagesAsReadInDB(job, done);
+      await chatWorker.markMessagesAsReadInDB(job);
 
       expect(chatService.markMessagesAsRead).toHaveBeenCalledWith('u1', 'u2');
-      expect(done).toHaveBeenCalledWith(null, job.data);
     });
   });
 
   describe('updateMessageReaction', () => {
     it('calls chatService.updateMessageReaction with correct args', async () => {
-      const done = jest.fn();
       const job = mockJob({ messageId: 'msg1', senderName: 'Alice', reaction: '❤️', type: 'add' });
       (chatService.updateMessageReaction as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await chatWorker.updateMessageReaction(job, done);
+      await chatWorker.updateMessageReaction(job);
 
       expect(chatService.updateMessageReaction).toHaveBeenCalledWith('msg1', 'Alice', '❤️', 'add');
-      expect(done).toHaveBeenCalledWith(null, job.data);
     });
   });
 });

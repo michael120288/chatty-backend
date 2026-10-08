@@ -5,31 +5,31 @@
   <title>The WebSocket Watcher</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0d0d1a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif;
+    body { background: #f8f8f8; color: #121212; font-family: 'Segoe UI', sans-serif;
            display: flex; flex-direction: column; align-items: center;
            justify-content: center; min-height: 100vh; gap: 20px; }
-    h1 { color: #ffd700; font-size: 1.8rem; }
-    p  { color: #aaa; font-size: 0.9rem; max-width: 460px; text-align: center; }
+    h1 { color: #4a3a8f; font-size: 1.8rem; }
+    p  { color: rgba(18,18,18,.6); font-size: 0.9rem; max-width: 460px; text-align: center; }
     .panel {
-      background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 10px;
-      padding: 20px; min-width: 380px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px;
+      padding: 20px; min-width: 380px; box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .panel-title { color: #a855f7; font-size: 0.85rem; text-transform: uppercase;
+    .panel-title { color: #6f5aa8; font-size: 0.85rem; text-transform: uppercase;
                    letter-spacing: 1px; margin-bottom: 12px; }
     #ws-status { font-size: 1rem; margin-bottom: 10px; }
-    #ws-log { background: #0a0a14; border-radius: 6px; padding: 10px;
+    #ws-log { background: #f2f0fb; border-radius: 6px; padding: 10px;
               font-family: monospace; font-size: 0.8rem; min-height: 80px;
-              max-height: 140px; overflow-y: auto; color: #4ade80; }
+              max-height: 140px; overflow-y: auto; color: #15803d; }
     button {
       padding: 10px 24px; border: none; border-radius: 8px;
       font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
     }
-    #connect-btn  { background: #ffd700; color: #0d0d1a; margin-right: 8px; }
-    #connect-btn:hover { background: #ffcc00; }
-    #send-btn     { background: #a855f7; color: #fff; margin-right: 8px; }
-    #send-btn:hover { background: #9333ea; }
-    #close-btn    { background: #e94560; color: #fff; }
-    #close-btn:hover { background: #c0392b; }
+    #connect-btn  { background: #8f74e8; color: #ffffff; margin-right: 8px; }
+    #connect-btn:hover { background: #7c5fe0; }
+    #send-btn     { background: #6f8cff; color: #fff; margin-right: 8px; }
+    #send-btn:hover { background: #5a72e0; }
+    #close-btn    { background: #dc2626; color: #fff; }
+    #close-btn:hover { background: #b91c1c; }
     .btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
   </style>
 </head>

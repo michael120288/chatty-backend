@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { levelsController } from '@game/controllers/levels.controller';
 import { submissionController } from '@game/controllers/submission.controller';
+import { authMiddleware } from '@global/helpers/auth-middleware';
 
 const submitLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -14,9 +15,9 @@ const submitLimiter = rateLimit({
 export class GameRoutes {
   routes(): Router {
     const router = express.Router();
-    router.get('/game/levels', levelsController.getLevels.bind(levelsController));
-    router.get('/game/levels/:id', levelsController.getLevel.bind(levelsController));
-    router.post('/game/submit', submitLimiter, submissionController.submit.bind(submissionController));
+    router.get('/game/levels', authMiddleware.checkAuthentication, levelsController.getLevels.bind(levelsController));
+    router.get('/game/levels/:id', authMiddleware.checkAuthentication, levelsController.getLevel.bind(levelsController));
+    router.post('/game/submit', authMiddleware.checkAuthentication, submitLimiter, submissionController.submit.bind(submissionController));
     return router;
   }
 }

@@ -29,8 +29,8 @@ describe('ChangePassword', () => {
         {},
         {
           currentPassword: '',
-          newPassword: 'manny2',
-          confirmPassword: 'manny2'
+          newPassword: 'SecurePass2@',
+          confirmPassword: 'SecurePass2@'
         }
       ) as Request;
       const res: Response = authMockResponse();
@@ -44,9 +44,9 @@ describe('ChangePassword', () => {
       const req: Request = authMockRequest(
         {},
         {
-          currentPassword: 'manny1',
+          currentPassword: 'SecurePass1@',
           newPassword: '',
-          confirmPassword: 'manny2'
+          confirmPassword: 'SecurePass2@'
         }
       ) as Request;
       const res: Response = authMockResponse();
@@ -60,8 +60,8 @@ describe('ChangePassword', () => {
       const req: Request = authMockRequest(
         {},
         {
-          currentPassword: 'manny1',
-          newPassword: 'manny2',
+          currentPassword: 'SecurePass1@',
+          newPassword: 'SecurePass2@',
           confirmPassword: ''
         }
       ) as Request;
@@ -76,9 +76,9 @@ describe('ChangePassword', () => {
       const req: Request = authMockRequest(
         {},
         {
-          currentPassword: 'manny1',
-          newPassword: 'manny2',
-          confirmPassword: 'manny2'
+          currentPassword: 'SecurePass1@',
+          newPassword: 'SecurePass2@',
+          confirmPassword: 'SecurePass2@'
         },
         authUserPayload
       ) as Request;
@@ -99,9 +99,9 @@ describe('ChangePassword', () => {
       const req: Request = authMockRequest(
         {},
         {
-          currentPassword: 'manny1',
-          newPassword: 'manny2',
-          confirmPassword: 'manny2'
+          currentPassword: 'SecurePass1@',
+          newPassword: 'SecurePass2@',
+          confirmPassword: 'SecurePass2@'
         },
         authUserPayload
       ) as Request;

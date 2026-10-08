@@ -15,17 +15,22 @@ export class SocketIOUserHandler {
 
   public listen(): void {
     this.io.on('connection', (socket: Socket) => {
-      socket.on('setup', (data: ILogin) => {
-        this.addClientToMap(data.userId, socket.id);
-        this.addUser(data.userId);
+      socket.on('setup', (_data: ILogin) => {
+        const username = (socket.data.user?.username as string) || (_data as ILogin).userId;
+        this.addClientToMap(username, socket.id);
+        this.addUser(username);
         this.io.emit('user online', users);
       });
 
       socket.on('block user', (data: ISocketData) => {
+        const socketUserId = socket.data?.user?.userId as string | undefined;
+        if (!socketUserId || socketUserId !== data.blockedBy) return;
         this.io.emit('blocked user id', data);
       });
 
       socket.on('unblock user', (data: ISocketData) => {
+        const socketUserId = socket.data?.user?.userId as string | undefined;
+        if (!socketUserId || socketUserId !== data.blockedBy) return;
         this.io.emit('unblocked user id', data);
       });
 

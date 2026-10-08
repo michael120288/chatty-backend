@@ -37,7 +37,7 @@ class CommentService {
     const response: [ICommentDocument, IPostDocument, IUserDocument] =
       await Promise.all([comments, post, user]);
 
-    if (response[2].notifications.comments && userFrom !== userTo) {
+    if (response[2]?.notifications.comments && userFrom !== userTo) {
       const notificationModel: INotificationDocument = new NotificationModel();
       const notifications = await notificationModel.insertNotification({
         userFrom,
@@ -104,15 +104,15 @@ class CommentService {
     return commentsNamesList;
   }
 
-  public async updateCommentInDB(commentId: string, comment: string, username?: string): Promise<void> {
-    const filter = username ? { _id: commentId, username } : { _id: commentId };
-    await CommentsModel.updateOne(filter, { $set: { comment } });
+  public async updateCommentInDB(commentId: string, comment: string, username: string): Promise<void> {
+    await CommentsModel.updateOne({ _id: commentId, username }, { $set: { comment } });
   }
 
-  public async deleteCommentFromDB(postId: string, commentId: string, username?: string): Promise<void> {
-    const filter = username ? { _id: commentId, username } : { _id: commentId };
-    await CommentsModel.deleteOne(filter);
-    await PostModel.updateOne({ _id: postId }, { $inc: { commentsCount: -1 } });
+  public async deleteCommentFromDB(postId: string, commentId: string, username: string): Promise<void> {
+    await Promise.all([
+      CommentsModel.deleteOne({ _id: commentId, username }),
+      PostModel.updateOne({ _id: postId }, { $inc: { commentsCount: -1 } })
+    ]);
   }
 }
 

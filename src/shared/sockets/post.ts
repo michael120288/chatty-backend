@@ -15,10 +15,14 @@ export  class SocketIOPostHandler{
     this.io.on('connection', (socket: Socket) => {
 
       socket.on('reaction', (reaction:IReactionDocument)=>{
+        const socketUsername = socket.data?.user?.username as string | undefined;
+        if (!socketUsername || socketUsername !== reaction.username) return;
         this.io.emit('update like', reaction)
       })
 
       socket.on('comment', (data:ICommentDocument)=>{
+        const socketUsername = socket.data?.user?.username as string | undefined;
+        if (!socketUsername || socketUsername !== data.username) return;
         this.io.emit('update comment', data)
       })
 

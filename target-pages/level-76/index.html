@@ -4,27 +4,27 @@
   <meta charset="UTF-8" />
   <title>The Merchant's Trail — Shop</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 0; }
-    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: #0d0d2e; border-bottom: 1px solid #1a2e1a; }
-    .topbar-title { color: #22c55e; font-size: 18px; font-weight: bold; }
-    .cart-btn { display: flex; align-items: center; gap: 10px; padding: 9px 20px; background: #22c55e; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 14px; cursor: pointer; text-decoration: none; }
-    .cart-btn:hover { background: #4ade80; }
-    #cart-count { background: #000; color: #22c55e; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 0; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: #ffffff; border-bottom: 1px solid rgba(18,18,18,.08); }
+    .topbar-title { color: #4a3a8f; font-size: 18px; font-weight: bold; }
+    .cart-btn { display: flex; align-items: center; gap: 10px; padding: 9px 20px; background: #8f74e8; border: none; border-radius: 8px; color: #ffffff; font-weight: bold; font-size: 14px; cursor: pointer; text-decoration: none; }
+    .cart-btn:hover { background: #7a5fd6; }
+    #cart-count { background: #ffffff; color: #4a3a8f; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
     .content { max-width: 900px; margin: 48px auto; padding: 0 24px; }
-    h2 { color: #22c55e; margin: 0 0 8px; }
-    .page-desc { color: #888; font-size: 14px; margin: 0 0 32px; }
+    h2 { color: #4a3a8f; margin: 0 0 8px; }
+    .page-desc { color: rgba(18,18,18,.55); font-size: 14px; margin: 0 0 32px; }
     .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .item-card { background: #0d0d2e; border: 1px solid #1a2e1a; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; }
+    .item-card { background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
     .item-icon { font-size: 40px; margin-bottom: 14px; }
-    .item-name { font-size: 17px; font-weight: bold; color: #eee; margin-bottom: 6px; }
-    .item-desc { font-size: 13px; color: #666; margin-bottom: 16px; flex: 1; }
+    .item-name { font-size: 17px; font-weight: bold; color: #121212; margin-bottom: 6px; }
+    .item-desc { font-size: 13px; color: rgba(18,18,18,.5); margin-bottom: 16px; flex: 1; }
     .item-footer { display: flex; align-items: center; justify-content: space-between; }
-    .item-price { font-size: 18px; font-weight: bold; color: #22c55e; }
-    .item-price span { font-size: 12px; color: #666; font-weight: normal; }
-    .add-btn { padding: 9px 18px; background: #22c55e; border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 13px; cursor: pointer; transition: background 0.2s; }
-    .add-btn:hover { background: #4ade80; }
-    .add-btn.added { background: #166534; color: #4ade80; cursor: default; }
-    .added-badge { display: none; font-size: 12px; color: #4ade80; margin-top: 6px; }
+    .item-price { font-size: 18px; font-weight: bold; color: #4a3a8f; }
+    .item-price span { font-size: 12px; color: rgba(18,18,18,.45); font-weight: normal; }
+    .add-btn { padding: 9px 18px; background: #8f74e8; border: none; border-radius: 8px; color: #ffffff; font-weight: bold; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .add-btn:hover { background: #7a5fd6; }
+    .add-btn.added { background: #eafaf0; color: #15803d; cursor: default; }
+    .added-badge { display: none; font-size: 12px; color: #15803d; margin-top: 6px; }
   </style>
 </head>
 <body>

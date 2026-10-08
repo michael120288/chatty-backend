@@ -22,10 +22,12 @@ export class MessageCache extends BaseCache {
       const userChatList = await this.client.LRANGE(`chatList:${senderId}`, 0, -1);
       if (userChatList.length === 0) {
         await this.client.RPUSH(`chatList:${senderId}`, JSON.stringify({ receiverId, conversationId }));
+        await this.client.EXPIRE(`chatList:${senderId}`, 7 * 24 * 60 * 60);
       } else {
         const receiverIndex: number = findIndex(userChatList, (listItem: string) => listItem.includes(receiverId));
         if (receiverIndex < 0) {
           await this.client.RPUSH(`chatList:${senderId}`, JSON.stringify({ receiverId, conversationId }));
+          await this.client.EXPIRE(`chatList:${senderId}`, 7 * 24 * 60 * 60);
         }
       }
     } catch (error) {
@@ -56,6 +58,7 @@ export class MessageCache extends BaseCache {
         await this.client.connect();
       }
       await this.client.RPUSH(`messages:${conversationId}`, JSON.stringify(value));
+      await this.client.EXPIRE(`messages:${conversationId}`, 30 * 24 * 60 * 60);
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');

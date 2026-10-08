@@ -4,29 +4,29 @@
   <meta charset="UTF-8" />
   <title>Gallery of Chronicles — Level 7</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a1628; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #4da6ff; text-align: center; font-size: 2.2em; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #6f8cff; text-align: center; font-size: 2.2em; }
+    .subtitle { text-align: center; color: #767676; margin-bottom: 40px; }
     .gallery { max-width: 800px; margin: 0 auto; }
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
     .gallery-card {
-      background: #0d2040; border: 1px solid #1a4070; border-radius: 8px;
-      padding: 20px; text-align: center; transition: transform 0.2s;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px;
+      padding: 20px; text-align: center; transition: transform 0.2s; box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .gallery-card:hover { transform: translateY(-4px); }
     .card-icon { font-size: 48px; margin-bottom: 8px; }
-    .card-title { font-size: 14px; color: #4da6ff; font-weight: bold; }
+    .card-title { font-size: 14px; color: #4a6fe0; font-weight: bold; }
     .hero-banner {
-      background: linear-gradient(135deg, #0d2040, #1a4070);
-      border: 2px solid #4da6ff; border-radius: 12px;
+      background: linear-gradient(135deg, #e2e8ff, #cbd5ff);
+      border: 2px solid #6f8cff; border-radius: 12px;
       padding: 32px; text-align: center; margin-bottom: 24px;
     }
-    .hero-title { font-size: 28px; color: #4da6ff; font-weight: bold; }
-    .hero-sub { color: #888; margin-top: 8px; }
+    .hero-title { font-size: 28px; color: #3a4fa8; font-weight: bold; }
+    .hero-sub { color: #5a5a5a; margin-top: 8px; }
     .progress-section { margin-top: 24px; }
     .progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
-    .progress-bar-bg { background: #0d2040; border-radius: 4px; height: 12px; margin-bottom: 12px; }
-    .progress-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #4da6ff, #7b61ff); }
+    .progress-bar-bg { background: #eef0f8; border-radius: 4px; height: 12px; margin-bottom: 12px; }
+    .progress-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #6f8cff, #8f74e8); }
   </style>
 </head>
 <body>
@@ -54,7 +54,7 @@
       <div class="progress-label"><span>Lore Documented</span><span>91%</span></div>
       <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 91%"></div></div>
       <div class="progress-label"><span>Mysteries Solved</span><span>45%</span></div>
-      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 45%; background: linear-gradient(90deg, #e94560, #ff6b9d)"></div></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 45%; background: linear-gradient(90deg, #a78bfa, #c3acff)"></div></div>
     </div>
   </div>
 </body>

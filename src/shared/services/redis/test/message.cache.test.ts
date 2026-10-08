@@ -30,7 +30,8 @@ const mockClient = {
   RPUSH: jest.fn(),
   LSET: jest.fn(),
   LINDEX: jest.fn(),
-  LREM: jest.fn()
+  LREM: jest.fn(),
+  EXPIRE: jest.fn().mockResolvedValue(1)
 };
 
 describe('MessageCache', () => {

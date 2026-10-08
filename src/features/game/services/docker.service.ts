@@ -42,7 +42,24 @@ export class DockerService {
       return await this.execDocker(
         tmpFile,
         '/sandbox/submission.test.ts',
-        ['bash', '-c', 'node /app/node_modules/.bin/vitest run /sandbox/submission.test.ts --reporter=verbose --no-coverage 2>&1'],
+        ['bash', '-c', '/app/node_modules/.bin/vitest run /sandbox/submission.test.ts --reporter=verbose --no-coverage 2>&1'],
+        false
+      );
+    } finally {
+      await fs.unlink(tmpFile).catch(() => {});
+    }
+  }
+
+  async runPythonPlaywrightCode(code: string): Promise<IDockerRunResult> {
+    const rewritten = code
+      .replace(/localhost:4000/g, 'host.docker.internal:5000')
+      .replace(/localhost/g, 'host.docker.internal');
+    const tmpFile = await this.writeTemp(rewritten, '.py');
+    try {
+      return await this.execDocker(
+        tmpFile,
+        '/sandbox/submission.py',
+        ['bash', '-c', 'python3 /sandbox/submission.py 2>&1'],
         false
       );
     } finally {
@@ -95,12 +112,15 @@ export class DockerService {
     readOnly: boolean
   ): Promise<IDockerRunResult> {
     return new Promise((resolve) => {
+      const containerName = `sandbox-${uuidv4()}`;
       const args = [
         'run',
         '--rm',
+        '--name', containerName,
         '--add-host', 'host.docker.internal:host-gateway',
         '--memory', '512m',
         '--cpus', '1.0',
+        '--pids-limit', '128',
         '--security-opt', 'no-new-privileges',
         '--tmpfs', '/tmp',
         ...(readOnly ? ['--read-only'] : []),
@@ -118,6 +138,15 @@ export class DockerService {
 
       const killTimer = setTimeout(() => {
         timedOut = true;
+        // Killing the local `docker` CLI process does NOT stop the container
+        // running under the daemon — `docker run` in the foreground is just a
+        // client attached to the container's streams, and SIGKILL to the
+        // client can't be forwarded. Without an explicit `docker kill` on the
+        // named container, a runaway submission (e.g. an infinite loop) keeps
+        // consuming CPU/memory past the reported timeout. Issue the kill by
+        // name and swallow errors (e.g. container already exited).
+        const containerKill = spawn('docker', ['kill', containerName]);
+        containerKill.on('error', () => {});
         docker.kill('SIGKILL');
       }, config.DOCKER_TIMEOUT);
 

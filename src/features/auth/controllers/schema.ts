@@ -212,7 +212,7 @@ const SCHEMA = {
       description: 'Delete a test user. Only works for usernames starting with "vitest". Requires x-test-secret header.',
       fields: [
         { name: 'authId',          type: 'string',  in: 'path',   required: true, format: 'authId from signup response' },
-        { name: 'x-test-secret',   type: 'string',  in: 'header', required: true, value: 'chatty-test-cleanup-2026' },
+        { name: 'x-test-secret',   type: 'string',  in: 'header', required: true },
       ],
       success: { status: 200, body: '{ message: "Test user deleted successfully" }' },
       errors: [

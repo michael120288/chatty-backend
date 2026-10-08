@@ -22,7 +22,7 @@ describe('Delete Comment', () => {
     await Delete.prototype.comment(req, res);
 
     expect(CommentCache.prototype.deleteCommentFromCache).toHaveBeenCalledWith('post1', 'comment1');
-    expect(addJobSpy).toHaveBeenCalledWith('deleteCommentFromDB', { postId: 'post1', commentId: 'comment1' });
+    expect(addJobSpy).toHaveBeenCalledWith('deleteCommentFromDB', { postId: 'post1', commentId: 'comment1', username: 'Manny' });
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ message: 'Comment deleted successfully' });
   });

@@ -36,7 +36,7 @@ describe('Update', () => {
         {},
         {
           senderId: `${existingUser._id}`,
-          receiverId: '60263f14648fed5246e322d8'
+          receiverId: authUserPayload.userId
         },
         authUserPayload
       ) as Request;
@@ -59,7 +59,7 @@ describe('Update', () => {
         {},
         {
           senderId: `${existingUser._id}`,
-          receiverId: '60263f14648fed5246e322d8'
+          receiverId: authUserPayload.userId
         },
         authUserPayload
       ) as Request;

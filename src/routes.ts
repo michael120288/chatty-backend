@@ -30,7 +30,7 @@ export default (app: Application) => {
     const targetPagesPath = path.join(process.cwd(), 'target-pages');
     // Mock API routes for target pages (no auth — called from iframes)
     app.use('/api', mockApiRoutes.routes());
-
+    app.use(express.static(path.join(process.cwd(), 'public')));
     app.use('/pages', (_req: Request, res: Response, next: NextFunction) => {
       const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
       res.setHeader('Content-Security-Policy', `frame-ancestors 'self' ${clientUrl}`);
@@ -44,22 +44,29 @@ export default (app: Application) => {
     app.use('/health-instance', authMiddleware.verifyUser, healthRoutes.instance());
     app.use('/fibo', authMiddleware.verifyUser, healthRoutes.fiboRoutes());
     app.use(BASE_PATH, authRoutes.routes());
+    // Enabled in all environments, including production, so QA test accounts
+    // (vitest/pytest/pw_ prefixes) created against codeandtest.com can be
+    // cleaned up too. Guarded by TEST_CLEANUP_SECRET + username-prefix checks
+    // inside testCleanupRoutes/test-cleanup.ts.
     app.use(BASE_PATH, testCleanupRoutes.routes());
     app.get(`${BASE_PATH}/schema`, schemaController.get);
 
-    app.use(BASE_PATH, authMiddleware.verifyUser, currentUserRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, postRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, reactionRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, commentRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, followerRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, notificationRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, imageRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, chatRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, currentUserRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, postRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, reactionRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, commentRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, followerRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, notificationRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, imageRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, chatRoutes.routes());
     // app.use(BASE_PATH, authMiddleware.verifyUser, flashcardRoutes.routes()); // disabled — flashcards WIP
-    app.use(BASE_PATH, authMiddleware.verifyUser, userRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, gameRoutes.routes());
-    app.use(BASE_PATH, authMiddleware.verifyUser, progressRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, userRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, gameRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.identifyUser, progressRoutes.routes());
 
+    app.use(BASE_PATH, (req: Request, res: Response) => {
+      res.status(404).json({ message: 'Route not found', statusCode: 404, status: 'error' });
+    });
   };
   setupRoutes();
 };

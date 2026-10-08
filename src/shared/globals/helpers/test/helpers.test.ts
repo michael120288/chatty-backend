@@ -79,6 +79,39 @@ describe('Helpers', () => {
     });
   });
 
+  // ── parseJsonSafe ────────────────────────────────────────────────────────
+
+  describe('parseJsonSafe', () => {
+    it('returns the fallback when value is undefined', () => {
+      expect(Helpers.parseJsonSafe(undefined, 0)).toBe(0);
+    });
+
+    it('returns the fallback when value is null', () => {
+      expect(Helpers.parseJsonSafe(null, [])).toEqual([]);
+    });
+
+    it('parses a well-formed value normally', () => {
+      expect(Helpers.parseJsonSafe('[1,2,3]', [])).toEqual([1, 2, 3]);
+    });
+
+    it('does not treat 0 or an empty string as missing', () => {
+      expect(Helpers.parseJsonSafe(0, 99)).toBe(0);
+      expect(Helpers.parseJsonSafe('', 'fallback')).toBe('');
+    });
+
+    it('treats the literal string "undefined" as missing (self-heals already-corrupted stored data)', () => {
+      expect(Helpers.parseJsonSafe('undefined', 'Public')).toBe('Public');
+    });
+
+    it('treats the literal string "null" as missing', () => {
+      expect(Helpers.parseJsonSafe('null', '#ffffff')).toBe('#ffffff');
+    });
+
+    it('passes through a plain non-JSON string unchanged', () => {
+      expect(Helpers.parseJsonSafe('Public', 'fallback')).toBe('Public');
+    });
+  });
+
   // ── isDataURL ────────────────────────────────────────────────────────────
 
   describe('isDataURL', () => {

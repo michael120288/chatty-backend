@@ -12,32 +12,35 @@ import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads, videoUpload } from '@global/helpers/cloudinary-upload';
-import { BadRequestError, NotAuthorizedError } from '@global/helpers/error-handler';
+import { BadRequestError, ForbiddenError, NotFoundError } from '@global/helpers/error-handler';
 import { imageQueue } from '@service/queues/image.queue';
+import { postService } from '@service/db/post.service';
+import { withPostDefaults } from '@post/controllers/create-post';
 
 const postCache: PostCache = new PostCache();
+
+async function verifyPostOwnership(postId: string, userId: string): Promise<void> {
+  // Ownership enforcement (prevents IDOR). Distinguish the two failure modes:
+  //   - post does not exist        → 404 Not Found
+  //   - post exists but not yours  → 403 Forbidden (authenticated, not permitted)
+  const cachedOwnerId = await postCache.getPostOwnerFromCache(postId);
+  const ownerId = cachedOwnerId ?? await postService.getPostOwnerFromDB(postId);
+  if (!ownerId) {
+    throw new NotFoundError(`Post ${postId} not found`);
+  }
+  if (ownerId !== userId) {
+    throw new ForbiddenError('Not authorized to update this post');
+  }
+}
 
 export class Update {
   @joiValidation(postSchema)
   public async posts(req: Request, res: Response): Promise<void> {
-    const {
-      post,
-      bgColor,
-      feelings,
-      privacy,
-      gifUrl,
-      imgVersion,
-      imgId,
-      profilePicture,
-      videoId,
-      videoVersion,
-    } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
+    const { imgVersion, imgId, videoId, videoVersion } = req.body;
     const { postId } = req.params;
 
-    const cachedOwnerId = await postCache.getPostOwnerFromCache(postId);
-    if (cachedOwnerId && cachedOwnerId !== `${req.currentUser!.userId}`) {
-      throw new NotAuthorizedError('Not authorized to update this post');
-    }
+    await verifyPostOwnership(postId, `${req.currentUser!.userId}`);
 
     const updatedPost: IPostDocument = {
       post,
@@ -67,7 +70,7 @@ export class Update {
   public async postWithImage(req: Request, res: Response): Promise<void> {
     const { imgId, imgVersion } = req.body;
     if (imgId && imgVersion) {
-      Update.prototype.updatePost(req);
+      await Update.prototype.updatePost(req);
     } else {
       const result: UploadApiResponse =
         await Update.prototype.addFileToExistingPost(req);
@@ -98,24 +101,11 @@ export class Update {
   }
 
   private async updatePost(req: Request): Promise<void> {
-    const {
-      post,
-      bgColor,
-      feelings,
-      privacy,
-      gifUrl,
-      imgVersion,
-      imgId,
-      profilePicture,
-      videoId,
-      videoVersion,
-    } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
+    const { imgVersion, imgId, videoId, videoVersion } = req.body;
     const { postId } = req.params;
 
-    const cachedOwnerId = await postCache.getPostOwnerFromCache(postId);
-    if (cachedOwnerId && cachedOwnerId !== `${req.currentUser!.userId}`) {
-      throw new NotAuthorizedError('Not authorized to update this post');
-    }
+    await verifyPostOwnership(postId, `${req.currentUser!.userId}`);
 
     const updatedPost: IPostDocument = {
       post,
@@ -140,17 +130,12 @@ export class Update {
   private async addFileToExistingPost(
     req: Request,
   ): Promise<UploadApiResponse> {
-    const {
-      post,
-      bgColor,
-      feelings,
-      privacy,
-      gifUrl,
-      profilePicture,
-      image,
-      video,
-    } = req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings } = withPostDefaults(req.body);
+    const { image, video } = req.body;
     const { postId } = req.params;
+
+    await verifyPostOwnership(postId, `${req.currentUser!.userId}`);
+
     const result: UploadApiResponse = image
       ? ((await uploads(image)) as UploadApiResponse)
       : ((await videoUpload(video)) as UploadApiResponse);

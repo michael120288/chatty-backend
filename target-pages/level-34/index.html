@@ -4,48 +4,50 @@
   <meta charset="UTF-8" />
   <title>The Location Oracle — Level 34</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0f14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #22d3ee; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a3a8f; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 40px; }
     .oracle-panel { max-width: 480px; margin: 0 auto; }
     .globe-display {
-      text-align: center; padding: 40px 20px; background: #0d1a20;
-      border: 1px solid #0e4d6a; border-radius: 12px; margin-bottom: 20px;
+      text-align: center; padding: 40px 20px; background: #ffffff;
+      border: 1px solid rgba(111,140,255,.35); border-radius: 12px; margin-bottom: 20px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .globe-icon { font-size: 72px; margin-bottom: 16px; }
-    .globe-title { font-size: 18px; color: #22d3ee; margin-bottom: 8px; }
-    .globe-desc { font-size: 14px; color: #666; margin-bottom: 24px; }
+    .globe-title { font-size: 18px; color: #6f8cff; margin-bottom: 8px; }
+    .globe-desc { font-size: 14px; color: #6b6b6b; margin-bottom: 24px; }
     #locate-btn {
-      padding: 12px 32px; background: #0e4d6a; border: 1px solid #22d3ee;
-      border-radius: 8px; color: #22d3ee; font-size: 15px; cursor: pointer;
+      padding: 12px 32px; background: #6f8cff; border: 1px solid #6f8cff;
+      border-radius: 8px; color: #ffffff; font-size: 15px; cursor: pointer;
       transition: background 0.2s;
     }
-    #locate-btn:hover { background: #1a6080; }
+    #locate-btn:hover { background: #4a6ae0; }
     #locate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     #location-display { display: none; margin-top: 20px; }
     .coord-card {
-      background: #0d1a20; border: 1px solid #22d3ee; border-radius: 10px; padding: 20px;
+      background: #ffffff; border: 1px solid #6f8cff; border-radius: 10px; padding: 20px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .coord-title { color: #22d3ee; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .coord-title { color: #6f8cff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
     .coord-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
-    .coord-label { color: #888; font-size: 14px; }
-    .coord-value { color: #eee; font-size: 14px; font-weight: bold; font-family: monospace; }
-    #lat-display, #lng-display { color: #4ecca3; }
+    .coord-label { color: #6b6b6b; font-size: 14px; }
+    .coord-value { color: #121212; font-size: 14px; font-weight: bold; font-family: monospace; }
+    #lat-display, #lng-display { color: #2f9e74; }
     .success-seal {
-      margin-top: 16px; padding: 12px; background: #0a2e14;
-      border: 1px solid #4ecca3; border-radius: 8px;
-      color: #4ecca3; font-size: 14px; font-weight: bold; text-align: center;
+      margin-top: 16px; padding: 12px; background: #eafaf3;
+      border: 1px solid #2f9e74; border-radius: 8px;
+      color: #1f7a58; font-size: 14px; font-weight: bold; text-align: center;
     }
     #error-msg {
       display: none; margin-top: 20px; padding: 14px;
-      background: #1a0a0a; border: 1px solid #f87171;
-      border-radius: 8px; color: #f87171; font-size: 14px; text-align: center;
+      background: #fdeceb; border: 1px solid #e35b5b;
+      border-radius: 8px; color: #c23b3b; font-size: 14px; text-align: center;
     }
     .hint-box {
-      margin-top: 20px; padding: 14px; background: #0d1a20; border: 1px solid #0e4d6a;
-      border-radius: 8px; font-size: 13px; color: #888; line-height: 1.6;
+      margin-top: 20px; padding: 14px; background: #f4f2fb; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 13px; color: #6b6b6b; line-height: 1.6;
     }
-    code { color: #22d3ee; font-family: monospace; background: #060f14; padding: 1px 5px; border-radius: 3px; }
+    code { color: #4a3a8f; font-family: monospace; background: #eef0fb; padding: 1px 5px; border-radius: 3px; }
   </style>
 </head>
 <body>

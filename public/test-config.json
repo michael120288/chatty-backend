@@ -1,0 +1,16 @@
+{
+    "chatty-api-tests-python": {
+        "BASE_URL": "https://api.codeandtest.com/api/v1",
+        "TEST_USERNAME": "pytestmike",
+        "TEST_PASSWORD": "Pytest@123456",
+        "DATABASE_URL": "mongodb+srv://testuserread:testuserread@cluster0.8zhnmva.mongodb.net/",
+        "TEST_CLEANUP_SECRET": "chatty-test-cleanup-2026"
+    },
+    "chatty-api-tests": {
+        "BASE_URL": "https://api.codeandtest.com/api/v1",
+        "TEST_USERNAME": "vitestuser",
+        "TEST_PASSWORD": "TestUser!234",
+        "DATABASE_URL": "mongodb+srv://testuserread:testuserread@cluster0.8zhnmva.mongodb.net/",
+        "TEST_CLEANUP_SECRET": "chatty-test-cleanup-2026"
+    }
+}

@@ -9,9 +9,10 @@ import { SocketIOFlashcardHandler } from '@socket/flashcard';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-function mockSocket(id = 'socket-1'): jest.Mocked<Socket> {
+function mockSocket(id = 'socket-1', username = 'testuser', userId = 'user1'): jest.Mocked<Socket> {
   return {
     id,
+    data: { user: { username, userId } },
     on: jest.fn(),
     join: jest.fn(),
     emit: jest.fn(),
@@ -45,7 +46,7 @@ describe('SocketIOUserHandler', () => {
 
   it('adds user to connectedUsersMap on "setup"', () => {
     const io = mockServer();
-    const socket = mockSocket('sock-1');
+    const socket = mockSocket('sock-1', '', '');
     const handler = new SocketIOUserHandler(io);
     handler.listen();
     connect(io, socket);
@@ -71,7 +72,7 @@ describe('SocketIOUserHandler', () => {
     const handler = new SocketIOUserHandler(io);
     handler.listen();
     connect(io, socket);
-    const data = { blockedUserId: 'u99' };
+    const data = { blockedUser: 'u99', blockedBy: 'user1' };
     emit(socket, 'block user', data);
 
     expect(io.emit).toHaveBeenCalledWith('blocked user id', data);
@@ -83,7 +84,7 @@ describe('SocketIOUserHandler', () => {
     const handler = new SocketIOUserHandler(io);
     handler.listen();
     connect(io, socket);
-    const data = { blockedUserId: 'u99' };
+    const data = { blockedUser: 'u99', blockedBy: 'user1' };
     emit(socket, 'unblock user', data);
 
     expect(io.emit).toHaveBeenCalledWith('unblocked user id', data);
@@ -91,7 +92,7 @@ describe('SocketIOUserHandler', () => {
 
   it('removes user from connectedUsersMap on disconnect', () => {
     const io = mockServer();
-    const socket = mockSocket('sock-disconnect');
+    const socket = mockSocket('sock-disconnect', '', '');
     const handler = new SocketIOUserHandler(io);
     handler.listen();
     connect(io, socket);
@@ -112,7 +113,7 @@ describe('SocketIOPostHandler', () => {
     const handler = new SocketIOPostHandler(io);
     handler.listen();
     connect(io, socket);
-    const reaction = { type: 'like', postId: 'p1' };
+    const reaction = { type: 'like', postId: 'p1', username: 'testuser' };
     emit(socket, 'reaction', reaction);
 
     expect(io.emit).toHaveBeenCalledWith('update like', reaction);
@@ -124,7 +125,7 @@ describe('SocketIOPostHandler', () => {
     const handler = new SocketIOPostHandler(io);
     handler.listen();
     connect(io, socket);
-    const comment = { comment: 'Nice!', postId: 'p1' };
+    const comment = { comment: 'Nice!', postId: 'p1', username: 'testuser' };
     emit(socket, 'comment', comment);
 
     expect(io.emit).toHaveBeenCalledWith('update comment', comment);
@@ -141,7 +142,7 @@ describe('SocketIOChatHandler', () => {
     connectedUsersMap.set('Bob', 'sock-bob');
 
     const io = mockServer();
-    const socket = mockSocket();
+    const socket = mockSocket('socket-1', 'Alice', 'user-alice');
     const handler = new SocketIOChatHandler(io);
     handler.listen();
     connect(io, socket);
@@ -161,7 +162,7 @@ describe('SocketIOFollowerHandler', () => {
     const handler = new SocketIOFollowerHandler(io);
     handler.listen();
     connect(io, socket);
-    const data = { followerId: 'u1', followeeId: 'u2' };
+    const data = { userId: 'user1' };
     emit(socket, 'unfollow user', data);
 
     expect(io.emit).toHaveBeenCalledWith('remove follower', data);

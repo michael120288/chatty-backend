@@ -4,21 +4,21 @@
   <meta charset="UTF-8" />
   <title>The Ancient Tome — Level 65</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #ec4899; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #c0368a; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b7d; margin-bottom: 40px; }
     .tome-area { max-width: 600px; margin: 0 auto; }
-    .tome { background: #0d0d2e; border: 1px solid #3a0a2e; border-radius: 12px; padding: 32px; text-align: center; }
-    .tome-title { color: #ec4899; font-size: 16px; font-weight: bold; margin: 0 0 24px; }
+    .tome { background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 32px; text-align: center; box-shadow: 0 12px 32px rgba(80,60,160,.08); }
+    .tome-title { color: #c0368a; font-size: 16px; font-weight: bold; margin: 0 0 24px; }
     .spell-book { position: relative; display: inline-block; margin-bottom: 24px; }
     .spell-icon { font-size: 80px; cursor: pointer; user-select: none; transition: transform 0.1s; }
     .spell-icon:hover { transform: scale(1.05); }
-    #context-menu { display: none; position: absolute; top: 50%; left: 105%; background: #1a1a2e; border: 1px solid #2a2a5e; border-radius: 8px; padding: 4px; min-width: 160px; z-index: 10; }
-    .ctx-item { padding: 8px 14px; cursor: pointer; font-size: 13px; border-radius: 4px; color: #ccc; }
-    .ctx-item:hover { background: #2a2a4e; color: #eee; }
-    .action-label { font-size: 13px; color: #888; margin-bottom: 16px; }
-    #dbl-result { display: none; padding: 12px; background: #0a0a2e; border: 1px solid #ec4899; border-radius: 8px; color: #ec4899; font-weight: bold; margin-top: 16px; }
-    #ctx-result { display: none; padding: 12px; background: #0a1a2e; border: 1px solid #a855f7; border-radius: 8px; color: #a855f7; font-weight: bold; margin-top: 8px; }
+    #context-menu { display: none; position: absolute; top: 50%; left: 105%; background: #ffffff; border: 1px solid rgba(18,18,18,.14); border-radius: 8px; padding: 4px; min-width: 160px; z-index: 10; box-shadow: 0 12px 32px rgba(80,60,160,.12); }
+    .ctx-item { padding: 8px 14px; cursor: pointer; font-size: 13px; border-radius: 4px; color: #444450; }
+    .ctx-item:hover { background: #f3f1ff; color: #121212; }
+    .action-label { font-size: 13px; color: #6b6b7d; margin-bottom: 16px; }
+    #dbl-result { display: none; padding: 12px; background: #fdf0f7; border: 1px solid #c0368a; border-radius: 8px; color: #c0368a; font-weight: bold; margin-top: 16px; }
+    #ctx-result { display: none; padding: 12px; background: #f3f1ff; border: 1px solid #8f74e8; border-radius: 8px; color: #8f74e8; font-weight: bold; margin-top: 8px; }
   </style>
 </head>
 <body>

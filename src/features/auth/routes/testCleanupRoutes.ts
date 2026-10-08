@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import { testCleanup } from '@auth/controllers/test-cleanup';
+import { validateObjectId } from '@global/helpers/object-id-validation';
 
 class TestCleanupRoutes {
   private router: Router;
@@ -10,10 +11,11 @@ class TestCleanupRoutes {
 
   public routes(): Router {
     // DELETE /api/v1/test/cleanup/user/:authId
-    // Required header: x-test-secret: chatty-test-cleanup-2026
-    // Safety: only deletes users whose username starts with "vitest"
+    // Required header: x-test-secret: value of process.env.TEST_CLEANUP_SECRET
+    // Safety: only deletes users whose username starts with "vitest", "pytest", or "pw_"
     this.router.delete(
       '/test/cleanup/user/:authId',
+      validateObjectId('authId'),
       testCleanup.deleteUser.bind(testCleanup)
     );
 

@@ -43,7 +43,7 @@ export class UpdateCard {
 
     const cardUpdated: IFlashcardDocument = await flashcardCache.updateCardInCache(cardId, updatedCard);
     socketIOFlashcardObject.emit('update card', cardUpdated);
-    flashcardQueue.addCardJob('updateCardInDB', { key: cardId, value: cardUpdated });
+    flashcardQueue.addCardJob('updateCardInDB', { key: cardId, value: cardUpdated, userId: req.currentUser?.userId });
 
     res.status(HTTP_STATUS.OK).json({ message: 'Card updated successfully' });
   }

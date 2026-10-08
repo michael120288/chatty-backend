@@ -11,51 +11,41 @@ describe('CommentWorker', () => {
 
   describe('addCommentToDB', () => {
     it('calls commentService.addCommentToDB with job.data', async () => {
-      const done = jest.fn();
       const data = { postId: 'p1', comment: 'Nice post' };
       const job = mockJob(data);
       (commentService.addCommentToDB as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await commentWorker.addCommentToDB(job, done);
+      await commentWorker.addCommentToDB(job);
 
       expect(commentService.addCommentToDB).toHaveBeenCalledWith(data);
       expect(job.progress).toHaveBeenCalledWith(100);
-      expect(done).toHaveBeenCalledWith(null, job.data);
     });
 
-    it('calls done with error on failure', async () => {
-      const done = jest.fn();
+    it('rejects on failure', async () => {
       const job = mockJob({});
       const err = new Error('DB error');
       (commentService.addCommentToDB as jest.Mock).mockRejectedValueOnce(err);
 
-      await commentWorker.addCommentToDB(job, done);
-
-      expect(done).toHaveBeenCalledWith(err);
+      await expect(commentWorker.addCommentToDB(job)).rejects.toThrow('DB error');
     });
   });
 
   describe('deleteCommentFromDB', () => {
-    it('calls commentService.deleteCommentFromDB with postId and commentId', async () => {
-      const done = jest.fn();
-      const job = mockJob({ postId: 'post1', commentId: 'comment1' });
+    it('calls commentService.deleteCommentFromDB with postId, commentId and username', async () => {
+      const job = mockJob({ postId: 'post1', commentId: 'comment1', username: 'testuser' });
       (commentService.deleteCommentFromDB as jest.Mock).mockResolvedValueOnce(undefined);
 
-      await commentWorker.deleteCommentFromDB(job, done);
+      await commentWorker.deleteCommentFromDB(job);
 
-      expect(commentService.deleteCommentFromDB).toHaveBeenCalledWith('post1', 'comment1');
-      expect(done).toHaveBeenCalledWith(null, job.data);
+      expect(commentService.deleteCommentFromDB).toHaveBeenCalledWith('post1', 'comment1', 'testuser');
     });
 
-    it('calls done with error on failure', async () => {
-      const done = jest.fn();
-      const job = mockJob({ postId: 'p', commentId: 'c' });
+    it('rejects on failure', async () => {
+      const job = mockJob({ postId: 'p', commentId: 'c', username: 'u' });
       const err = new Error('Delete failed');
       (commentService.deleteCommentFromDB as jest.Mock).mockRejectedValueOnce(err);
 
-      await commentWorker.deleteCommentFromDB(job, done);
-
-      expect(done).toHaveBeenCalledWith(err);
+      await expect(commentWorker.deleteCommentFromDB(job)).rejects.toThrow('Delete failed');
     });
   });
 });

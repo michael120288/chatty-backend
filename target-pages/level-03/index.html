@@ -4,34 +4,35 @@
   <meta charset="UTF-8" />
   <title>Gate of Authentication — Level 3</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #1a0a2e; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #7b61ff; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #8f74e8; text-align: center; }
+    .subtitle { text-align: center; color: #767676; margin-bottom: 40px; }
     .login-box {
       max-width: 400px; margin: 0 auto;
-      background: #16102e; border: 1px solid #3d2a6e; border-radius: 12px; padding: 36px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 36px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .form-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 6px; color: #aaa; font-size: 14px; }
+    label { display: block; margin-bottom: 6px; color: #5a5a5a; font-size: 14px; }
     input {
-      width: 100%; padding: 12px; background: #0d0820; border: 1px solid #3d2a6e;
-      border-radius: 6px; color: #eee; font-size: 15px; box-sizing: border-box;
+      width: 100%; padding: 12px; background: #f8f8f8; border: 1px solid rgba(18,18,18,.14);
+      border-radius: 6px; color: #121212; font-size: 15px; box-sizing: border-box;
     }
-    input:focus { outline: none; border-color: #7b61ff; }
+    input:focus { outline: none; border-color: #8f74e8; }
     button {
-      width: 100%; background: #7b61ff; color: white; border: none;
+      width: 100%; background: #8f74e8; color: white; border: none;
       padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer;
     }
     button:hover { background: #6a4fe0; }
     #success-message {
       display: none; margin-top: 20px; padding: 14px;
-      background: #0a2e14; border: 1px solid #4ecca3; border-radius: 8px;
-      color: #4ecca3; text-align: center; font-weight: bold;
+      background: #eafaf0; border: 1px solid #3aa876; border-radius: 8px;
+      color: #227a54; text-align: center; font-weight: bold;
     }
     #error-message {
       display: none; margin-top: 20px; padding: 14px;
-      background: #2e0a0a; border: 1px solid #e94560; border-radius: 8px;
-      color: #e94560; text-align: center;
+      background: #fdeef0; border: 1px solid #e94560; border-radius: 8px;
+      color: #c22f47; text-align: center;
     }
     .gate-icon { text-align: center; font-size: 60px; margin-bottom: 20px; }
   </style>

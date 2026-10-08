@@ -4,22 +4,22 @@
   <meta charset="UTF-8" />
   <title>The Shape Shifter — Level 14</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a1a; color: #eee; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 0; }
     /* Desktop nav */
     .desktop-nav {
-      background: #12121f; border-bottom: 1px solid #1e1e3a;
+      background: #ffffff; border-bottom: 1px solid rgba(18,18,18,.08);
       padding: 0 40px; height: 56px; display: flex; align-items: center; gap: 24px;
     }
-    .nav-brand { font-size: 18px; font-weight: bold; color: #7b61ff; }
+    .nav-brand { font-size: 18px; font-weight: bold; color: #4a63c9; }
     .nav-links { display: flex; gap: 20px; }
-    .nav-links a { color: #aaa; text-decoration: none; font-size: 14px; }
+    .nav-links a { color: #6b6b76; text-decoration: none; font-size: 14px; }
     /* Mobile nav - hidden on desktop */
     .mobile-nav {
-      display: none; background: #12121f; border-bottom: 1px solid #1e1e3a;
+      display: none; background: #ffffff; border-bottom: 1px solid rgba(18,18,18,.08);
       padding: 12px 20px; align-items: center; justify-content: space-between;
     }
     #mobile-menu {
-      background: none; border: 1px solid #3a3a5e; color: #aaa; padding: 8px 12px;
+      background: none; border: 1px solid rgba(18,18,18,.14); color: #4a63c9; padding: 8px 12px;
       border-radius: 6px; cursor: pointer; font-size: 18px;
     }
     /* Mobile treasure - hidden on desktop */
@@ -30,24 +30,25 @@
       .mobile-nav { display: flex; }
       #mobile-treasure {
         display: block; margin: 20px; padding: 24px;
-        background: #1a0a2e; border: 2px solid #7b61ff; border-radius: 12px;
+        background: #eef2ff; border: 2px solid #6f8cff; border-radius: 12px;
         text-align: center;
       }
       #mobile-treasure .treasure-icon { font-size: 48px; margin-bottom: 12px; }
-      #mobile-treasure .treasure-title { color: #7b61ff; font-size: 18px; font-weight: bold; }
-      #mobile-treasure .treasure-text { color: #aaa; font-size: 14px; margin-top: 8px; }
+      #mobile-treasure .treasure-title { color: #4a63c9; font-size: 18px; font-weight: bold; }
+      #mobile-treasure .treasure-text { color: #6b6b76; font-size: 14px; margin-top: 8px; }
       .desktop-content { padding: 20px !important; }
     }
 
     .desktop-content { padding: 40px; max-width: 700px; margin: 0 auto; }
     .content-card {
-      background: #12121f; border: 1px solid #1e1e3a; border-radius: 12px; padding: 28px; margin-bottom: 20px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 28px; margin-bottom: 20px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
-    .content-card h2 { color: #7b61ff; margin: 0 0 12px; }
-    .content-card p { color: #888; line-height: 1.6; margin: 0; }
+    .content-card h2 { color: #4a63c9; margin: 0 0 12px; }
+    .content-card p { color: #6b6b76; line-height: 1.6; margin: 0; }
     .viewport-display {
-      background: #0a0a14; border: 1px solid #1e1e3a; border-radius: 6px;
-      padding: 10px 14px; font-family: monospace; font-size: 13px; color: #4da6ff;
+      background: #f3f0fb; border: 1px solid rgba(18,18,18,.08); border-radius: 6px;
+      padding: 10px 14px; font-family: monospace; font-size: 13px; color: #4a63c9;
       margin-top: 12px;
     }
   </style>
@@ -85,7 +86,7 @@
     </div>
     <div class="content-card">
       <h2>Hint</h2>
-      <p>Use <code style="color:#4ecca3;">page.setViewportSize({ width: 375, height: 667 })</code> to transform into mobile form, then check if <code style="color:#4ecca3;">#mobile-treasure</code> is visible.</p>
+      <p>Use <code style="color:#4a63c9;">page.setViewportSize({ width: 375, height: 667 })</code> to transform into mobile form, then check if <code style="color:#4a63c9;">#mobile-treasure</code> is visible.</p>
     </div>
   </div>
 

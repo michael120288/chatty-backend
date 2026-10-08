@@ -16,6 +16,8 @@ export class SocketIOChatHandler {
     this.io.on('connection', (socket: Socket) => {
       socket.on('join room', (users: ISenderReceiver) => {
         const { senderName, receiverName } = users;
+        const socketUsername = socket.data?.user?.username as string | undefined;
+        if (!socketUsername || (socketUsername !== senderName && socketUsername !== receiverName)) return;
         const senderSocketId: string = connectedUsersMap.get(senderName) as string;
         const receiverSocketId: string = connectedUsersMap.get(receiverName) as string;
         socket.join(senderSocketId);

@@ -4,47 +4,47 @@
   <meta charset="UTF-8" />
   <title>The Arcane Registry — Level 43</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #a78bfa; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a3a8f; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 30px; }
     .registry { max-width: 460px; margin: 0 auto; }
-    #login-panel { background: #0d0d20; border: 1px solid #2a2060; border-radius: 12px; padding: 28px; }
-    #dashboard-panel { display: none; background: #0d0d20; border: 1px solid #4ecca3; border-radius: 12px; padding: 28px; }
+    #login-panel { background: #ffffff; border: 1px solid rgba(167,139,250,.35); border-radius: 12px; padding: 28px; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
+    #dashboard-panel { display: none; background: #ffffff; border: 1px solid #2f9e74; border-radius: 12px; padding: 28px; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
     .panel-title { font-size: 17px; font-weight: bold; margin-bottom: 20px; }
-    .login-title { color: #a78bfa; }
-    .dashboard-title { color: #4ecca3; }
+    .login-title { color: #4a3a8f; }
+    .dashboard-title { color: #1f7a58; }
     .field-group { margin-bottom: 14px; }
-    label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+    label { display: block; font-size: 12px; color: #6b6b6b; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
     input[type="text"], input[type="password"] {
-      width: 100%; padding: 10px 12px; background: #060616; border: 1px solid #2a2060;
-      border-radius: 6px; color: #eee; font-size: 14px; box-sizing: border-box;
+      width: 100%; padding: 10px 12px; background: #f8f8f8; border: 1px solid rgba(167,139,250,.4);
+      border-radius: 6px; color: #121212; font-size: 14px; box-sizing: border-box;
     }
     input:focus { outline: none; border-color: #a78bfa; }
     .login-btn {
-      width: 100%; padding: 11px; background: #2d1a6a; border: 1px solid #a78bfa;
-      border-radius: 8px; color: #a78bfa; font-size: 14px; font-weight: bold;
+      width: 100%; padding: 11px; background: #8f74e8; border: 1px solid #8f74e8;
+      border-radius: 8px; color: #ffffff; font-size: 14px; font-weight: bold;
       cursor: pointer; margin-top: 4px; transition: background 0.2s;
     }
-    .login-btn:hover { background: #3d2a7a; }
-    #login-error { display: none; color: #f87171; font-size: 13px; margin-top: 8px; text-align: center; }
+    .login-btn:hover { background: #7a5fd6; }
+    #login-error { display: none; color: #c23b3b; font-size: 13px; margin-top: 8px; text-align: center; }
     .user-card { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
     .user-avatar { font-size: 48px; }
-    .user-name { font-size: 18px; font-weight: bold; color: #4ecca3; }
-    .user-rank { font-size: 13px; color: #888; }
+    .user-name { font-size: 18px; font-weight: bold; color: #1f7a58; }
+    .user-rank { font-size: 13px; color: #6b6b6b; }
     .session-badge {
-      display: inline-block; background: #0a2e1a; border: 1px solid #4ecca3;
-      color: #4ecca3; padding: 4px 12px; border-radius: 10px; font-size: 12px;
+      display: inline-block; background: #eafaf3; border: 1px solid #2f9e74;
+      color: #1f7a58; padding: 4px 12px; border-radius: 10px; font-size: 12px;
       margin-bottom: 16px;
     }
     .logout-btn {
-      padding: 8px 20px; background: transparent; border: 1px solid #555;
-      border-radius: 6px; color: #888; font-size: 13px; cursor: pointer;
+      padding: 8px 20px; background: transparent; border: 1px solid rgba(18,18,18,.14);
+      border-radius: 6px; color: #6b6b6b; font-size: 13px; cursor: pointer;
     }
     .hint-box {
-      margin-top: 20px; padding: 14px; background: #0a0a18; border: 1px solid #2a2060;
-      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+      margin-top: 20px; padding: 14px; background: #f4f2fb; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 13px; color: #6b6b6b; line-height: 1.6;
     }
-    code { color: #a78bfa; font-family: monospace; }
+    code { color: #4a3a8f; font-family: monospace; }
   </style>
 </head>
 <body>
@@ -76,7 +76,7 @@
         </div>
       </div>
       <div class="panel-title dashboard-title">📜 Registry Dashboard</div>
-      <p style="color:#aaa;font-size:14px">You are logged in. Your session persists in localStorage.</p>
+      <p style="color:#4b4b4b;font-size:14px">You are logged in. Your session persists in localStorage.</p>
       <button class="logout-btn" id="logout-btn">Sign Out</button>
     </div>
 

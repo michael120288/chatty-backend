@@ -36,11 +36,26 @@ class FlashcardService {
     await Promise.all([deleteCard, decrementCardCount]);
   }
 
-  public async editCard(cardId: string, updatedCard: IFlashcardDocument): Promise<void> {
-    const updateCard: UpdateQuery<IFlashcardDocument> = FlashcardModel.updateOne(
-      { _id: cardId },
-      { $set: { ...updatedCard, updatedAt: new Date() } }
-    );
+  public async editCard(cardId: string, updatedCard: IFlashcardDocument, userId?: string): Promise<void> {
+    const filter: Record<string, unknown> = { _id: cardId };
+    if (userId) filter['userId'] = userId;
+    const updateCard: UpdateQuery<IFlashcardDocument> = FlashcardModel.updateOne(filter, {
+      $set: {
+        question: updatedCard.question,
+        answer: updatedCard.answer,
+        category: updatedCard.category,
+        difficulty: updatedCard.difficulty,
+        privacy: updatedCard.privacy,
+        questionImgVersion: updatedCard.questionImgVersion,
+        questionImgId: updatedCard.questionImgId,
+        answerImgVersion: updatedCard.answerImgVersion,
+        answerImgId: updatedCard.answerImgId,
+        questionCodeSnippet: updatedCard.questionCodeSnippet,
+        answerCodeSnippet: updatedCard.answerCodeSnippet,
+        deckId: updatedCard.deckId,
+        updatedAt: new Date()
+      }
+    });
     await updateCard;
   }
 

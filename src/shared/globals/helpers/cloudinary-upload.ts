@@ -36,7 +36,8 @@ export function uploads(
       {
         public_id,
         overwrite,
-        invalidate
+        invalidate,
+        disable_promises: true
       },
       (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
         if (error) {
@@ -59,6 +60,24 @@ export function videoUpload(
   invalidate?: boolean
 ): Promise<UploadApiResponse | UploadApiErrorResponse | undefined> {
   return new Promise((resolve) => {
+    if (file.startsWith('data:')) {
+      const videoDataUrlPattern = /^data:video\/(mp4|webm|ogg|quicktime|x-msvideo|x-matroska);base64,/;
+      if (!videoDataUrlPattern.test(file)) {
+        log.error('Invalid video data URL format. Received:', file.substring(0, 50));
+        resolve({
+          message: 'Invalid video format. Supported: mp4, webm, ogg, mov, avi, mkv',
+          http_code: 400
+        } as UploadApiErrorResponse);
+        return;
+      }
+    } else if (!file.startsWith('http://') && !file.startsWith('https://')) {
+      log.error('Invalid video input: not a data URL or http(s) URL. Received:', file.substring(0, 100));
+      resolve({
+        message: 'Invalid video: must be a base64 data URL or an http(s) URL',
+        http_code: 400
+      } as UploadApiErrorResponse);
+      return;
+    }
     cloudinary.v2.uploader.upload(
       file,
       {
@@ -66,7 +85,8 @@ export function videoUpload(
         chunk_size: 50000,
         public_id,
         overwrite,
-        invalidate
+        invalidate,
+        disable_promises: true
       },
       (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
         if (error) resolve(error);

@@ -33,6 +33,25 @@ export class Helpers {
     }
   }
 
+  // For a value read from a Redis hash field that may genuinely be missing
+  // (real `undefined`, not the field holding some falsy-but-present value).
+  // Callers used to do `Helpers.parseJson(`${value}`)` unconditionally, which
+  // stringifies a missing field to the literal text "undefined", fails to
+  // JSON.parse, and returns that literal string back — corrupting the field
+  // instead of falling back to a sane default.
+  //
+  // Also treats the *stored* literal strings "undefined"/"null" as missing —
+  // those are exactly what earlier writes (before this helper existed) left
+  // behind in already-persisted hashes, so reading them back needs to self-heal
+  // the same way a genuinely-missing field does.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static parseJsonSafe(value: unknown, fallback: any): any {
+    if (value === undefined || value === null || value === 'undefined' || value === 'null') {
+      return fallback;
+    }
+    return Helpers.parseJson(`${value}`);
+  }
+
   static isDataURL(value: string): boolean {
     const dataUrlRegex = /^\s*data:([a-z]+\/[a-z0-9-+.]+(;[a-z-]+=[a-z0-9-]+)?)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\\/?%\s]*)\s*$/i;
     return dataUrlRegex.test(value);

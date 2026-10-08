@@ -7,6 +7,7 @@ import { socketIOChatObject } from '@socket/chat';
 import { chatQueue } from '@service/queues/chat.queue';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import { messageReactionSchema } from '@chat/schemes/chat';
+import { BadRequestError } from '@global/helpers/error-handler';
 
 const messageCache: MessageCache = new MessageCache();
 
@@ -14,6 +15,11 @@ export class Message {
   @joiValidation(messageReactionSchema)
   public async reaction(req: Request, res: Response): Promise<void> {
     const { conversationId, messageId, reaction, type } = req.body;
+
+    // Guard invalid ObjectIds so a bad messageId returns 400, not a 500 crash.
+    if (!mongoose.isValidObjectId(messageId)) {
+      throw new BadRequestError('Invalid messageId');
+    }
     const updatedMessage: IMessageData = await messageCache.updateMessageReaction(
       `${conversationId}`,
       `${messageId}`,

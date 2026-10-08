@@ -4,26 +4,26 @@
   <meta charset="UTF-8" />
   <title>The Rarity Vault — Level 38</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #a78bfa; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #4a3a8f; text-align: center; }
+    .subtitle { text-align: center; color: #6b6b6b; margin-bottom: 30px; }
     .vault { max-width: 520px; margin: 0 auto; }
     .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; }
     .filter-btn {
-      padding: 6px 16px; border-radius: 20px; border: 1px solid #3a2a6a;
-      background: #12102a; color: #888; font-size: 13px; cursor: pointer;
+      padding: 6px 16px; border-radius: 20px; border: 1px solid rgba(167,139,250,.4);
+      background: #ffffff; color: #6b6b6b; font-size: 13px; cursor: pointer;
       transition: all 0.2s;
     }
-    .filter-btn.active { background: #2d1a6a; border-color: #a78bfa; color: #a78bfa; }
+    .filter-btn.active { background: #ece4fd; border-color: #a78bfa; color: #4a3a8f; }
     .item-list { display: flex; flex-direction: column; gap: 8px; }
     .item-card {
       display: flex; align-items: center; gap: 12px;
-      background: #12102a; border: 1px solid #2a2050; border-radius: 8px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 8px;
       padding: 12px 16px;
     }
-    .item-card[data-rarity="legendary"] { border-color: #f59e0b; }
-    .item-card[data-rarity="rare"] { border-color: #3b82f6; }
-    .item-card[data-rarity="common"] { border-color: #2a2050; }
+    .item-card[data-rarity="legendary"] { border-color: #d69420; }
+    .item-card[data-rarity="rare"] { border-color: #3b6fe0; }
+    .item-card[data-rarity="common"] { border-color: rgba(18,18,18,.14); }
     .item-card.hidden { display: none; }
     .item-icon { font-size: 24px; }
     .item-name { flex: 1; font-size: 14px; font-weight: bold; }
@@ -31,16 +31,16 @@
       font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 8px;
       text-transform: uppercase; letter-spacing: 1px;
     }
-    .rarity-legendary { background: #2d1f00; color: #f59e0b; border: 1px solid #f59e0b; }
-    .rarity-rare { background: #0a1a2e; color: #3b82f6; border: 1px solid #3b82f6; }
-    .rarity-common { background: #1a1a1a; color: #888; border: 1px solid #444; }
-    .count-display { margin-top: 16px; font-size: 13px; color: #888; text-align: right; }
-    #visible-count { color: #a78bfa; font-weight: bold; }
+    .rarity-legendary { background: #fdf1dc; color: #a06b0d; border: 1px solid #d69420; }
+    .rarity-rare { background: #e8eefd; color: #2c53b0; border: 1px solid #3b6fe0; }
+    .rarity-common { background: #f0f0f0; color: #6b6b6b; border: 1px solid #ccc; }
+    .count-display { margin-top: 16px; font-size: 13px; color: #6b6b6b; text-align: right; }
+    #visible-count { color: #4a3a8f; font-weight: bold; }
     .hint-box {
-      margin-top: 20px; padding: 14px; background: #0d0a20; border: 1px solid #2a2050;
-      border-radius: 8px; font-size: 13px; color: #666; line-height: 1.6;
+      margin-top: 20px; padding: 14px; background: #f4f2fb; border: 1px solid rgba(18,18,18,.08);
+      border-radius: 8px; font-size: 13px; color: #6b6b6b; line-height: 1.6;
     }
-    code { color: #a78bfa; font-family: monospace; }
+    code { color: #4a3a8f; font-family: monospace; }
   </style>
 </head>
 <body>

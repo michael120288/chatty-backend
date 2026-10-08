@@ -43,22 +43,29 @@ describe('Password', () => {
       })
     })
 
-    it('should throw "Invalid credentials" if email does not exist', () => {
+    it('should send the same 200 response if the email does not exist (no enumeration)', async () => {
       const req: Request = authMockRequest({}, { email: WRONG_EMAIL }) as Request;
       const res: Response = authMockResponse();
       jest.spyOn(authService, 'getAuthUserByEmail').mockResolvedValue(null as any);
-      Password.prototype.create(req, res).catch((error: CustomError) => {
-        expect(error.statusCode).toEqual(400);
-        expect(error.serializeError().message).toEqual('Invalid credentials');
+      jest.spyOn(emailQueue, 'addEmailJob');
+      await Password.prototype.create(req, res);
+      expect(emailQueue.addEmailJob).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        message: 'Password reset email sent.'
       });
     });
-    it('should throw "Invalid credentials" if email does not exist', () => {
-      const req:Request = authMockRequest({},{email:WRONG_EMAIL}) as Request
-      const res:Response = authMockResponse()
-      Password.prototype.create(req, res).catch((error: CustomError)=>{
-        expect(error.statusCode).toEqual(400)
-        expect(error.serializeError().message).toEqual('Invalid credentials')
-      })
+    it('should send the same 200 response if the email does not exist (no enumeration)', async () => {
+      const req: Request = authMockRequest({}, { email: WRONG_EMAIL }) as Request;
+      const res: Response = authMockResponse();
+      jest.spyOn(authService, 'getAuthUserByEmail').mockResolvedValue(null as any);
+      jest.spyOn(emailQueue, 'addEmailJob');
+      await Password.prototype.create(req, res);
+      expect(emailQueue.addEmailJob).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        message: 'Password reset email sent.'
+      });
     });
 
     it('should send correct json response', async () => {

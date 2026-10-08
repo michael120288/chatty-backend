@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <title>The Spell Logger — Level 68</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a14; color: #eee; margin: 0; padding: 40px; }
-    h1 { color: #8b5cf6; text-align: center; }
-    .subtitle { text-align: center; color: #888; margin-bottom: 40px; }
-    .spy-lab { max-width: 580px; margin: 0 auto; background: #0d0d2e; border: 1px solid #1a0a3e; border-radius: 12px; padding: 32px; }
-    .lab-title { color: #8b5cf6; font-size: 16px; font-weight: bold; margin: 0 0 24px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 40px; }
+    h1 { color: #6f5aa8; text-align: center; }
+    .subtitle { text-align: center; color: rgba(18,18,18,.55); margin-bottom: 40px; }
+    .spy-lab { max-width: 580px; margin: 0 auto; background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 12px; padding: 32px; box-shadow: 0 12px 32px rgba(80,60,160,.1); }
+    .lab-title { color: #6f5aa8; font-size: 16px; font-weight: bold; margin: 0 0 24px; }
     .spell-row { display: flex; gap: 10px; margin-bottom: 12px; }
-    .spell-btn { flex: 1; padding: 12px; background: #1a0a3e; border: 1px solid #2a1a5e; border-radius: 8px; color: #ccc; font-size: 13px; cursor: pointer; }
-    .spell-btn:hover { background: #2a1a5e; color: #eee; }
-    .spell-log { background: #0a0a0a; border: 1px solid #1a1a2e; border-radius: 8px; padding: 12px; min-height: 100px; font-family: monospace; font-size: 12px; margin-top: 16px; }
-    .log-line { color: #8b5cf6; margin-bottom: 4px; }
-    .note { margin-top: 12px; font-size: 12px; color: #555; font-style: italic; }
+    .spell-btn { flex: 1; padding: 12px; background: #f3effe; border: 1px solid rgba(18,18,18,.14); border-radius: 8px; color: #4a3a8f; font-size: 13px; cursor: pointer; }
+    .spell-btn:hover { background: #e9defc; color: #2f2350; }
+    .spell-log { background: #f1f1f4; border: 1px solid rgba(18,18,18,.08); border-radius: 8px; padding: 12px; min-height: 100px; font-family: monospace; font-size: 12px; margin-top: 16px; }
+    .log-line { color: #6f5aa8; margin-bottom: 4px; }
+    .note { margin-top: 12px; font-size: 12px; color: rgba(18,18,18,.45); font-style: italic; }
   </style>
   <script>
     window.spellCaster = {
@@ -45,7 +45,7 @@
       <button class="spell-btn" id="btn-heal" onclick="window.spellCaster.castHeal()">💚 Heal</button>
     </div>
     <div class="spell-log" id="log">
-      <div style="color:#333">// Spell log will appear here</div>
+      <div style="color:rgba(18,18,18,.35)">// Spell log will appear here</div>
     </div>
     <p class="note">Hint: cy.spy(win.spellCaster, 'castFireball') then assert .should('have.been.calledOnce')</p>
   </div>

@@ -4,68 +4,69 @@
   <meta charset="UTF-8" />
   <title>The Grand Emporium — Level 24</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #0a0a00; color: #eee; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f8f8; color: #121212; margin: 0; padding: 0; }
     .shop-header {
-      background: #12120a; border-bottom: 1px solid #2a2a00; padding: 16px 32px;
+      background: #ffffff; border-bottom: 1px solid rgba(18,18,18,.08); padding: 16px 32px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .shop-brand { font-size: 20px; font-weight: bold; color: #ffd700; }
+    .shop-brand { font-size: 20px; font-weight: bold; color: #9c6f00; }
     .cart-badge {
-      background: #1a1500; border: 1px solid #3a3000; padding: 8px 16px;
-      border-radius: 20px; font-size: 14px; color: #ffd700;
+      background: #fff3d6; border: 1px solid #e6c200; padding: 8px 16px;
+      border-radius: 20px; font-size: 14px; color: #9c6f00;
     }
     .shop-body { display: flex; gap: 0; min-height: calc(100vh - 65px); }
-    .products { flex: 1; padding: 24px 32px; border-right: 1px solid #2a2a00; }
-    .products h2 { color: #ffd700; font-size: 16px; margin: 0 0 16px; }
+    .products { flex: 1; padding: 24px 32px; border-right: 1px solid rgba(18,18,18,.08); }
+    .products h2 { color: #9c6f00; font-size: 16px; margin: 0 0 16px; }
     .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .product-card {
-      background: #12120a; border: 1px solid #2a2a00; border-radius: 10px; padding: 16px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 10px; padding: 16px;
+      box-shadow: 0 12px 32px rgba(80,60,160,.1);
     }
     .product-icon { font-size: 36px; margin-bottom: 8px; }
-    .product-name { font-size: 14px; font-weight: bold; color: #eee; }
-    .product-price { color: #ffd700; font-size: 13px; margin: 4px 0 12px; }
+    .product-name { font-size: 14px; font-weight: bold; color: #121212; }
+    .product-price { color: #9c6f00; font-size: 13px; margin: 4px 0 12px; }
     .add-btn {
-      width: 100%; background: #ffd700; color: #000; border: none; padding: 8px;
+      width: 100%; background: #f2c94c; color: #121212; border: none; padding: 8px;
       border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer;
     }
-    .add-btn:hover { background: #ffcc00; }
-    .add-btn.added { background: #4ecca3; }
+    .add-btn:hover { background: #e6b800; }
+    .add-btn.added { background: #34b378; color: #ffffff; }
     .cart-panel { width: 280px; padding: 24px; }
-    .cart-panel h2 { color: #ffd700; font-size: 16px; margin: 0 0 16px; }
+    .cart-panel h2 { color: #9c6f00; font-size: 16px; margin: 0 0 16px; }
     #cart-items { min-height: 80px; margin-bottom: 16px; }
     .cart-item {
-      background: #12120a; border: 1px solid #2a2a00; border-radius: 6px;
+      background: #ffffff; border: 1px solid rgba(18,18,18,.08); border-radius: 6px;
       padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between;
       align-items: center;
     }
     .cart-item-name { font-size: 13px; }
-    .cart-item-price { color: #ffd700; font-size: 13px; }
-    #cart-empty { color: #555; font-style: italic; font-size: 13px; text-align: center; padding: 20px; }
+    .cart-item-price { color: #9c6f00; font-size: 13px; }
+    #cart-empty { color: #767676; font-style: italic; font-size: 13px; text-align: center; padding: 20px; }
     .coupon-row { display: flex; gap: 8px; margin-bottom: 16px; }
     #coupon-input {
-      flex: 1; padding: 8px 12px; background: #0a0a00; border: 1px solid #2a2a00;
-      border-radius: 6px; color: #eee; font-size: 13px;
+      flex: 1; padding: 8px 12px; background: #ffffff; border: 1px solid rgba(18,18,18,.14);
+      border-radius: 6px; color: #121212; font-size: 13px;
     }
-    #coupon-input:focus { outline: none; border-color: #ffd700; }
+    #coupon-input:focus { outline: none; border-color: #9c6f00; }
     #apply-coupon {
-      background: #2a2a00; color: #ffd700; border: 1px solid #3a3a00;
+      background: #fff3d6; color: #9c6f00; border: 1px solid #e6c200;
       padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px;
     }
-    #apply-coupon:hover { background: #3a3a00; }
-    .totals { border-top: 1px solid #2a2a00; padding-top: 12px; }
+    #apply-coupon:hover { background: #ffe9b3; }
+    .totals { border-top: 1px solid rgba(18,18,18,.14); padding-top: 12px; }
     .total-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
-    .total-row.discount { color: #4ecca3; }
-    .total-row.grand { font-size: 16px; font-weight: bold; color: #ffd700; margin-top: 8px; }
+    .total-row.discount { color: #1f8a5c; }
+    .total-row.grand { font-size: 16px; font-weight: bold; color: #9c6f00; margin-top: 8px; }
     #checkout-btn {
-      width: 100%; background: #ffd700; color: #000; border: none; padding: 12px;
+      width: 100%; background: #f2c94c; color: #121212; border: none; padding: 12px;
       font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 12px;
     }
-    #checkout-btn:hover { background: #ffcc00; }
+    #checkout-btn:hover { background: #e6b800; }
     #checkout-success {
-      display: none; background: #0a2e14; border: 1px solid #4ecca3; border-radius: 8px;
-      padding: 14px; text-align: center; color: #4ecca3; font-weight: bold; margin-top: 12px;
+      display: none; background: #e6f9f0; border: 1px solid #34b378; border-radius: 8px;
+      padding: 14px; text-align: center; color: #1f8a5c; font-weight: bold; margin-top: 12px;
     }
-    #coupon-status { font-size: 11px; color: #555; margin-top: 4px; }
+    #coupon-status { font-size: 11px; color: #767676; margin-top: 4px; }
     #discount-row { display: none; }
   </style>
 </head>
@@ -137,7 +138,7 @@
       cartItems.innerHTML = '';
 
       if (cart.length === 0) {
-        cartItems.innerHTML = '<div id="cart-empty" style="color:#555;font-style:italic;font-size:13px;text-align:center;padding:20px">Cart is empty</div>';
+        cartItems.innerHTML = '<div id="cart-empty" style="color:#767676;font-style:italic;font-size:13px;text-align:center;padding:20px">Cart is empty</div>';
       } else {
         cart.forEach(item => {
           cartItems.innerHTML += `<div class="cart-item"><span class="cart-item-name">${item.name}</span><span class="cart-item-price">${item.price}g</span></div>`;
@@ -171,15 +172,15 @@
           discount = data.discount;
           document.getElementById('discount-row').style.display = 'flex';
           document.getElementById('discount-amount').textContent = '-' + discount + ' gold';
-          status.style.color = '#4ecca3';
+          status.style.color = '#1f8a5c';
           status.textContent = '✓ Coupon applied: ' + data.message;
           updateCart();
         } else {
-          status.style.color = '#e94560';
+          status.style.color = '#c23652';
           status.textContent = '✗ Invalid coupon code';
         }
       } catch {
-        status.style.color = '#e94560';
+        status.style.color = '#c23652';
         status.textContent = '✗ Could not validate coupon';
       }
     });

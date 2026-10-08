@@ -12,6 +12,7 @@ class Config {
   public SECRET_KEY_TWO: string | undefined;
   public CLIENT_URL: string | undefined;
   public REDIS_HOST: string | undefined;
+  public REDIS_PASSWORD: string | undefined;
   public CLOUD_NAME: string | undefined;
   public CLOUD_API_KEY: string | undefined;
   public CLOUD_API_SECRET: string | undefined;
@@ -23,18 +24,22 @@ class Config {
   public DOCKER_TIMEOUT: number = parseInt(process.env.DOCKER_TIMEOUT || '120000', 10);
   public MAX_CODE_LENGTH: number = parseInt(process.env.MAX_CODE_LENGTH || '50000', 10);
   public SANDBOX_IMAGE: string = process.env.SANDBOX_IMAGE || 'test-quest-sandbox:latest';
+  // No hardcoded fallback — if unset, comparisons against this value must fail closed.
+  // See setupServer.ts / test-cleanup.ts for the fail-closed usage.
+  public TEST_CLEANUP_SECRET: string | undefined = process.env.TEST_CLEANUP_SECRET;
 
   private readonly DEFAULT_DATABASE_URL =
     'mongodb://127.0.0.1:27017/chattyapp-backend';
 
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL || this.DEFAULT_DATABASE_URL;
-    this.JWT_TOKEN = process.env.JWT_TOKEN || '';
+    this.JWT_TOKEN = process.env.JWT_TOKEN;
     this.NODE_ENV = process.env.NODE_ENV || '';
-    this.SECRET_KEY_ONE = process.env.SECRET_KEY_ONE || '';
-    this.SECRET_KEY_TWO = process.env.SECRET_KEY_TWO || '';
+    this.SECRET_KEY_ONE = process.env.SECRET_KEY_ONE;
+    this.SECRET_KEY_TWO = process.env.SECRET_KEY_TWO;
     this.CLIENT_URL = process.env.CLIENT_URL || '';
     this.REDIS_HOST = process.env.REDIS_HOST || '';
+    this.REDIS_PASSWORD = process.env.REDIS_PASSWORD;
     this.CLOUD_NAME = process.env.CLOUD_NAME || '';
     this.CLOUD_API_KEY = process.env.CLOUD_API_KEY || '';
     this.CLOUD_API_SECRET = process.env.CLOUD_API_SECRET || '';

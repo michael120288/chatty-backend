@@ -6,11 +6,13 @@ import hpp from 'hpp';
 import compression from 'compression';
 import cookieSession from 'cookie-session';
 import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
 import HTTP_STATUS from 'http-status-codes';
 import { Server } from 'socket.io';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 import Logger from 'bunyan';
+import JWT from 'jsonwebtoken';
 import apiStats from 'swagger-stats';
 import 'express-async-errors';
 import { config } from '@root/config';
@@ -36,6 +38,9 @@ export class ChattyServer {
   }
 
   public start(): void {
+    if (!config.TEST_CLEANUP_SECRET) {
+      log.warn('TEST_CLEANUP_SECRET is not set — the test-cleanup endpoint and rate-limit bypass will refuse all requests (fail closed).');
+    }
     this.securityMiddleware(this.app);
     this.standardMiddleware(this.app);
     this.routesMiddleware(this.app);
@@ -74,6 +79,42 @@ export class ChattyServer {
 
   private standardMiddleware(app: Application): void {
     app.use(compression());
+
+    const isTestSessionUser = (req: Request): boolean => {
+      // Fail closed: if TEST_CLEANUP_SECRET is not configured, this bypass can never match.
+      if (config.TEST_CLEANUP_SECRET && req.headers['x-test-secret'] === config.TEST_CLEANUP_SECRET) return true;
+      const token = req.session?.jwt;
+      if (!token) return false;
+      try {
+        const payload = JWT.verify(token, config.JWT_TOKEN!) as { username?: string };
+        const username = payload.username?.toLowerCase() ?? '';
+        return ['vitest', 'pytest', 'pw_'].some((p) => username.startsWith(p));
+      } catch {
+        return false;
+      }
+    };
+
+    const uploadLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 30,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { message: 'Too many upload requests, please try again later.' },
+      skip: isTestSessionUser
+    });
+
+    // The test-secret path of isTestSessionUser needs no auth to match, so a full skip
+    // would let anyone with the (public) test secret send unlimited 50mb bodies. Give it
+    // a relaxed cap instead of removing the cap entirely.
+    const relaxedUploadLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 300,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { message: 'Too many upload requests, please try again later.' },
+      skip: (req: Request) => !isTestSessionUser(req)
+    });
+
     // Image upload routes must be registered BEFORE the global 1mb limit
     app.use(
       [
@@ -87,6 +128,8 @@ export class ChattyServer {
         '/api/v1/cards/with-image',
         '/api/v1/chat/message'
       ],
+      uploadLimiter,
+      relaxedUploadLimiter,
       json({ limit: '50mb' })
     );
     app.use(json({ limit: '1mb' }));
@@ -126,7 +169,7 @@ export class ChattyServer {
         return res.status(error.statusCode).json(error.serializeError());
       }
       return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-        message: error.message,
+        message: 'Internal server error',
         status: 'error',
         statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR
       });
@@ -158,6 +201,19 @@ export class ChattyServer {
     const subClient = pubClient.duplicate();
     await Promise.all([pubClient.connect(), subClient.connect()]);
     io.adapter(createAdapter(pubClient, subClient));
+    io.use((socket, next) => {
+      const token = socket.handshake.auth?.token as string | undefined;
+      if (!token) {
+        return next(new Error('Authentication required'));
+      }
+      try {
+        const payload = JWT.verify(token, config.JWT_TOKEN!, { algorithms: ['HS256'] }) as Record<string, unknown>;
+        socket.data.user = payload;
+        next();
+      } catch {
+        next(new Error('Invalid or expired token'));
+      }
+    });
     return io;
   }
 

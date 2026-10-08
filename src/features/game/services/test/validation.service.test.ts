@@ -83,4 +83,44 @@ describe('ValidationService', () => {
       });
     });
   });
+
+  describe('blocklist bypass techniques', () => {
+    const cases: Array<{ name: string; code: string }> = [
+      { name: "process['env'] bracket access",              code: "process['env']" },
+      { name: 'process["exit"] bracket access',              code: 'process["exit"](0)' },
+      { name: "require() via string concatenation",          code: "require('child'+'_process')" },
+      { name: 'Function() constructor',                      code: "Function('return process')()" },
+      { name: 'new Function() constructor',                  code: "new Function('return process')()" },
+      { name: '.constructor.constructor escape',             code: "this.constructor.constructor('return process')()" },
+      { name: 'globalThis reference',                        code: 'globalThis.process' },
+      { name: 'require() via template-literal interpolation', code: "require(`${'fs'}`)" },
+      { name: 'dynamic import()',                             code: "import('fs')" },
+    ];
+
+    cases.forEach(({ name, code }) => {
+      it(`blocks ${name}`, () => {
+        const result = service.validate(code);
+        expect(result.valid).toBe(false);
+      });
+    });
+  });
+
+  describe('legitimate code that must keep working', () => {
+    const cases: Array<{ name: string; code: string }> = [
+      {
+        name: 'React component import for cypress-component levels',
+        code: "import React from 'react';\nimport { HeroCard } from '../../components/HeroCard.jsx';",
+      },
+      {
+        name: 'plain literal requires/imports of fs, os, path (levels that teach fs mocking)',
+        code: "import fs from 'node:fs';\nimport path from 'path';\nimport os from 'os';\nconst { readFileSync } = require('node:fs');",
+      },
+    ];
+
+    cases.forEach(({ name, code }) => {
+      it(`allows ${name}`, () => {
+        expect(service.validate(code)).toEqual({ valid: true });
+      });
+    });
+  });
 });

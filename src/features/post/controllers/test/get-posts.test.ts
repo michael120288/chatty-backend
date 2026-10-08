@@ -1,17 +1,21 @@
 import { Request, Response } from 'express';
 import { authUserPayload } from '@root/mocks/auth.mock';
 import { newPost, postMockData, postMockRequest, postMockResponse } from '@root/mocks/post.mock';
+import { existingUser, existingUserTwo } from '@root/mocks/user.mock';
 import { PostCache } from '@service/redis/post.cache';
+import { UserCache } from '@service/redis/user.cache';
 import { Get } from '@post/controllers/get-posts';
 import { postService } from '@service/db/post.service';
 
 jest.useFakeTimers();
 jest.mock('@service/queues/base.queue');
 jest.mock('@service/redis/post.cache');
+jest.mock('@service/redis/user.cache');
 
 describe('Get', () => {
   beforeEach(() => {
     jest.restoreAllMocks();
+    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser);
   });
 
   afterEach(() => {
@@ -27,7 +31,8 @@ describe('Get', () => {
           jest.spyOn(PostCache.prototype, 'getTotalPostsInCache').mockResolvedValue(1);
 
           await Get.prototype.posts(req, res);
-          expect(PostCache.prototype.getPostsFromCache).toHaveBeenCalledWith('post', 0, 10);
+          // end = skip + PAGE_SIZE - 1 = 9, so ZRANGE returns exactly 10 items (0-9 inclusive)
+          expect(PostCache.prototype.getPostsFromCache).toHaveBeenCalledWith('post', 0, 9);
           expect(res.status).toHaveBeenCalledWith(200);
           expect(res.json).toHaveBeenCalledWith({
             message: 'All posts',
@@ -70,6 +75,26 @@ describe('Get', () => {
         totalPosts: 0
       });
     });
+
+    it('excludes a Public post from a user in a block relationship with the viewer', async () => {
+      const req: Request = postMockRequest(newPost, authUserPayload, { page: '1' }) as Request;
+      const res: Response = postMockResponse();
+      const blockedAuthorPost = { ...postMockData, userId: existingUserTwo._id, privacy: 'Public' } as typeof postMockData;
+      jest.spyOn(PostCache.prototype, 'getPostsFromCache').mockResolvedValue([blockedAuthorPost]);
+      jest.spyOn(PostCache.prototype, 'getTotalPostsInCache').mockResolvedValue(1);
+      jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue({
+        ...existingUser,
+        blocked: [existingUserTwo._id]
+      } as typeof existingUser);
+
+      await Get.prototype.posts(req, res);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        message: 'All posts',
+        posts: [],
+        totalPosts: 1
+      });
+    });
   });
 
   describe('postWithImages', () => {
@@ -79,7 +104,8 @@ describe('Get', () => {
       jest.spyOn(PostCache.prototype, 'getPostsWithImagesFromCache').mockResolvedValue([postMockData]);
 
       await Get.prototype.postsWithImages(req, res);
-      expect(PostCache.prototype.getPostsWithImagesFromCache).toHaveBeenCalledWith('post', 0, 10);
+      // end = skip + PAGE_SIZE - 1 = 9, so ZRANGE returns exactly 10 items (0-9 inclusive)
+      expect(PostCache.prototype.getPostsWithImagesFromCache).toHaveBeenCalledWith('post', 0, 9);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: 'All posts with images',
